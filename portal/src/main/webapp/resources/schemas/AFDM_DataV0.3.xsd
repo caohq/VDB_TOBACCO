@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 (http://www.altova.com) by LN (SDC) -->
+<xs:schema xmlns:AFDM="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/0.3"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:AFCM="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/0.3"
+		   targetNamespace="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/0.3"
+		   elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/0.3" schemaLocation="AFCMV0.3.xsd"/>
+	<xs:include schemaLocation="AFDM_CoreV0.3.xsd"/>
+	<xs:element name="AFDMData" type="AFDM:AFDMDataType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源发现元数据</lable>
+				<definition>空军装备论证数据服务项目发现元数据规定的关于数据资源的描述信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>1</rootelement>
+			</xs:appinfo>
+			<xs:documentation>定义了空军装备论证数据发现元数据关于数据资源的描述信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="AFDMDataType">
+		<xs:annotation>
+			<xs:documentation>数据资源发现元数据类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:MetadataInfo"/>
+			<xs:element ref="AFDM:BasicInfo"/>
+			<xs:element ref="AFDM:ContentInfo" minOccurs="0"/>
+			<xs:element ref="AFCM:QualityInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:DistributeInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:Relationship" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFDM:AppCase" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

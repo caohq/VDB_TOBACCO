@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd"
+	updateCheck="true" monitoring="autodetect">
+	
+	<!-- 目录可根据项目需要设置 e.g. /usr/local/sdc/data/app/ehcache -->
+	<diskStore path="java.io.tmpdir/ehcache" />
+
+	<!-- defaultCache -->
+	<defaultCache maxElementsInMemory="500" overflowToDisk="true" eternal="true"
+		timeToLiveSeconds="0" timeToIdleSeconds="0" diskPersistent="true" diskExpiryThreadIntervalSeconds="600" />
+
+	<!-- appCache -->
+	<cache name="appCache" maxElementsInMemory="500" eternal="true" timeToIdleSeconds="3600" timeToLiveSeconds="3600"
+		overflowToDisk="false" />
+
+	<!-- shiroCache -->
+	<cache name="shiro-activeSessionCache" maxElementsInMemory="1000" overflowToDisk="true" eternal="true"
+		timeToLiveSeconds="0" timeToIdleSeconds="0" diskPersistent="true" diskExpiryThreadIntervalSeconds="600" />
+
+</ehcache> 

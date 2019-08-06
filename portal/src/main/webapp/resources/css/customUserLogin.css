@@ -1,0 +1,39 @@
+.cus_ul{
+    position: absolute;
+    right: 0;
+    min-width: 100px;
+    text-align: center;
+
+}
+.cus_ul > li a{
+    padding: 0 10px;
+    color: #5b9bd1 !important;
+}
+.cus_ul a {
+    text-decoration: none;
+    color: #ffe;
+    text-transform: capitalize;
+    font-family: monospace;
+    display: block;
+    /*padding: 10px 15px;
+    font-size: 16px;*/
+    transition: background-color 0.5s ease-in-out;
+
+    font-family: "Raleway", sans-serif;
+}
+
+.cus_ul a:hover {
+    background-color: #eee;
+}
+.cus_drop{
+    display: none;
+}.cus_drop li {
+     background-color: #eee;
+    margin-top: 1px;
+ }
+
+/*
+.cus_ul li:hover .cus_drop li:first-of-type {
+    animation: cus_drop 0.3s ease-in-out forwards;
+    animation-delay: 0.3s;
+}*/

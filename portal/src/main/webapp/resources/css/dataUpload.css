@@ -1,0 +1,43 @@
+.modediv{
+    padding-top: 7px;
+    margin-top: 1px;
+}
+.uplod-head{
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    color: #999999;
+}
+.upload-title{
+    height: 50px;
+    line-height: 50px;
+}
+.upload-title span{
+    font-family: 'Arial Normal', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 28px;
+    color: #000000;
+}
+/*.upload-title a{
+    display: inline-block;
+    width: 140px;
+    height: 37px;
+    line-height: 37px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: rgba(30, 159, 76, 1);
+    margin-left: 150px;
+    font-family: 'Arial Negreta', 'Arial Normal', 'Arial';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 18px;
+    color: #FFFFFF;
+}*/
+.upload-search,.upload-table{
+    margin-top: 20px;
+}
+#upload-list td{
+    text-align: center;
+    vertical-align: middle!important;
+}

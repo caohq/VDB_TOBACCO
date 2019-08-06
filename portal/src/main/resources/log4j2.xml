@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest" monitorInterval="30">
+    <Filter type="ThresholdFilter" level="trace"/>
+
+    <Appenders>
+        <!--控制台输出-->
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%level]%class{36} %L %M-%msg%n"/>
+            <!--<Filters>-->
+            <!--<Filter type="ThresholdFilter" level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <!--</Filters>-->
+        </Appender>
+        <!--日志输出到文件，当日志大小超过250MB时，将其压缩；如果压缩包超过20个，将删除旧的压缩包-->
+        <Appender type="RollingRandomAccessFile" name="RollingRandomAccessFile" fileName="/logs/portal.log"
+                  filePattern="/logs/$${date:yyyy-MM}/portal-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level]%class{36} %L %M-%msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </Appender>
+        <!--日志输出到文件，当日志大小超过250MB时，将其压缩；如果压缩包超过20个，将删除旧的压缩包-->
+        <Appender type="RollingRandomAccessFile" name="MyFile" fileName="/logs/portalUpload.log"
+                  filePattern="/logs/$${date:yyyy-MM}/portal-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level]%class{36} %L %M-%msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </Appender>
+        <Appender type="ASYNC" name="async" includeLocation="true">
+            <AppenderRef ref="RollingRandomAccessFile"/>
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+        <!--将导出上传流程日志单独输出到特定文件-->
+        <logger name="cn.csdb.portal.controller.ResourceController" level="info">
+            <AppenderRef ref="MyFile"/>
+        </logger>
+        <!--将导出上传流程日志单独输出到文件-->
+        <logger name="cn.csdb.portal.controller.HttpServiceController" level="info">
+            <AppenderRef ref="MyFile"/>
+        </logger>
+        <!--这里写自定义日志输出级别，只输出到控制台-->
+        <logger name="cn.csdb.portal" level="debug">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+        <!--spring日志只输出WARN级别以上到控制台-->
+        <logger name="org.springframework" level="WARN">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+        <logger name="org.apache.logging" level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+        <!--日志输出级别为INFO，并输出到控制台和文件中-->
+        <Root level="INFO" includeLocation="true">
+            <AppenderRef ref="async"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

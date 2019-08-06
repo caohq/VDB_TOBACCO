@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<xs:schema xmlns:AFCM="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/" elementFormDefault="qualified"
+           attributeFormDefault="qualified">
+    <xs:element name="Dataset" type="AFCM:DatasetType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>空军装备论证数据资源建设核心元数据</lable>
+                <definition>空军装备论证数据资源建设核心元数据的内容，主要包括数据资源基础描述信息、数据资源内容信息、数据资源质量信息和数据资源分发信息等4个方面信息。</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>1</rootelement>
+            </xs:appinfo>
+            <xs:documentation>
+                空军装备论证数据资源建设核心元数据的内容，主要包括数据资源基础描述信息、数据资源内容信息、数据资源质量信息和数据资源分发信息等4个方面信息。其中数据资源基础描述信息为必备信息，数据资源内容信息、数据资源质量信息和数据资源分发信息为可选信息。
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="BasicInfo" type="AFCM:BasicInfoType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源基础描述信息</lable>
+                <definition>数据资源基础描述信息</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源基础描述信息</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="ContentInfo" type="AFCM:ContentInfoType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源内容信息</lable>
+                <definition>数据资源内容信息</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源内容信息</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="QualityInfo" type="AFCM:QualityInfoType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源质量信息</lable>
+                <definition>数据资源质量信息</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源质量信息</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="DistributeInfo" type="AFCM:DistributeInfoType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源分发信息</lable>
+                <definition>数据资源分发信息</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源分发信息</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="resTitle" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源名称</lable>
+                <definition>缩略描述空军装备论证数据资源内容的标题</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源名称：缩略描述空军装备论证数据资源内容的标题</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="resID" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源标识符</lable>
+                <definition>空军装备论证数据资源的唯一不变的标识编码</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源标识符：空军装备论证数据资源的唯一不变的标识编码</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="abstract" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源摘要</lable>
+                <definition>对数据资源内容进行概要说明的文字</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源摘要：对数据资源内容进行概要说明的文字</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="pubDate" type="xs:date">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源发布日期</lable>
+                <definition>数据资源提供方发布数据资源的日期</definition>
+                <inputwidget>日期</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源发布日期：数据资源提供方发布数据资源的日期</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="resTpye" type="AFCM:resTpyeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源类型</lable>
+                <definition>对数据资源所属格式类型的说明</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源类型：对数据资源所属格式类型的说明</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="PvdOfContact" type="AFCM:ContactInfoType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源提供方</lable>
+                <definiion>提供数据资源的机构的名称、地址等信息</definiion>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源提供方：提供数据资源的机构的名称、地址等信息</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="onlLink" type="xs:anyURI">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>在线数据资源链接地址</lable>
+                <definition>可以获取空军装备论证数据资源的网络地址</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>在线数据资源链接地址：可以获取空军装备论证数据资源的网络地址</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="DesptKeys" type="AFCM:DesptKeysType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>关键字说明</lable>
+                <definition>说明空军装备论证数据资源的关键字内容及其依据</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>关键字说明：说明空军装备论证数据资源的关键字内容及其依据</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="keyword" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>关键字</lable>
+                <definition>用于概括空军装备论证数据资源主要内容的通用词、形式化词或短语</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>关键字：用于概括空军装备论证数据资源主要内容的通用词、形式化词或短语</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="theName" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>词典名称</lable>
+                <definition>关键字所属的专业关键字词典的名称</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>词典名称：关键字所属的专业关键字词典的名称</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="secClassfication" type="AFCM:secClassficationType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源密级</lable>
+                <definition>说明数据资源的保密等级</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源密级：说明数据资源的保密等级</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="ResCategory" type="AFCM:ResCategoryType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源分类</lable>
+                <definition>说明空军装备论证数据资源分类方式及其相应的分类信息</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源分类：说明空军装备论证数据资源分类方式及其相应的分类信息</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="ctgryStdd" type="AFCM:ctgryStddType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>分类方式</lable>
+                <definition>说明武器装备论证评估数据资源所采用的分类方式</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>分类方式：说明武器装备论证评估数据资源所采用的分类方式</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="ctgryName" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>类目名称</lable>
+                <definition>给出对应某种武器装备论证评估数据资源分类方式中某个具体类目</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>类目名称：给出对应某种武器装备论证评估数据资源分类方式中某个具体类目</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="categoryCode" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>类目编码</lable>
+                <definition>类目名称对应的编码</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>类目编码：类目名称对应的编码</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="lineage" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据志</lable>
+                <definition>对数据生产和使用过程中数据质量状况及其相关信息的描述</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据志：对数据生产和使用过程中数据质量状况及其相关信息的描述</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="mdID" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>元数据标识符</lable>
+                <definition>元数据的唯一标识符</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>元数据标识符：元数据的唯一标识符</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="MdCont" type="AFCM:ContactInfoType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>元数据维护方</lable>
+                <definition>对元数据内容负责的单位的名称和地址信息</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>元数据维护方：对元数据内容负责的单位的名称和地址信息</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="mdDateUpd" type="xs:date">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>元数据更新日期</lable>
+                <definition>更新元数据的日期</definition>
+                <inputwidget>日期</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>元数据更新日期：更新元数据的日期</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="mdClsfi" type="AFCM:secClassficationType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>元数据密级</lable>
+                <definition>说明元数据的保密等级</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>元数据密级：说明元数据的保密等级</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="obtways" type="AFCM:obtwaysType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据来源分类</lable>
+                <definition>数据来源分类</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据来源分类：数据来源分类</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="dataExmp" type="xs:anyURI">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据示例</lable>
+                <definition>数据示例</definition>
+                <inputwidget>图片</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据示例：数据示例</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="updtDate" type="xs:date">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据资源更新时间</lable>
+                <definition>描述数据资源的更新时间</definition>
+                <inputwidget>日期</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据资源更新时间：描述数据资源的更新时间</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="updtFrequency" type="AFCM:updtFrequencyType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>维护与更新频率</lable>
+                <definition>数据资源的更新频率</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>维护与更新频率：数据资源的更新频率</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="updtScopeDescpt" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>更新范围说明</lable>
+                <definition>数据资源内容更新范围的说明</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>更新范围说明：数据资源内容更新范围的说明</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="remark" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>备注</lable>
+                <definition>对数据资源其他信息的描述</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>备注：对数据资源其他信息的描述</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="numRecords" type="xs:int">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>记录数</lable>
+                <definition>数据资源的记录数，以主记录为准</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>记录数：数据资源的记录数，以主记录为准</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="memSize" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>存储量</lable>
+                <definition>数据资源占用的存储空间</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>存储量：数据资源占用的存储空间</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="tempRange" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据时间范围</lable>
+                <definition>数据覆盖的时间范围</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据时间范围：数据覆盖的时间范围</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="geoName" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据地理范围</lable>
+                <definition>数据覆盖的地理范围</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据地理范围：数据覆盖的地理范围</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="structInfo" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>结构描述信息</lable>
+                <definition>数据资源中数据项的名称或定义</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>结构描述信息：数据资源中数据项的名称或定义</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="qualityDesc" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据质量描述</lable>
+                <definition>数据的质量说明</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据质量描述：数据的质量说明</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="quality" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>质量控制方法</lable>
+                <definition>数据的质量控制方法</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>质量控制方法：数据的质量控制方法</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="dataFormat" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>数据格式</lable>
+                <definition>数据分发所使用的数据格式</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>数据格式：数据分发所使用的数据格式</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="sendWay" type="AFCM:sendWayType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>分发方式</lable>
+                <definition>数据资源分发方式</definition>
+                <inputwidget>下拉选单</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>分发方式：数据资源分发方式</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="rtState" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>授权声明</lable>
+                <definition>对数据分发对象的授权声明，如可任意分发、限制分发或者禁止分发</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>授权声明：对数据分发对象的授权声明，如可任意分发、限制分发或者禁止分发</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="Contact" type="AFCM:ContactInfoType">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>分发人联系方式</lable>
+                <definition>数据资源分发人的联系方式</definition>
+                <inputwidget>复合元素</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>分发人联系方式：数据资源分发人的联系方式</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="rpOrgName" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>单位</lable>
+                <definition>单位名称</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>单位：单位名称</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="addr" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>地址</lable>
+                <definition>单位的物理联系地址</definition>
+                <inputwidget>多行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>地址：单位的物理联系地址</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="eMailAddr" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>电子邮件</lable>
+                <definition>联系人的电子邮件地址</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>电子邮件：联系人的电子邮件地址</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="telNum" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>电话号码</lable>
+                <definition>联系人的电话号码</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>电话号码：联系人的电话号码</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="contName" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <lable>联系人姓名</lable>
+                <definition>联系人的姓名</definition>
+                <inputwidget>单行文本</inputwidget>
+                <rootelement>0</rootelement>
+            </xs:appinfo>
+            <xs:documentation>联系人姓名：联系人的姓名</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:complexType name="DatasetType">
+        <xs:annotation>
+            <xs:documentation>空军装备论证数据资源建设核心元数据类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:BasicInfo"/>
+            <xs:element ref="AFCM:ContentInfo" minOccurs="0"/>
+            <xs:element ref="AFCM:QualityInfo" minOccurs="0"/>
+            <xs:element ref="AFCM:DistributeInfo" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BasicInfoType">
+        <xs:annotation>
+            <xs:documentation>数据资源基础描述信息类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:resTitle"/>
+            <xs:element ref="AFCM:resID"/>
+            <xs:element ref="AFCM:abstract"/>
+            <xs:element ref="AFCM:pubDate" minOccurs="0"/>
+            <xs:element ref="AFCM:resTpye"/>
+            <xs:element ref="AFCM:PvdOfContact"/>
+            <xs:element ref="AFCM:onlLink" minOccurs="0"/>
+            <xs:element ref="AFCM:DesptKeys" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="AFCM:secClassfication"/>
+            <xs:element ref="AFCM:ResCategory" maxOccurs="unbounded"/>
+            <xs:element ref="AFCM:lineage" minOccurs="0"/>
+            <xs:element ref="AFCM:mdID"/>
+            <xs:element ref="AFCM:MdCont" minOccurs="0"/>
+            <xs:element ref="AFCM:mdDateUpd" minOccurs="0"/>
+            <xs:element ref="AFCM:mdClsfi"/>
+            <xs:element ref="AFCM:obtways" minOccurs="0"/>
+            <xs:element ref="AFCM:dataExmp" minOccurs="0"/>
+            <xs:element ref="AFCM:updtDate" minOccurs="0"/>
+            <xs:element ref="AFCM:updtFrequency"/>
+            <xs:element ref="AFCM:updtScopeDescpt" minOccurs="0"/>
+            <xs:element ref="AFCM:remark"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DesptKeysType">
+        <xs:annotation>
+            <xs:documentation>关键字说明类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:keyword"/>
+            <xs:element ref="AFCM:theName" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ResCategoryType">
+        <xs:annotation>
+            <xs:documentation>数据资源分类类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:ctgryStdd"/>
+            <xs:element ref="AFCM:ctgryName"/>
+            <xs:element ref="AFCM:categoryCode"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ContentInfoType">
+        <xs:annotation>
+            <xs:documentation>数据资源内容信息类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:numRecords" minOccurs="0"/>
+            <xs:element ref="AFCM:memSize" minOccurs="0"/>
+            <xs:element ref="AFCM:tempRange" minOccurs="0"/>
+            <xs:element ref="AFCM:geoName" minOccurs="0"/>
+            <xs:element ref="AFCM:structInfo" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="QualityInfoType">
+        <xs:annotation>
+            <xs:documentation>数据资源质量信息类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:qualityDesc" minOccurs="0"/>
+            <xs:element ref="AFCM:quality" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DistributeInfoType">
+        <xs:annotation>
+            <xs:documentation>数据资源分发信息类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:dataFormat"/>
+            <xs:element ref="AFCM:sendWay" minOccurs="0"/>
+            <xs:element ref="AFCM:rtState" minOccurs="0"/>
+            <xs:element ref="AFCM:Contact"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ContactInfoType">
+        <xs:annotation>
+            <xs:documentation>人员联系方式类型</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AFCM:rpOrgName"/>
+            <xs:element ref="AFCM:addr" minOccurs="0"/>
+            <xs:element ref="AFCM:eMailAddr" minOccurs="0"/>
+            <xs:element ref="AFCM:telNum" minOccurs="0"/>
+            <xs:element ref="AFCM:contName" minOccurs="0"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="secClassficationType">
+        <xs:annotation>
+            <xs:documentation>数据资源密级代码</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="绝密"/>
+            <xs:enumeration value="机密"/>
+            <xs:enumeration value="秘密"/>
+            <xs:enumeration value="限制级"/>
+            <xs:enumeration value="公开级"/>
+            <xs:enumeration value="内部"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ctgryStddType">
+        <xs:annotation>
+            <xs:documentation>数据资源分类代码</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="主题分类"/>
+            <xs:enumeration value="机构分类"/>
+            <xs:enumeration value="业务分类"/>
+            <xs:enumeration value="资源类型分类"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="resTpyeType">
+        <xs:annotation>
+            <xs:documentation>数据资源类型代码</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="数据库"/>
+            <xs:enumeration value="文本"/>
+            <xs:enumeration value="图像"/>
+            <xs:enumeration value="声音"/>
+            <xs:enumeration value="视频"/>
+            <xs:enumeration value="模型"/>
+            <xs:enumeration value="其它"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="updtFrequencyType">
+        <xs:annotation>
+            <xs:documentation>维护频率代码</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="连续"/>
+            <xs:enumeration value="按日"/>
+            <xs:enumeration value="按周"/>
+            <xs:enumeration value="按两周"/>
+            <xs:enumeration value="按月"/>
+            <xs:enumeration value="按季"/>
+            <xs:enumeration value="按半年"/>
+            <xs:enumeration value="按年"/>
+            <xs:enumeration value="按需要"/>
+            <xs:enumeration value="不固定"/>
+            <xs:enumeration value="无计划"/>
+            <xs:enumeration value="未知"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="obtwaysType">
+        <xs:annotation>
+            <xs:documentation>数据来源分类代码</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="试验数据"/>
+            <xs:enumeration value="论证预测"/>
+            <xs:enumeration value="真实数据"/>
+            <xs:enumeration value="实测数据"/>
+            <xs:enumeration value="预报数据"/>
+            <xs:enumeration value="生产厂家数据"/>
+            <xs:enumeration value="文件采集数据"/>
+            <xs:enumeration value="网络收集数据"/>
+            <xs:enumeration value="渠道收集数据"/>
+            <xs:enumeration value="外文翻译数据"/>
+            <xs:enumeration value="官方发布数据"/>
+            <xs:enumeration value="其它"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="sendWayType">
+        <xs:annotation>
+            <xs:documentation>分发方式代码</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="在线直接下载"/>
+            <xs:enumeration value="在线审批离线传递"/>
+            <xs:enumeration value="在线审批在线下载"/>
+            <xs:enumeration value="离线审批离线传递"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

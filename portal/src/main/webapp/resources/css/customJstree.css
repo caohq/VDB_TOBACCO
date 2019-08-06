@@ -1,0 +1,12 @@
+.jstree-default .jstree-anchor {
+    height: auto;
+    width: 700px;
+    padding-bottom: 5px;
+}
+
+.jstree-leaf p {
+    width: 100%;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+}

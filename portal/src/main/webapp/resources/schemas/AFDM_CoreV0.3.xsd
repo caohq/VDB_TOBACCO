@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 (http://www.altova.com) by LN (SDC) -->
+<xs:schema xmlns:AFDM="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/0.3"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:AFCM="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/0.3"
+		   targetNamespace="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/0.3"
+		   elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/0.3" schemaLocation="AFCMV0.3.xsd"/>
+	<xs:element name="MetadataInfo" type="AFDM:MetadataInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>元数据信息</lable>
+				<definition>元数据自身的标识和管理信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>元数据信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="BasicInfo" type="AFDM:BasicInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源基础描述信息</lable>
+				<definition>数据资源基础描述信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>基本信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DistributeInfo" type="AFDM:DistributeInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源分发信息</lable>
+				<definition>数据资源分发信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>分发信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="mdReleasability" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>元数据可见范围</lable>
+				<definition>描述元数据实例的内容可以被哪些用户发现和使用</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>元数据可见范围</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="resType" type="AFDM:resTpyeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源类型</lable>
+				<definition>数据资源的资源类型</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>元数据可见范围</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="releasability" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>资源可见范围</lable>
+				<definition>描述元数据实例所描述的资源对象可以被哪些用户发现和使用</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>资源可见范围</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ContentInfo" type="AFDM:ContentInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源内容信息</lable>
+				<definition>数据资源内容信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>数据资源内容信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="AppCase" type="AFDM:AppCaseType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>应用案例信息</lable>
+				<definition>描述用户使用资源并评价资源的信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>应用案例信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="appDate" type="xs:date">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>应用时间</lable>
+				<definition>应用案例发生的时间</definition>
+				<inputwidget>日期</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>应用时间</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="appStars" type="xs:int">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>应用星级</lable>
+				<definition>用户给资源的评分，取值为一颗星至五颗星</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>应用星级，取值为从1到5的整数</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="appReview" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>应用情况综述</lable>
+				<definition>用户使用资源及产出成果等情况，用户的评论等综述</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>应用情况综述</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="appContact" type="AFCM:ContactInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>应用联系人</lable>
+				<definition>用户机构或个人的联系信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>应用联系人</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Relationship" type="AFDM:RelationshipType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联信息</lable>
+				<definition>与资源相关的其它资源的信息，如支撑数据服务的数据，COI的成员机构等</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relType" type="AFDM:relTypeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联类型</lable>
+				<definition>关联关系的类型</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联类型</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relResType" type="AFDM:resTpyeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联资源类型</lable>
+				<definition>关联对象的资源类型</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联资源类型</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relMdID" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联资源元数据ID</lable>
+				<definition>关联对象的元数据实例的ID</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联资源元数据ID</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relResID" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联资源ID</lable>
+				<definition>关联对象本身的ID</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联资源ID</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relResTitle" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联资源名称</lable>
+				<definition>关联对象的名称</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联资源名称</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relResOnlLink" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联资源在线地址</lable>
+				<definition>关联对象的在线获取地址</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联资源在线地址</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relResContact" type="AFCM:ContactInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>关联资源联系方式</lable>
+				<definition>关联对象的联系人信息</definition>
+				<inputwidget>复合类型</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关联资源联系方式</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="MetadataInfoType">
+		<xs:annotation>
+			<xs:documentation>元数据信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:mdID"/>
+			<xs:element ref="AFDM:mdReleasability"/>
+			<xs:element ref="AFCM:mdClsfi"/>
+			<xs:element ref="AFCM:MdCont" minOccurs="0"/>
+			<xs:element ref="AFCM:mdDateUpd" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BasicInfoType">
+		<xs:annotation>
+			<xs:documentation>基本信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:resTitle"/>
+			<xs:element ref="AFCM:resID"/>
+			<xs:element ref="AFCM:abstract"/>
+			<xs:element ref="AFDM:resType"/>
+			<xs:element ref="AFCM:DesptKeys"/>
+			<xs:element ref="AFDM:releasability"/>
+			<xs:element ref="AFCM:secClassfication"/>
+			<xs:element ref="AFCM:ResCategory" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContentInfoType">
+		<xs:annotation>
+			<xs:documentation>内容信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:pubDate" minOccurs="0"/>
+			<xs:element ref="AFCM:PvdOfContact"/>
+			<xs:element ref="AFCM:obtways" minOccurs="0"/>
+			<xs:element ref="AFCM:dataExmp" minOccurs="0"/>
+			<xs:element ref="AFCM:updtDate" minOccurs="0"/>
+			<xs:element ref="AFCM:updtFrequency"/>
+			<xs:element ref="AFCM:updtScopeDescpt" minOccurs="0"/>
+			<xs:element ref="AFCM:numRecords" minOccurs="0"/>
+			<xs:element ref="AFCM:memSize" minOccurs="0"/>
+			<xs:element ref="AFCM:tempRange" minOccurs="0"/>
+			<xs:element ref="AFCM:geoName" minOccurs="0"/>
+			<xs:element ref="AFCM:structInfo" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DistributeInfoType">
+		<xs:annotation>
+			<xs:documentation>分发信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:onlLink" minOccurs="0"/>
+			<xs:element ref="AFCM:dataFormat" minOccurs="0"/>
+			<xs:element ref="AFCM:sendWay" minOccurs="0"/>
+			<xs:element ref="AFCM:rtState" minOccurs="0"/>
+			<xs:element ref="AFCM:Contact"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RelationshipType">
+		<xs:annotation>
+			<xs:documentation>关联信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:relType"/>
+			<xs:element ref="AFDM:relResType"/>
+			<xs:element ref="AFDM:relMdID" minOccurs="0"/>
+			<xs:element ref="AFDM:relResID" minOccurs="0"/>
+			<xs:element ref="AFDM:relResTitle" minOccurs="0"/>
+			<xs:element ref="AFDM:relResOnlLink" minOccurs="0"/>
+			<xs:element ref="AFDM:relResContact" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AppCaseType">
+		<xs:annotation>
+			<xs:documentation>应用案例类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:appDate"/>
+			<xs:element ref="AFDM:appReview"/>
+			<xs:element ref="AFDM:appContact"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="resTpyeType">
+		<xs:annotation>
+			<xs:documentation>数据资源类型代码</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="数据库"/>
+			<xs:enumeration value="数据服务"/>
+			<xs:enumeration value="利益共同体（COI）"/>
+			<xs:enumeration value="数据服务机构"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="relTypeType">
+		<xs:annotation>
+			<xs:documentation>关联类型代码</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="属于"/>
+			<xs:enumeration value="包含"/>
+			<xs:enumeration value="支持"/>
+			<xs:enumeration value="被支持"/>
+			<xs:enumeration value="提供"/>
+			<xs:enumeration value="被提供"/>
+			<xs:enumeration value="生产"/>
+			<xs:enumeration value="被生产"/>
+			<xs:enumeration value="相关"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

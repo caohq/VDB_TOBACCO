@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<!-- 空军装备论证数据服务体系发现元数据规范XML模式定义 -->
+<xs:schema xmlns:AFDM="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:AFCM="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/"
+		   targetNamespace="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/" elementFormDefault="qualified"
+		   attributeFormDefault="qualified">
+	<xs:import namespace="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/" schemaLocation="AFCM.xsd"/>
+	<xs:element name="MetadataInfo" type="AFDM:MetadataInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>元数据信息</lable>
+				<definition>关于元数据记录自身的标识和管理信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>元数据信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="BasicInfo" type="AFDM:BasicInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源基础描述信息</lable>
+				<definition>关于数据资源发现的最基本的描述信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>基本信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DistributeInfo" type="AFDM:DistributeInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源分发信息</lable>
+				<definition>关于数据资源分发与获取的信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>分发信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="mdReleasability" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>元数据可见范围</lable>
+				<definition>描述元数据实例的内容可以被哪些用户发现和使用</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>元数据可见范围</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="resType" type="AFDM:resTpyeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源类型</lable>
+				<definition>对数据资源所属类型的说明，在空军装备论证数据服务体系内，数据资源类型包括数据集、服务和COI三种</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>元数据可见范围</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="releasAbility" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源可见范围</lable>
+				<definition>描述数据资源可以被哪些用户发现和使用</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>数据资源可见范围</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ContentInfo" type="AFDM:ContentInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据资源内容信息</lable>
+				<definition>关于数据资源内容的信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>关于数据资源内容的信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="MetadataInfoType">
+		<xs:annotation>
+			<xs:documentation>元数据信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:mdID"/>
+			<xs:element ref="AFDM:mdReleasability"/>
+			<xs:element ref="AFCM:mdClsfi"/>
+			<xs:element ref="AFCM:MdCont" minOccurs="0"/>
+			<xs:element ref="AFCM:mdDateUpd" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BasicInfoType">
+		<xs:annotation>
+			<xs:documentation>数据资源基础描述信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:resTitle"/>
+			<xs:element ref="AFCM:resID"/>
+			<xs:element ref="AFCM:abstract"/>
+			<xs:element ref="AFDM:resType"/>
+			<xs:element ref="AFCM:DesptKeys"/>
+			<xs:element ref="AFDM:releasAbility"/>
+			<xs:element ref="AFCM:secClassfication"/>
+			<xs:element ref="AFCM:ResCategory" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContentInfoType">
+		<xs:annotation>
+			<xs:documentation>数据资源内容信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:pubDate" minOccurs="0"/>
+			<xs:element ref="AFCM:PvdOfContact"/>
+			<xs:element ref="AFCM:obtways" minOccurs="0"/>
+			<xs:element ref="AFCM:dataExmp" minOccurs="0"/>
+			<xs:element ref="AFCM:updtDate" minOccurs="0"/>
+			<xs:element ref="AFCM:updtFrequency"/>
+			<xs:element ref="AFCM:updtScopeDescpt" minOccurs="0"/>
+			<xs:element ref="AFCM:numRecords" minOccurs="0"/>
+			<xs:element ref="AFCM:memSize" minOccurs="0"/>
+			<xs:element ref="AFCM:tempRange" minOccurs="0"/>
+			<xs:element ref="AFCM:geoName" minOccurs="0"/>
+			<xs:element ref="AFCM:structInfo" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DistributeInfoType">
+		<xs:annotation>
+			<xs:documentation>数据资源分发信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFCM:onlLink" minOccurs="0"/>
+			<xs:element ref="AFCM:dataFormat" minOccurs="0"/>
+			<xs:element ref="AFCM:sendWay" minOccurs="0"/>
+			<xs:element ref="AFCM:rtState" minOccurs="0"/>
+			<xs:element ref="AFCM:Contact"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="resTpyeType">
+		<xs:annotation>
+			<xs:documentation>数据资源类型类型</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="数据库"/>
+			<xs:enumeration value="数据服务"/>
+			<xs:enumeration value="利益共同体（COI）"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Dataset" type="AFDM:DatasetType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>数据集发现元数据</lable>
+				<definition>空军装备论证数据服务项目发现元数据规定的关于数据集的描述信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>1</rootelement>
+			</xs:appinfo>
+			<xs:documentation>定义了空军装备论证数据发现元数据关于数据集的描述信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="DatasetType">
+		<xs:annotation>
+			<xs:documentation>数据集发现元数据类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:MetadataInfo"/>
+			<xs:element ref="AFDM:BasicInfo"/>
+			<xs:element ref="AFDM:ContentInfo" minOccurs="0"/>
+			<xs:element ref="AFCM:QualityInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:DistributeInfo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Service" type="AFDM:ServiceType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>服务发现元数据</lable>
+				<definition>空军装备论证数据服务项目发现元数据规定的关于服务的描述性内容</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>1</rootelement>
+			</xs:appinfo>
+			<xs:documentation>定义了空军装备论证数据发现元数据关于服务的描述信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ServicePort" type="AFDM:ServicePortType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>服务接口</lable>
+				<definition>关于数据服务的接口信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>服务接口</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="portURLFormat" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>接口URL格式</lable>
+				<definition>数据服务接口的URL格式</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>接口URL格式</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="requestMode" type="AFDM:requestModeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>接口请求方式</lable>
+				<definition>数据服务接口的请求方式</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>接口请求方式</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="RequestParameter" type="AFDM:ParameterType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>请求参数</lable>
+				<definition>数据服务接口的请求参数说明</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>请求参数</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="requestExample" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>请求实例</lable>
+				<definition>数据服务接口的请求完整实例</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>请求实例</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ReturnParameter" type="AFDM:ParameterType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>返回参数</lable>
+				<definition>数据服务接口的返回参数说明</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>返回参数</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="returnExample" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>返回实例</lable>
+				<definition>数据服务接口的返回完整实例</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>返回实例</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="portDescription" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>接口说明</lable>
+				<definition>关于接口的文字说明</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>接口说明</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterName" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数名称</lable>
+				<definition>参数的名称</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数名称</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterType" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数类型</lable>
+				<definition>参数的数据类型</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数类型</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterMandatory" type="AFDM:MandatoryType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数必选性</lable>
+				<definition>参数是否必选的说明</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数必选性</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterDescription" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数说明</lable>
+				<definition>参数的文字说明</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数说明</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ServiceType">
+		<xs:annotation>
+			<xs:documentation>服务发现元数据类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:MetadataInfo"/>
+			<xs:element ref="AFDM:BasicInfo"/>
+			<xs:element ref="AFDM:ContentInfo" minOccurs="0"/>
+			<xs:element ref="AFCM:QualityInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:DistributeInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:ServicePort" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ServicePortType">
+		<xs:annotation>
+			<xs:documentation>服务接口类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:portURLFormat"/>
+			<xs:element ref="AFDM:requestMode"/>
+			<xs:element ref="AFDM:RequestParameter" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFDM:requestExample" minOccurs="0"/>
+			<xs:element ref="AFDM:ReturnParameter" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFDM:returnExample" minOccurs="0"/>
+			<xs:element ref="AFDM:portDescription" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParameterType">
+		<xs:annotation>
+			<xs:documentation>参数类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:parameterName"/>
+			<xs:element ref="AFDM:parameterType"/>
+			<xs:element ref="AFDM:parameterMandatory"/>
+			<xs:element ref="AFDM:parameterDescription"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="requestModeType">
+		<xs:annotation>
+			<xs:documentation>请求方式代码</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GET"/>
+			<xs:enumeration value="POST"/>
+			<xs:enumeration value="GET+POST"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MandatoryType">
+		<xs:annotation>
+			<xs:documentation>必选性代码</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="必选"/>
+			<xs:enumeration value="可选"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="COI" type="AFDM:COIType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>COI发现元数据</lable>
+				<definition>空军装备论证数据服务项目发现元数据规定的关于利益共同体的描述信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>1</rootelement>
+			</xs:appinfo>
+			<xs:documentation>定义了空军装备论证数据发现元数据关于利益共同体的描述信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="COIManaInfo" type="AFDM:COIManaInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>COI管理信息</lable>
+				<definition>关于利益共同体管理情况的元数据信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>COI管理方面的元数据信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="COIType" type="AFDM:COITypeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>COI类型</lable>
+				<definition>利益共同体的类型</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>COI类型</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="COISupIns" type="AFCM:ContactInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>COI依托单位</lable>
+				<definition>利益共同体的依托单位信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>COI依托单位</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="COIdataResMetaID" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>COI数据资源信息</lable>
+				<definition>利益共同体发布的数据资源的元数据实例的ID</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>COI发布数据资源的元数据ID</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="MemberInfo" type="AFCM:ContactInfoType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>成员信息</lable>
+				<definition>利益共同体成员的信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>成员信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="COIType">
+		<xs:annotation>
+			<xs:documentation>COI发现元数据类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:MetadataInfo"/>
+			<xs:element ref="AFDM:BasicInfo"/>
+			<xs:element ref="AFDM:COIManaInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:MemberInfo" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="COIManaInfoType">
+		<xs:annotation>
+			<xs:documentation>COI管理信息类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:COIType"/>
+			<xs:element ref="AFDM:COISupIns" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFCM:onlLink"/>
+			<xs:element ref="AFDM:COIdataResMetaID" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="COITypeType">
+		<xs:annotation>
+			<xs:documentation>COI类型代码</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="任务型COI"/>
+			<xs:enumeration value="领域型COI"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

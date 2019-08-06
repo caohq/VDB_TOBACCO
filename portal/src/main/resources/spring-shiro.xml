@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-lazy-init="true">
+
+    <description>spring shiro 配置文件</description>
+
+    <!-- 缓存配置文件 -->
+    <!--<import resource="spring-cache.xml"/>-->
+
+    <bean id="roleOrFilter" class="cn.csdb.portal.common.CustomRolesAuthorizationFilter"><!--自定义的filter-->
+    </bean>
+
+    <!--<context:property-placeholder location="classpath:cas_urls.properties"/>-->
+    <!-- shiro filter -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean"> <!--depends-on="roleOrFilter">-->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 设定角色的登录链接，这里为cas登录页面的链接可配置回调地址  -->
+        <property name="loginUrl" value="/login"/><!--${cas.url.prefix}/login?service=${resreg.url}/shiro-cas-->
+        <!--<property name="loginUrl" value="/"/>-->
+        <property name="successUrl" value="/"/>
+        <property name="unauthorizedUrl" value="/403"/>
+
+       <!-- <property name="filters">
+            <util:map>
+                <entry key="cas" value-ref="casFilter"/>
+                <entry key="roles" value-ref="roleOrFilter"/>
+            </util:map>
+        </property>-->
+        <property name="filterChainDefinitions">
+            <value>
+<!--
+                /shiro-cas=cas
+-->
+                /logout=logout
+                /*/logout=logout
+                /login=anon
+                /opencallback=anon
+                /403=anon
+                /404=anon
+                /500=anon
+                /resources/**=anon
+                /upload=anon
+                /authorize/**=anon
+                /key/**=anon
+                /v1/sync/**=anon
+                /api/**=anon
+                /service/**=anon
+<!--
+                /** = authc,roles[管理员,系统管理员]
+-->
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
+
+    <bean id="casFilter" class="org.apache.shiro.cas.CasFilter">
+        <!-- 配置验证错误时的失败页面  -->
+        <property name="failureUrl" value="/loginError"/>
+    </bean>
+
+    <bean id="logout" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="/"/>
+    </bean>
+
+
+     <!--<bean id="casRealm" class="cn.csdb.portal.common.NCasRealm">
+         &lt;!&ndash;cas地址后台验证地址&ndash;&gt;
+         <property name="casServerUrlPrefix" value="${cas.url.prefix}"/>
+         &lt;!&ndash; 客户端的回调地址设置，必须和下面的shiro-cas过滤器拦截的地址一致 &ndash;&gt;
+         <property name="casService" value="${resreg.url}/shiro-cas"/>
+    </bean>-->
+    <!-- 自定义Realm -->
+    <bean id="myRealm" class="cn.csdb.portal.common.MyRealm"/>
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="shiroCacheManager"/>
+        <property name="realm" ref="myRealm"/>
+
+<!--
+        <property name="subjectFactory" ref="casSubjectFactory"/>
+-->
+    </bean>
+
+    <!-- shiro ehcache-->
+    <bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManager" ref="ehCacheManagerFactory"/>
+    </bean>
+
+    <!-- 如果要实现cas的remember me的功能，需要用到下面这个bean，并设置到securityManager的subjectFactory中-->
+    <bean id="casSubjectFactory" class="org.apache.shiro.cas.CasSubjectFactory"/>
+
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+
+    <!-- AOP shiro method level auth-->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true" />
+    </bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+
+</beans>

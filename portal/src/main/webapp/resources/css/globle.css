@@ -1,0 +1,8 @@
+.page-logo a:hover {
+    text-decoration: none;
+}
+
+.page-logo h4 {
+    color: white;
+    font-weight: bold;
+}

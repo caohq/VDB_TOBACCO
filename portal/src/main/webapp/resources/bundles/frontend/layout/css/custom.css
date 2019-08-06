@@ -1,0 +1,73 @@
+/* here you can put your own css to customize and override the theme */
+.product-page-content .datasheet td:first-child {
+    min-width: 100px;
+}
+
+.pagination > li:first-child > a, .pagination > li:last-child > a {
+    padding: 6px 12px;
+}
+
+.current-sort, .current-sort:hover, .current-sort:active, .current-sort:focus {
+    color: #FFF !important;
+    background: #2977f7;
+    border-color: transparent;
+}
+
+.current-sort i {
+    color: #FFF !important;
+}
+
+.header a {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.header-navigation ul li a {
+    color: #FFF !important;
+}
+
+.header-navigation ul li a:hover {
+    color: #FFF;
+    font-weight: bold;
+    background: #2691d9;
+    border-right: #1e73bc 0px solid;
+}
+
+.header-navigation ul span.sep {
+    top: 0;
+    width: 1px;
+    height: 26px;
+    background: #eaeaea;
+    position: relative;
+    margin: 0 18px 0 16px;
+    display: inline-block;
+}
+
+.header-navigation ul li {
+    border-right: #1e73bc 1px solid;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    position: relative;
+}
+
+.foot_div {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 14px;
+}
+
+.con_div {
+    padding-bottom: 100px; /* Height of the footer element */
+}
+
+#tree_root .dropdown-menu::before, #tree_root .dropdown-menu::after {
+    display: none !important;
+}

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 (http://www.altova.com) by LN (SDC) -->
+<xs:schema xmlns:AFDM="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/0.3"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:AFCM="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/0.3"
+		   targetNamespace="http://www.xxx.com/XMLSchema/Metadata/AFDiscoveryMetadata/0.3"
+		   elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="http://www.xxx.com/XMLSchema/Metadata/AFCoreMetadata/0.3" schemaLocation="AFCMV0.3.xsd"/>
+	<xs:include schemaLocation="AFDM_CoreV0.3.xsd"/>
+	<xs:element name="AFDMService" type="AFDM:AFDiscoveryMetadataDataType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>服务发现元数据</lable>
+				<definition>空军装备论证数据服务项目发现元数据规定的关于服务的描述性内容</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>1</rootelement>
+			</xs:appinfo>
+			<xs:documentation>定义了空军装备论证数据发现元数据关于服务资源的描述信息</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ServicePort" type="AFDM:ServicePortType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>服务接口</lable>
+				<definition>关于数据服务的接口信息</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>服务接口</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="portURLFormat" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>接口URL格式</lable>
+				<definition>数据服务接口的URL格式</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>接口URL格式</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="requestMode" type="AFDM:requestModeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>接口请求方式</lable>
+				<definition>数据服务接口的请求方式</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>接口请求方式</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="RequestParameter" type="AFDM:ParameterType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>请求参数</lable>
+				<definition>数据服务接口的请求参数说明</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>请求参数</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="requestExample" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>请求实例</lable>
+				<definition>数据服务接口的请求完整实例</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>请求实例</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ReturnParameter" type="AFDM:ParameterType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>返回参数</lable>
+				<definition>数据服务接口的返回参数说明</definition>
+				<inputwidget>复合元素</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>返回参数</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="returnExample" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>返回实例</lable>
+				<definition>数据服务接口的返回完整实例</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>返回实例</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="portDescription" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>接口说明</lable>
+				<definition>关于接口的文字说明</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>接口说明</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterName" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数名称</lable>
+				<definition>参数的名称</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数名称</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterType" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数类型</lable>
+				<definition>参数的数据类型</definition>
+				<inputwidget>单行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数类型</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterMandatory" type="AFDM:MandatoryType">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数必选性</lable>
+				<definition>参数是否必选的说明</definition>
+				<inputwidget>下拉选单</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数必选性</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="parameterDescription" type="xs:string">
+		<xs:annotation>
+			<xs:appinfo>
+				<lable>参数说明</lable>
+				<definition>参数的文字说明</definition>
+				<inputwidget>多行文本</inputwidget>
+				<rootelement>0</rootelement>
+			</xs:appinfo>
+			<xs:documentation>参数说明</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="AFDiscoveryMetadataDataType">
+		<xs:annotation>
+			<xs:documentation>数据资源发现元数据类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:MetadataInfo"/>
+			<xs:element ref="AFDM:BasicInfo"/>
+			<xs:element ref="AFDM:ContentInfo" minOccurs="0"/>
+			<xs:element ref="AFCM:QualityInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:DistributeInfo" minOccurs="0"/>
+			<xs:element ref="AFDM:Relationship" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFDM:AppCase" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFDM:ServicePort" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ServicePortType">
+		<xs:annotation>
+			<xs:documentation>服务接口类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:portURLFormat"/>
+			<xs:element ref="AFDM:requestMode"/>
+			<xs:element ref="AFDM:RequestParameter" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFDM:requestExample" minOccurs="0"/>
+			<xs:element ref="AFDM:ReturnParameter" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AFDM:returnExample" minOccurs="0"/>
+			<xs:element ref="AFDM:portDescription" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParameterType">
+		<xs:annotation>
+			<xs:documentation>参数类型</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="AFDM:parameterName"/>
+			<xs:element ref="AFDM:parameterType"/>
+			<xs:element ref="AFDM:parameterMandatory"/>
+			<xs:element ref="AFDM:parameterDescription"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="requestModeType">
+		<xs:annotation>
+			<xs:documentation>请求方式代码</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GET"/>
+			<xs:enumeration value="POST"/>
+			<xs:enumeration value="GET+POST"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MandatoryType">
+		<xs:annotation>
+			<xs:documentation>必选性代码</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="必选"/>
+			<xs:enumeration value="可选"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
