@@ -34,7 +34,7 @@
 <body>
 
 <shiro:hasRole name="root">
-    <h1 style="margin-top: 20%;margin-left: 35%;"><b>欢迎使用${applicationScope.menus['systemRole_root']}</b></h1>
+    <h1 style="margin-top: 20%;margin-left: 25%;"><b>欢迎使用${applicationScope.menus['systemRole_root']}</b></h1>
 </shiro:hasRole>
 <shiro:hasRole name="admin">
     <h3><b>欢迎使用${applicationScope.menus['systemRole_admin']}</b></h3>

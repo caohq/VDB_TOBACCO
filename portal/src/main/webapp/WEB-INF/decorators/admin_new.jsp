@@ -129,6 +129,9 @@
             width: 82% !important;
             float: right !important;
         }
+        .left_bottom{
+            background-size: 100%;
+        }
 
     </style>
 
@@ -137,9 +140,9 @@
 
 <body>
 
-<div class="con_div">
+<div class="con_div" style="height: 95% !important;min-height: 300px !important;">
 
-    <div class="page-container" style="height: 95%;width: 100%;margin: 0 auto;">
+    <div class="page-container" style="height: 100%;width: 100%;margin: 0 auto;min-height: 400px !important;">
         <!-- BEGIN SIDEBAR -->
         <div class="page-sidebar-wrapper">
             <%--NEW BAR ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！--%>
@@ -151,7 +154,7 @@
                             <span style="font-weight: bold;color: white;font-size: 20px;">${applicationScope.menus['systemRole_admin']}</span>
                         </shiro:hasRole>
                         <shiro:hasRole name="root">
-                            <span style="font-weight: bold;color: white;font-size: 20px;">${applicationScope.menus['systemRole_root']}</span>
+                            <span style="font-weight: bold;color: white;font-size: 18px;">${applicationScope.menus['systemRole_root']}</span>
                         </shiro:hasRole>
                     </div>
                     <div class="user_div">
@@ -253,7 +256,11 @@
     </div>
 </div>
 
-<div class="foot_div">${applicationScope.menus['copyright']}</div>
+<div class="foot_div" style="height: 5% !important;position: relative;">
+    <div style="position: absolute;top: 50%;left: 48%; margin-top: -14px;margin-left: -170px;">
+        ${applicationScope.menus['copyright']}
+    </div>
+</div>
 
 
 <script src="${ctx}/resources/bundles/jquery/jquery.min.js"></script>
@@ -382,11 +389,11 @@
         var $page_content = $(".page-content");
         $page_content.css("margin-left", $(".page-sidebar").width());
         // $page_content.css("min-height", $page_content.height() - $(".foot_div").height());
-        $page_content.css("min-height", "");
+        $page_content.css("min-height", "200px");
         $page_content.css("height", "100%");
 
 
-        $("#content").height("90%");
+        $("#content").height("86%");
 
         // $("#alltableName").niceScroll({cursorborder: "", cursorcolor: "#155aab", boxzoom: true}); // First scrollable DIV
     });

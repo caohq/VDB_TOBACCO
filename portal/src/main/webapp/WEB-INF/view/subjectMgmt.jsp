@@ -14,6 +14,9 @@
         .error-message {
             color: red;
         }
+        .table-bordered>tbody>tr>td {
+            white-space: nowrap;
+        }
     </style>
 </head>
 
