@@ -198,6 +198,10 @@
                                                                                        aria-hidden="true"></i>
                                     数据统计管理</a>
                                 </li>
+                                <li><a class="" href="${ctx}/theme/"><i class="fa  fa-bar-chart"
+                                                                                       aria-hidden="true"></i>
+                                    主题库</a>
+                                </li>
                             </ul>
 
                         </shiro:hasRole>

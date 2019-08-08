@@ -1,7 +1,9 @@
 package cn.csdb.portal.controller;
 
 import cn.csdb.portal.model.Subject;
+import cn.csdb.portal.model.ThemesGallery;
 import cn.csdb.portal.service.SubjectMgmtService;
+import cn.csdb.portal.service.ThemeService;
 import cn.csdb.portal.utils.MD5Util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.List;
@@ -33,6 +36,9 @@ public class SubjectMgmtController {
 
 	@Value("#{systemPro['ftpServerAddr']}")
 	private String ftpServerAddr;
+
+	@Resource
+    private ThemeService themeService;
 
     @Autowired
     public void setProjectLibService(SubjectMgmtService subjectService) {
@@ -291,10 +297,22 @@ public class SubjectMgmtController {
         logger.info("enterring SubjectMgmtController-querySubjectById");
         logger.info("id = " + id);
         Subject subject = subjectMgmtService.findSubjectById(id);
+        List<ThemesGallery> list=themeService.getAll();
         logger.info("queried subject - " + subject);
-
         return (JSONObject) JSON.toJSON(subject);
     }
+
+    @RequestMapping(value = "/findSubjectAndThemeById")
+    @ResponseBody
+    public JSONObject findSubjectAndThemeById(String id) {
+        Subject subject = subjectMgmtService.findSubjectById(id);
+        List<ThemesGallery> list=themeService.getAll();
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("subject",subject);
+        jsonObject.put("list",list);
+        return jsonObject;
+    }
+
 
     /**
      * Function Description: check if the subject code has been used
@@ -355,5 +373,22 @@ public class SubjectMgmtController {
         logger.info("nextSerialNo = " + nextSerialNo);
 
         return nextSerialNo;
+    }
+
+    @RequestMapping(value = "/getNextSerialNoAndTheme")
+    @ResponseBody
+    public JSONObject getNextSerialNoAndTheme(HttpServletRequest request) {
+        JSONObject jsonObject=new JSONObject();
+        String nextSerialNo = "";
+        String lastSerialNo = "";
+        lastSerialNo = subjectMgmtService.getLastSerialNo();
+        nextSerialNo = Integer.parseInt(lastSerialNo) + 1 + "";
+
+        logger.info("lastSerialNo = " + lastSerialNo);
+        logger.info("nextSerialNo = " + nextSerialNo);
+        List<ThemesGallery> list=themeService.getAll();
+        jsonObject.put("list",list);
+        jsonObject.put("nextSerialNo",nextSerialNo);
+        return jsonObject;
     }
 }
