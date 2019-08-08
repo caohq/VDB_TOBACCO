@@ -283,7 +283,7 @@
 													*</span></label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="themeNameEdit" name="themeName"
-                                   placeholder="请输入用户组名称" readonly required="required">
+                                   placeholder="请输入用户组名称"  required="required">
                         </div>
                     </div>
                     <div class="form-group">
@@ -291,7 +291,7 @@
 													*</span></label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" cols="30" rows="5" id="themeCodeEdit" name="themeCode"
-                                      placeholder="请输入主题库代码" required="required"/>
+                                      placeholder="请输入主题库代码" required="required" readonly />
                         </div>
                     </div>
 

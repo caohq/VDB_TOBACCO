@@ -56,6 +56,13 @@ public class ThemeController {
         return jsonObject;
     }
 
+    /** 
+    * @Description: 修改主题库信息 
+    * @Param: [id] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/8 
+    */ 
     @RequestMapping("/toUpdateTheme")
     @ResponseBody
     public JSONObject toUpdateTheme(@RequestParam(name = "id", defaultValue = "") String id) {
@@ -65,7 +72,13 @@ public class ThemeController {
         return jsonObject;
     }
 
-
+/** 
+* @Description: 保存修改的主题库信息 
+* @Param: [themesGallery] 
+* @return: com.alibaba.fastjson.JSONObject 
+* @Author: zcy
+* @Date: 2019/8/8 
+*/ 
     @RequestMapping(value = "/updateTheme", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject updateGroup(ThemesGallery themesGallery) {
@@ -76,6 +89,13 @@ public class ThemeController {
         return jsonObject;
     }
 
+    /** 
+    * @Description: 根据主题库id删除主题库
+    * @Param: [id] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/8 
+    */ 
     @RequestMapping("/deleteTheme/{id}")
     @ResponseBody
     public JSONObject deleteThemeById(@PathVariable("id") String id){

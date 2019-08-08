@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -64,7 +65,15 @@ public class ThemeDao {
        JSONObject jsonObject=new JSONObject();
         if(list.size()==0){
             mongoTemplate.insert(themesGallery);
+//            创建主题库文件夹，/home/themecode
+            String path="/home/"+themesGallery.getThemeCode();
+            File f1=new File(path);
+            if(!f1.exists())
+            {
+                f1.mkdirs();
+            }
             jsonObject.put("result", "ok");
+
         }else{
             jsonObject.put("result", "exist");
         }
@@ -82,6 +91,13 @@ return jsonObject;
         return mongoTemplate.findById(id,ThemesGallery.class);
     }
 
+    /** 
+    * @Description: 根据id修改主题库信息 
+    * @Param: [themesGallery] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/8 
+    */ 
     public JSONObject updateThemesGalleryById(ThemesGallery themesGallery){
         JSONObject jsonObject=new JSONObject();
 //        判断themeCode是否重复
@@ -104,6 +120,13 @@ return jsonObject;
         return mongoTemplate.findAll(ThemesGallery.class);
     }
 
+    /** 
+    * @Description: 根据id删除主题库 
+    * @Param: [id] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/8 
+    */ 
     public JSONObject deleteThemeById(String id){
         JSONObject jsonObject=new JSONObject();
         List<Subject> list=mongoTemplate.find(new Query(Criteria.where("themeId").is(id)),Subject.class);
