@@ -41,12 +41,12 @@
         <!-- tab header --->
         <ul class="nav nav-tabs ">
             <li class="active">
-                <a href="#userContent" data-toggle="tab" id="showUserContent" style="white-space:nowrap;">
+                <a href="#subjectContent" data-toggle="tab" id="showSubjectContent" style="white-space:nowrap;">
                     节点管理
                 </a>
             </li>
             <li>
-                <a href="#groupContent" data-toggle="tab">
+                <a href="#themeContent" data-toggle="tab">
                     主题库管理</a>
             </li>
         </ul>
@@ -54,7 +54,7 @@
         <div class="tab-content">
 
             <!--节点管理标签页-->
-            <div class="tab-pane active" id="userContent" style="min-height: 400px">
+            <div class="tab-pane active" id="subjectContent" style="min-height: 400px">
                 <div class="row">
                     <div class="col-xs-12 col-md-12 col-lg-12">
 
@@ -143,7 +143,7 @@
             </div>
 
             <!--主题库 tab-->
-            <div class="tab-pane" id="groupContent">
+            <div class="tab-pane" id="themeContent">
                 <div class="row">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div class="alert alert-info" role="alert">
@@ -315,54 +315,8 @@
     </div>
 </div>
 
-<!--用户组Group, 添加用户-->
-<div class="modal fade" tabindex="-1" role="dialog" id="groupModalForAddUser">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">用户组添加用户</h4>
-            </div>
-            <div class="modal-body" style="min-height: 150px">
-                <form class="form-horizontal" id="groupFormForAdduser" method="post" accept-charset="utf-8" role="form"
-                      onfocusout="true">
-                    <div class="form-group" style="margin-bottom:2px;">
-                        <input type="hidden" id="spanGroupId">
-                        <label class="col-sm-3 control-label">用户组名称:</label>
-                        <div class="col-sm-8" style="padding-top: 7px;">
-                            <span id="spanGroupName"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom:2px;">
-                        <label class="col-sm-3 control-label">描述:</label>
-                        <div class="col-sm-8" style="padding-top: 7px;">
-                            <span id="spanDesc"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom:2px;">
-                        <label class="col-sm-3 control-label">本组已有用户:</label>
-                        <div class="col-sm-8" style="padding-top: 7px;">
-                            <select class='form-control select2me' name='users' id='users' multiple>
-                                <c:forEach var="item" items="${list}">
-                                    <option value="${item.id}" id="${item.id}">${item.userName}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn green" onclick="submitAddUser();"><i
-                        class="glyphicon glyphicon-ok"></i>保存
-                </button>
-                <button type="button" data-dismiss="modal" class="btn  default">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- 用户组 group -->
+<!-- 主题库列表-->
 <script type="text/html" id="themeTmpl">
     {{each list}}
     <tr>
@@ -400,7 +354,7 @@
     {{/each}}
 </script>
 
-<!--用户管理标签页：用户列表表格-->
+<!--专业库列表-->
 <script type="text/html" id="subjectListTable">
     {{each list}}
     <tr>
@@ -429,7 +383,7 @@
 
 <script type="text/html" id="subjectThemeGroup">
 {{each list as value}}
-<option  value="{{value.id}}"> {{value.themeName}}</option>
+<option  value="{{value.themeCode}}"> {{value.themeName}}</option>
     {{/each}}
     </script>
 <%--新增数据节点--%>
@@ -765,8 +719,6 @@
     <script type="text/javascript">
         var ctx = '${ctx}';
         var currentGroupNo = 1;
-        var validatorAdd;
-        var groupUsersSelect2;
         var validAddData;
         var validEditData;
 
@@ -832,11 +784,11 @@
                 },
                 messages: {
                     themeName: {
-                        required: "请输入用户组名称",
-                        remote: "此用户组名称己存在"
+                        required: "请输入主题库名称",
+                        // remote: "此名称己存在"
                     },
                     desc: {
-                        required: "请输入用户组描述信息"
+                        required: "请输入主题库描述信息"
                     }
                 },
                 errorPlacement: function (error, element) { // render error placement for each input type
@@ -872,10 +824,10 @@
                 },
                 messages: {
                     themeName: {
-                        required: "请输入用户组名称"
+                        required: "请输入主题库名称"
                     },
                     desc: {
-                        required: "请输入用户组描述信息"
+                        required: "请输入主题库描述信息"
                     }
                 },
                 errorPlacement: function (error, element) { // render error placement for each input type
@@ -899,174 +851,11 @@
             $("#addThemeForm").validate(validAddData);
             $("#editGroupForm").validate(validEditData);
 
-            //getAllUserList();
-            groupUsersSelect2 = $('#users').select2({
-                placeholder: "请选择用户",
-                allowClear: true
-            });
-
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            //
-            // 用户管理标签页：jquery初始化代码
-            //
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            $("#showUserContent").click(function () {
+            $("#showSubjectContent").click(function () {
                 location.reload();
             });
-
-
-            // queryUser(null, null, null, 1); //用户管理标签页：获得用户列表
-            //选择用户组筛选用户
-            var groupsFilterSelect2 = $("#groupsFilter").select2(
-                {
-                    placeholder: "请选择用户组",
-                    allowClear: true
-                }
-            );
-            //添加用户对话框中，选择用户组
-            var userGroupForAddUserDialogSelect2 = $("#groupsForAddUserDialog").select2({
-                placeholder: "请选择用户组",
-                allowClear: true
-            });
-            //添加、更新用户对话框中，选择用户组
-            var groupsForUpdateUserDialogSelect2 = $('#groupsForUpdateUserDialog').select2({
-                placeholder: "请选择用户组",
-                allowClear: true
-            });
-
-            var addUserValid = {
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    if (element.is(':radio') || element.is(':checkbox')) { //如果是radio或checkbox
-                        var eid = element.attr('name'); //获取元素的name属性
-                        error.appendTo(element.parent()); //将错误信息添加当前元素的父结点后面
-                    } else {
-                        error.insertAfter(element);
-                    }
-                },
-                errorClass: 'error-message',
-                focusInvalid: false,
-                rules: {
-                    userName: "required",
-                    loginId: {
-                        required: true,
-                        remote:
-                            {
-                                url: "${ctx}/user/queryLoginId",
-                                type: "get",
-                                data:
-                                    {
-                                        'loginId': function () {
-                                            return $("#loginId").val();
-                                        }
-                                    },
-                                dataType: "json"
-                            }
-                    },
-                    password: {
-                        required: true,
-                        minlength: 6
-                    },
-                    userRealName: {
-                        required: true
-                    },
-                    idCard: {
-                        required: true,
-                        isIdCard: true
-                    },
-                    sex: {
-                        required: true
-                    },
-                    phoneNo: {
-                        required: true,
-                        isPhoneNum: true
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    }
-                },
-                messages: {
-                    userName: "请输入用户名",
-                    loginId: {
-                        required: "请输入用户账号",
-                        remote: "此用户账号已经存在！"
-                    },
-                    password: {
-                        required: "请输入密码",
-                        minlength: "密码至少为6位"
-                    },
-                    userRealName: {
-                        required: "请输入真实姓名"
-                    },
-                    idCard: {
-                        required: "请输入证件号"
-                    },
-                    sex: {
-                        required: "请选择性别"
-                    }
-                }
-            };
-            var updateUserValid = {
-                errorElement: 'span',
-                errorClass: 'error-message',
-                focusInvalid: false,
-                rules: {
-                    userNameForUpdate: "required",
-
-                    loginIdForUpdate: {
-                        required: true
-                    },
-                    passwordForUpdate: {
-                        required: true,
-                        minlength: 6
-                    },
-                    userRealNameForUpdate: {
-                        required: true
-                    },
-                    idCardForUpdate: {
-                        required: true,
-                        isIdCard: true
-                    },
-                    sexForUpdate: {
-                        required: true
-                    },
-                    phoneNoForUpdate: {
-                        required: true,
-                        isPhoneNum: true
-                    },
-                    emailForUpdate: {
-                        required: true,
-                        email: true
-                    }
-                    /*groupsForUpdateUserDialog: "required",*/
-                },
-                messages: {
-                    userNameForUpdate: "请输入用户名",
-                    loginIdForUpdate: {
-                        required: "请输入用户账号",
-                        /*remote: "此用户账号已经存在！"*/
-                    },
-                    passwordForUpdate: {
-                        required: "请输入密码",
-                        minlength: "密码至少为6位"
-                    },
-                    /*groupsForUpdateUserDialog: "请输入用户组"*/
-                    userRealNameForUpdate: {
-                        required: "请输入真实姓名"
-                    },
-                    idCardForUpdate: {
-                        required: "请输入证件号"
-                    },
-                    sexForUpdate: {
-                        required: "请选择性别"
-                    }
-                }
-            };
-            $("#addUserForm").validate(addUserValid);
-            $("#updateUserForm").validate(updateUserValid);
         });
+
         //自定义手机号验证
         jQuery.validator.addMethod("isPhoneNum", function (value, element) {
             var length = value.length;
@@ -1196,6 +985,7 @@
             $('.form-group').removeClass('has-error');
         }
 
+        //新增主题库保存
         function submitAddData() {
             if (!$("#addThemeForm").valid()) {
                 return;
@@ -1252,33 +1042,7 @@
                         $("#editModal").modal("hide");
                         getData(currentGroupNo);
                     } else if (data.result == 'exist'){
-                        toastr["error"]("主题库编码重复！");
-                    }
-                }
-            });
-        }
-
-        <!--用户组中增加用户信息确认 -->
-        function submitAddUser() {
-            console.log("id=" + $("#spanGroupId").val());
-            $.ajax({
-                type: "POST",
-                url: '${ctx}/group/updateUsers',
-                traditional: true,
-                data: {
-                    "id": $("#spanGroupId").val(),
-                    // "users":JSON.stringify($("#users").val())
-                    "users": $("#users").val()
-                },
-                dataType: "json",
-                success: function (data) {
-                    if (data.result == 'ok') {
-                        toastr["success"]("用户组增加用户成功！", "用户组编辑");
-                        $("#groupModalForAddUser").modal("hide");
-                        //同时更新用户信息
-                        queryUser(null, null, null, 1);
-                    } else {
-                        toastr["error"]("用户组增加用户失败！", "用户组编辑");
+                        toastr["error"]("主题库名称重复！");
                     }
                 }
             });
@@ -1300,59 +1064,11 @@
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////--%>
     <script type="text/javascript">
-        var currentUserPage = 1;
-
         function resetAddUserDialog() {
             $("#addUserForm").validate().resetForm();
             $("#addUserForm").validate().clean();
             $(".form-group").removeClass("has-error");
         }
-
-        //添加用户对话框的保存
-        function agreeAddUser() {
-            if (!$("#addUserForm").valid()) {
-                return;
-            }
-
-            console.log("adduser\n" + (typeof $("#groupsForAddUserDialog").val()) + "\nadduser");
-
-            $.ajax({
-                url: "${ctx}/user/addUser",
-                type: "get",
-                data: {
-                    "userName": $("#userName").val(),
-                    "loginId": $("#loginId").val(),
-                    "password": $("#password").val(),
-
-                    "userRealName": $("#userRealName").val(),
-                    "idCard": $("#idCard").val(),
-                    "sex": $("#sex").val(),
-                    "phoneNo": $("#phoneNo").val(),
-                    "email": $("#email").val(),
-                    "workName": $("#workName").val(),
-                    "workAddress": $("#workAddress").val(),
-                    "laboratoryDirec": $("#laboratoryDirec").val(),
-                    "laboratory": $("#laboratory").val(),
-
-                    "subjectCode": $("#subjectCodeForAddUserDialog").val(),
-                    "groups": ($("#groupsForAddUserDialog").val() == null) ? "" : ($("#groupsForAddUserDialog").val().toString())
-                },
-                dataType: "text",
-                success: function (data) {
-                    console.log(data);
-                    $("#addUserDialog").modal("hide");
-                    setTimeout(function () {
-                    }, 100);
-                    queryUser(null, null, null, 1); //没有搜索条件的情况下，显示第一页
-                    location.reload();
-                },
-                error: function (data) {
-
-                }
-            });
-        }
-
-        //查询 按钮
 
         //查询专业库
         function getSubject(pageNum) {
@@ -1501,10 +1217,10 @@
                       var s="";
                       debugger
                     for(var i=0;i<data.list.length;i++){
-                        if(data.subject.themeId===data.list[i].id){
-                            s+="<option value='"+data.list[i].id +"' selected>"+data.list[i].themeName +"</option>"
+                        if(data.subject.themeCode===data.list[i].themeCode){
+                            s+="<option value='"+data.list[i].themeCode +"' selected>"+data.list[i].themeName +"</option>"
                         }else{
-                            s+="<option value='"+data.list[i].id +"'>"+data.list[i].themeName +"</option>"
+                            s+="<option value='"+data.list[i].themeCode +"'>"+data.list[i].themeName +"</option>"
                         }
 
                     }
@@ -1518,6 +1234,7 @@
             });
         }
 
+        //增加专业库
         function addSubject() {
             $("#subjectThemeName").html(" ");
             clearAllInput();
@@ -1539,7 +1256,7 @@
             });
         }
 
-        //添加专业库
+        //添加专业库，保存新增信息
         function agreeAddSubject() {
             if (!$("#addSubjectForm").valid()) {
                 return;
@@ -1557,7 +1274,7 @@
             formData.append("phone", $("#phone").val());
             formData.append("email", $("#email").val());
             formData.append("serialNo", $("#serialNo").val());
-            formData.append("themeId",$("#subjectThemeName").val());
+            formData.append("themeCode",$("#subjectThemeName").val());
             $.ajax({
                 url: "${ctx}/subjectMgmt/addSubject",
                 type: "post",
@@ -1567,9 +1284,14 @@
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
-                    $("#addSubjectDialog").modal("hide");
+                    if(data==="1"){
+                        toastr["success"]("添加成功！");
+                        $("#addSubjectDialog").modal("hide");
+                    }else if(data==="0"){
+                        toastr["error"]("添加失败！数据节点代码重复");
+                    }
                     getSubject(1); //没有搜索条件的情况下，显示第一页
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     console.log("textStatus = " + textStatus);
@@ -1596,7 +1318,7 @@
             formData.append("phone", $("#phoneM").val());
             formData.append("email", $("#emailM").val());
             formData.append("serialNo", $("#serialNoM").val());
-            formData.append("themeId",$("#updateSubjectThemeName").val());
+            formData.append("themeCode",$("#updateSubjectThemeName").val());
             console.log("agreeUpdateSubject - formData = " + formData);
 
             $.ajax({
@@ -1607,29 +1329,16 @@
                 data: formData,
                 dataType: "json",
                 success: function (data) {
+                    if(data==="1"){
+                        toastr["success"]("修改成功！");
+                        $("#updateSubjectDialog").modal("hide");
+                    }else if(data==="0"){
+                        toastr["error"]("修改失败！");
+                    }
                     console.log(data);
-                    $("#updateSubjectDialog").modal("hide");
                     getSubject(1); //没有搜索条件的情况下，显示第一页
-                    location.reload();
-                    toastr["success"]("修改成功！");
-                },
-                error: function (data) {
+                    // location.reload();
 
-                }
-            });
-        }
-
-        function agreeDeleteUser(agreeDeleteBtn) {
-            $("#deleteUserDialog").modal("hide");
-            var idOfUser = $("#idOfUserToBeDeleted").html();
-            $.ajax({
-                url: "${ctx}/user/deleteUser",
-                type: "get",
-                data:
-                    {"id": idOfUser},
-                dataType: "json",
-                success: function (data) {
-                    queryUser(null, null, null, 1);
                 },
                 error: function (data) {
 

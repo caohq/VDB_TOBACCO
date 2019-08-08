@@ -47,8 +47,8 @@ public class Subject {
     @Field("dbPort")
     private String dbPort; // 关系型数据库端口号
 
-    @Field("themeId")
-    private String themeId;   //主题库，和节点关系一对多
+    @Field("themeCode")
+    private String themeCode;   //主题库Code，和节点关系一对多
 
     private long visitCount; // 访问量统计
     private long downCont; // 下载量统计
@@ -229,6 +229,14 @@ public class Subject {
         this.dbPort = dbPort;
     }
 
+    public String getThemeCode() {
+        return themeCode;
+    }
+
+    public void setThemeCode(String themeCode) {
+        this.themeCode = themeCode;
+    }
+
     @Override
     public String toString() {
         return "Subject{" +
@@ -252,17 +260,9 @@ public class Subject {
                 ", dbPassword='" + dbPassword + '\'' +
                 ", dbHost='" + dbHost + '\'' +
                 ", dbPort='" + dbPort + '\'' +
-                ", themeId='" + themeId + '\'' +
+                ", themeCode='" + themeCode + '\'' +
                 ", visitCount=" + visitCount +
                 ", downCont=" + downCont +
                 '}';
-    }
-
-    public String getThemeId() {
-        return themeId;
-    }
-
-    public void setThemeId(String themeId) {
-        this.themeId = themeId;
     }
 }

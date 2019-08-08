@@ -20,8 +20,11 @@ public class ThemesGallery {
     @Field("createTime")
     private Date createTime;  //主题库创建时间
 
-    @Field("subjects")
-    private List<String> subjects; // 包含的节点
+//    @Field("subjects")
+//    private List<String> subjects; // 包含的节点
+
+    @Field("/filePath")
+    private String filePath;
 
 
     public String getId() {
@@ -62,5 +65,13 @@ public class ThemesGallery {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

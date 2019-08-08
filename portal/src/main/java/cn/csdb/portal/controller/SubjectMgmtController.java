@@ -87,10 +87,6 @@ public class SubjectMgmtController {
 		subject.setFtpServerAddr(ftpServerAddr);
         String addSubjectNotice = subjectMgmtService.addSubject(subject);
         logger.info("subject added, addSubjectNotice : " + addSubjectNotice);
-
-      /*  long totalPages = subjectMgmtService.getTotalPages();
-        String redirectStr = "redirect:/subjectMgmt/querySubject?pageNum=" + totalPages;
-        logger.info("redirect request to querySubject : " + redirectStr);*/
         return addSubjectNotice;
     }
 

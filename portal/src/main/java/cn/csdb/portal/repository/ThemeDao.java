@@ -64,9 +64,13 @@ public class ThemeDao {
        List<ThemesGallery> list=mongoTemplate.find(new Query(Criteria.where("themeCode").is(themesGallery.getThemeCode())),ThemesGallery.class);
        JSONObject jsonObject=new JSONObject();
         if(list.size()==0){
+//            windows测试路径
+            //            String path="G:\\"+themesGallery.getThemeCode();
+            String path="/home/"+themesGallery.getThemeCode();
+            themesGallery.setFilePath(path);
             mongoTemplate.insert(themesGallery);
 //            创建主题库文件夹，/home/themecode
-            String path="/home/"+themesGallery.getThemeCode();
+
             File f1=new File(path);
             if(!f1.exists())
             {
@@ -92,7 +96,7 @@ return jsonObject;
     }
 
     /** 
-    * @Description: 根据id修改主题库信息 
+    * @Description: 根据id修改主题库信息
     * @Param: [themesGallery] 
     * @return: com.alibaba.fastjson.JSONObject 
     * @Author: zcy
@@ -101,7 +105,7 @@ return jsonObject;
     public JSONObject updateThemesGalleryById(ThemesGallery themesGallery){
         JSONObject jsonObject=new JSONObject();
 //        判断themeCode是否重复
-        List<ThemesGallery> list=mongoTemplate.find(new Query(Criteria.where("themeCode").is(themesGallery.getThemeCode())),ThemesGallery.class);
+        List<ThemesGallery> list=mongoTemplate.find(new Query(Criteria.where("themeName").is(themesGallery.getThemeName())),ThemesGallery.class);
         if(list.size()==0){
             Update update = Update.update("id", themesGallery.getId()).set("themeName", themesGallery.getThemeName())
                                                                       .set("themeCode",themesGallery.getThemeCode())
@@ -129,7 +133,8 @@ return jsonObject;
     */ 
     public JSONObject deleteThemeById(String id){
         JSONObject jsonObject=new JSONObject();
-        List<Subject> list=mongoTemplate.find(new Query(Criteria.where("themeId").is(id)),Subject.class);
+        ThemesGallery themesGallery=mongoTemplate.findOne(new Query(Criteria.where("id").is(id)),ThemesGallery.class);
+        List<Subject> list=mongoTemplate.find(new Query(Criteria.where("themeCode").is(themesGallery.getThemeCode())),Subject.class);
         if(list.size()==0){
             mongoTemplate.remove(new Query(Criteria.where("id").is(id)),ThemesGallery.class);
             jsonObject.put("result","ok");

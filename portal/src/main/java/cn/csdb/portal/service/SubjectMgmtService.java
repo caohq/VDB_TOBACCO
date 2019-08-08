@@ -55,9 +55,9 @@ public class SubjectMgmtService {
         // 添加 数据节点
         int addedRowCnt = subjectMgmtDao.addSubject(subject);
         if (addedRowCnt == 1) {
-            addSubjectNotice = "添加数据节点：成功！";
+            addSubjectNotice = "1";
         } else {
-            addSubjectNotice = "添加数据节点：失败！";
+            addSubjectNotice = "0";
         }
         return addSubjectNotice;
     }
@@ -116,9 +116,9 @@ public class SubjectMgmtService {
 
         int modifiedRowCnt = subjectMgmtDao.updateSubject(subject);
         if (modifiedRowCnt == 1) {
-            updatedSubjectNotice = "修改数据节点：成功！";
+            updatedSubjectNotice = "1";
         } else {
-            updatedSubjectNotice = "修改数据节点：失败！";
+            updatedSubjectNotice = "0";
         }
 
         return updatedSubjectNotice;

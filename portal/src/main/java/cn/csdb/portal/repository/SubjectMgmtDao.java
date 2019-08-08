@@ -2,6 +2,7 @@ package cn.csdb.portal.repository;
 
 import cn.csdb.portal.controller.SubjectMgmtController;
 import cn.csdb.portal.model.Subject;
+import cn.csdb.portal.model.ThemesGallery;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
 import com.mongodb.WriteResult;
@@ -65,7 +66,7 @@ public class SubjectMgmtDao {
      * Function Description:
      *
      * @param subject, the wrapped object which contains information of the subject ot be added
-     * @return  retValue, retValue inform user if create db info success or not
+     * @return retValue, retValue inform user if create db info success or not
      */
     public int addSubject(Subject subject) {
         logger.info("enterring SubjectMgmtDao-addSubject");
@@ -86,11 +87,10 @@ public class SubjectMgmtDao {
 
         Runtime runtime = Runtime.getRuntime();
         try {
-
             System.out.println("-----------------------");
             String command1 = "chmod 777 /etc/vsftpd/vftpuseradd";
             runtime.exec(command1).waitFor();
-            Process process = runtime.exec("/etc/vsftpd/vftpuseradd "+subject.getFtpUser()+" "+subject.getFtpPassword());
+            Process process = runtime.exec("/etc/vsftpd/vftpuseradd " + subject.getFtpUser() + " " + subject.getFtpPassword());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,9 +101,31 @@ public class SubjectMgmtDao {
         logger.info("create db, ftp user, ftp path completed!");
 
         //insert subject into mongodb
-        int addedRowCnt = 1;
-        mongoTemplate.insert(subject);
 
+//        判断subjectCode是否重复
+        List<Subject> list = mongoTemplate.find(new Query(Criteria.where("subjectCode").is(subject.getSubjectCode())), Subject.class);
+        int addedRowCnt = 0;
+        if (list.size() == 0) {
+//            subjectCode不重复，创建节点文件夹
+            ThemesGallery themesGallery = mongoTemplate.findOne(new Query(Criteria.where("themeCode").is(subject.getThemeCode())), ThemesGallery.class);
+            String path = themesGallery.getFilePath() + "/" + subject.getSubjectCode();
+//            String path = themesGallery.getFilePath() + "\\" + subject.getSubjectCode();
+            File f1 = new File(path);
+            if (!f1.exists()){
+                f1.mkdirs();
+            }
+            File fileDB=new File(path+"/db");
+            File file=new File(path+"/file");
+//            File fileDB=new File(path+"\\db");
+//            File file=new File(path+"\\file");
+            if(!file.exists()&& !fileDB.exists()){
+                file.mkdirs();
+                fileDB.mkdirs();
+            }
+
+                addedRowCnt = 1;
+            mongoTemplate.insert(subject);
+        }
         return addedRowCnt;
     }
 
@@ -111,7 +133,7 @@ public class SubjectMgmtDao {
      * Function Description:
      *
      * @param dbName, the db'name to be created
-     * @return  retValue, retValue inform user if create db info success or not
+     * @return retValue, retValue inform user if create db info success or not
      */
     private boolean createDb(String dbName) {
         logger.info("enterring SubjectMgmtDao-createDb, dbName = " + dbName);
@@ -152,9 +174,7 @@ public class SubjectMgmtDao {
             if (insertedRows == 1) {
                 logger.info("create ftp user and password success!");
                 retValue = true;
-            }
-            else
-            {
+            } else {
                 logger.info("create ftp user and password failed!");
                 retValue = false;
             }
@@ -170,8 +190,7 @@ public class SubjectMgmtDao {
         return retValue;
     }
 
-    private boolean createFtpPath(String ftpUser, String ftpPassword)
-    {
+    private boolean createFtpPath(String ftpUser, String ftpPassword) {
         logger.info("create ftp path");
         logger.info("ftpServerAddr = " + ftpServerAddr + ", ftpServerPort = " + ftpServerPort);
         boolean retValue = false;
@@ -185,15 +204,11 @@ public class SubjectMgmtDao {
             if (isCreated) {
                 retValue = true;
                 logger.info("create ftp path success!");
-            }
-            else
-            {
+            } else {
                 retValue = false;
                 logger.info("create ftp path failed!");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             logger.info("failed to create ftp path!");
             e.printStackTrace();
         }
@@ -204,10 +219,10 @@ public class SubjectMgmtDao {
     }
 
     /**
-     *Function Description:
+     * Function Description:
      *
      * @param id, the id of Subject to be deleted
-     * @return  deletedRowCnt, the count of rows deleted
+     * @return deletedRowCnt, the count of rows deleted
      */
     public int deleteSubject(String id) {
         logger.info("Delete Subject: subject id to be deleted : " + id);
@@ -250,9 +265,7 @@ public class SubjectMgmtDao {
             int deleteDbCnt = jdbcTemplate.update(deleteDbSql);
             if (deleteDbCnt == 1) {
                 logger.info("Delete Db: elete db success!");
-            }
-            else
-            {
+            } else {
                 logger.info("Delete Db: delete db failed!");
             }
         } catch (Exception e) {
@@ -266,7 +279,7 @@ public class SubjectMgmtDao {
     /**
      * Function Description:
      *
-     * @param ftpUser, ftp user name
+     * @param ftpUser,     ftp user name
      * @param ftpPassword, ftp password
      * @author zzl
      * @date 2018/10/23
@@ -302,8 +315,7 @@ public class SubjectMgmtDao {
         logger.info("delete image completed!");
     }
 
-    private void deleteFtpDir(String ftpUser, String ftpPassword)
-    {
+    private void deleteFtpDir(String ftpUser, String ftpPassword) {
         logger.info("delete ftp path");
         logger.info("ftpServerAddr = " + ftpServerAddr + ", ftpServerPort = " + ftpServerPort);
 
@@ -317,25 +329,17 @@ public class SubjectMgmtDao {
             boolean isDeleted = ftpClient.removeDirectory(ftpDirName);
             if (isDeleted) {
                 logger.info("delete ftp path success!");
-            }
-            else
-            {
+            } else {
                 logger.info("delete ftp path failed!");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             logger.info("delete ftp path failed!");
             e.printStackTrace();
-        }
-        finally {
-            if (ftpClient.isConnected())
-            {
+        } finally {
+            if (ftpClient.isConnected()) {
                 try {
                     ftpClient.disconnect();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -356,7 +360,7 @@ public class SubjectMgmtDao {
         logger.info("update subject");
         logger.info("subject to be updated : " + subject);
 
-        int updatedRowCnt = 0;
+        int updatedRowCnt = 1;
 
         try {
             //reserverd, not userd.
@@ -373,7 +377,7 @@ public class SubjectMgmtDao {
             update.set("email", subject.getEmail());
             update.set("serialNo", subject.getSerialNo());
             update.set("imagePath", subject.getImagePath());
-            update.set("themeId",subject.getThemeId());
+            update.set("themeCode", subject.getThemeCode());
             mongoTemplate.upsert(query, update, "t_subject");
 
         } catch (Exception e) {
@@ -429,12 +433,9 @@ public class SubjectMgmtDao {
         startRowNum = (pageNumber - 1) * rowsPerPage;
 
         DBObject dbObject = null;
-        if (!(subjectNameFilter.equals("")))
-        {
+        if (!(subjectNameFilter.equals(""))) {
             dbObject = QueryBuilder.start().and("subjectName").regex(Pattern.compile("^.*" + subjectNameFilter + ".*$")).get();
-        }
-        else
-        {
+        } else {
             dbObject = QueryBuilder.start().get();
         }
         Query query = new BasicQuery(dbObject).skip(startRowNum).limit(rowsPerPage); // paging
@@ -464,8 +465,7 @@ public class SubjectMgmtDao {
         return totalPages;
     }
 
-    public long getTotalSubject(String subjectNameFilter)
-    {
+    public long getTotalSubject(String subjectNameFilter) {
         DBObject dbObject = QueryBuilder.start().and("subjectName").regex(Pattern.compile("^.*" + subjectNameFilter + ".*$")).get();
         Query query = new BasicQuery(dbObject);
         long totalRows = mongoTemplate.count(query, "t_subject");
@@ -493,8 +493,7 @@ public class SubjectMgmtDao {
     /**
      *
      */
-    public long querySubjectCode(String subjectCode)
-    {
+    public long querySubjectCode(String subjectCode) {
         DBObject dbObject = QueryBuilder.start().and("subjectCode").is(subjectCode).get();
         Query query = new BasicQuery(dbObject);
         long cntOfTheCode = mongoTemplate.count(query, "t_subject");
@@ -502,8 +501,7 @@ public class SubjectMgmtDao {
         return cntOfTheCode;
     }
 
-    public long queryAdmin(String admin)
-    {
+    public long queryAdmin(String admin) {
         DBObject dbObject = QueryBuilder.start().and("loginId").is(admin).get();
         Query query = new BasicQuery(dbObject);
         //long cntOfAdminInSubject = mongoTemplate.count(query, "t_subject");
@@ -531,8 +529,7 @@ public class SubjectMgmtDao {
     }
 
 
-    public List<Subject> getSubjectCodeList()
-    {
+    public List<Subject> getSubjectCodeList() {
         return mongoTemplate.findAll(Subject.class);
     }
 
@@ -541,8 +538,7 @@ public class SubjectMgmtDao {
      *
      * @return retValue, next serial no after last inserted record, the last inserted record's serialNo plus 1,
      */
-    public String getLastSerialNo()
-    {
+    public String getLastSerialNo() {
         DBObject dbObject = QueryBuilder.start().get();
         BasicQuery query = new BasicQuery(dbObject);
         Sort.Direction direction = false ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -550,7 +546,7 @@ public class SubjectMgmtDao {
 
         List<Subject> subjects = mongoTemplate.find(query, Subject.class);
 
-        if(subjects.size()==0){
+        if (subjects.size() == 0) {
             return "0";
         }
 
