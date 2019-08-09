@@ -1,11 +1,13 @@
 package cn.csdb.portal.service;
 
+import cn.csdb.portal.model.DataComposeDemo;
 import cn.csdb.portal.model.DataSrc;
 import cn.csdb.portal.model.EnumData;
 import cn.csdb.portal.model.Subject;
 import cn.csdb.portal.repository.CheckUserDao;
 import cn.csdb.portal.repository.EditDataDao;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,32 +52,17 @@ public class EditDataService {
         return map;
     }
 
-    /**
-     * @Description: 根据PORTALID查询数据
-     * @Param: [dataSrc, tableName, PORTALID]
-     * @return: java.util.List<java.lang.String>
-     * @Author: zcy
-     * @Date: 2019/5/20
-     */
-    public List<String> getDataByPORTALID(String subjectCode, String tableName, String PORTALID) {
-        DataSrc dataSrc = getDataSrc(subjectCode);
-        List<String> list = editDataDao.getDataByPORTALID(dataSrc, tableName, PORTALID);
-        return list;
-    }
-
 
     /**
-     * @Description: 根据PORTALID，删除表数据
+     * @Description: 删除表数据
      * @Param: [tableName, delPORTALID, dataSrc]
      * @return: int
      * @Author: zcy
      * @Date: 2019/5/20
      */
-    public int deleteDate(String tableName, String delPORTALID, String subjectCode) {
+    public JSONObject deleteDate(String tableName, List<Object> listData, List<String> listColName,  String subjectCode) {
         DataSrc dataSrc = getDataSrc(subjectCode);
-        int i = editDataDao.deleteDate(tableName, delPORTALID, dataSrc);
-
-        return i;
+        return editDataDao.deleteDate(tableName, listData, listColName, dataSrc);
     }
 
 
@@ -100,10 +87,9 @@ public class EditDataService {
      * @Author: zcy
      * @Date: 2019/5/20
      */
-    public int updateDate(String tableName, String subjectCode, JSONArray jsonArray, String[] enumnCoumns, String delPORTALID) {
+    public JSONObject updateDate(String tableName, String subjectCode, JSONArray jsonArray, String[] enumnCoumns, JSONArray jsonArrayOld) {
         DataSrc dataSrc = getDataSrc(subjectCode);
-        int i = editDataDao.updateDate(tableName, dataSrc, jsonArray, subjectCode, enumnCoumns, delPORTALID);
-        return i;
+        return editDataDao.updateDate(tableName, dataSrc, jsonArray, subjectCode, enumnCoumns, jsonArrayOld);
     }
 
     /**
@@ -115,10 +101,9 @@ public class EditDataService {
      * @Author: zcy
      * @Date: 2019/5/20
      */
-    public int addData(String subjectCode, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String[] enumnCoumns) {
+    public JSONObject addData(String subjectCode, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String[] enumnCoumns) {
         DataSrc dataSrc = getDataSrc(subjectCode);
-        int i = editDataDao.addData(dataSrc, tableName, pkyList, addAuto, jsonArray, subjectCode, enumnCoumns);
-        return i;
+        return editDataDao.addData(dataSrc, tableName, pkyList, addAuto, jsonArray, subjectCode, enumnCoumns);
     }
 
     /**
@@ -163,16 +148,16 @@ public class EditDataService {
      * @Author: zcy
      * @Date: 2019/5/20
      */
-    public List<Map<String, Object>> getTableData(String subjectCode, String tableName, int pageNo, int pageSize, String searchKey, List<String> columnName) {
+    public List<List<DataComposeDemo>> getTableData(String subjectCode, String tableName, int pageNo, int pageSize, String searchKey, List<String> columnName) {
         DataSrc dataSrc = getDataSrc(subjectCode);
-        List<Map<String, Object>> listMap = new ArrayList<>();
+        List<List<DataComposeDemo>> lists = new ArrayList<>();
         if (searchKey.equals("") || searchKey == null) {
-            listMap = editDataDao.getTableData(dataSrc, tableName, pageNo, pageSize);
+            lists = editDataDao.getTableData(dataSrc, tableName, pageNo, pageSize);
         } else {
-            listMap = editDataDao.selectTableDataBySearchKey(dataSrc, tableName, pageNo, pageSize, searchKey, columnName);
+            lists = editDataDao.selectTableDataBySearchKey(dataSrc, tableName, pageNo, pageSize, searchKey, columnName);
         }
 
-        return listMap;
+        return lists;
     }
 
 
@@ -187,21 +172,6 @@ public class EditDataService {
         DataSrc dataSrc = getDataSrc(subjectCode);
         List<String> list = editDataDao.getDataByColumn(dataSrc, tableName, columnName);
         return list;
-    }
-
-
-    /**
-     * @Description: 显示表数据
-     * @Param: [dataSrc, tableName, pageNo, pageSize]
-     * @return: java.util.List<java.util.List   <   java.lang.Object>>
-     * @Author: zcy
-     * @Date: 2019/5/20
-     */
-    public List<List<Object>> getTableDataTestTmpl(String subjectCode, String tableName, int pageNo, int pageSize) {
-        DataSrc dataSrc = getDataSrc(subjectCode);
-        List<List<Object>> lists = editDataDao.getTableDataTestTmpl(dataSrc, tableName, pageNo, pageSize);
-
-        return lists;
     }
 
     /**
@@ -229,18 +199,6 @@ public class EditDataService {
         return enumDataList1;
     }
 
-    /**
-     * @Description: 新增数据，sql类型，根据val的值回找key值
-     * @Param: [dataSrc, tableName, recolK, recolV]
-     * @return: java.lang.String
-     * @Author: zcy
-     * @Date: 2019/5/7
-     */
-    public String getSqlEnumData(String subjectCode, String tableName, String recolK, String recolV, String recolValue) {
-        DataSrc dataSrc = getDataSrc(subjectCode);
-        String colKey = editDataDao.getSqlEnumData(dataSrc, tableName, recolK, recolV, recolValue);
-        return colKey;
-    }
 
     /**
      * @Description: 查询mysql中所有表名

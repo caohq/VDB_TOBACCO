@@ -1,19 +1,14 @@
 package cn.csdb.portal.repository;
 
-import cn.csdb.portal.model.DataSrc;
-import cn.csdb.portal.model.EnumData;
-import cn.csdb.portal.model.ShowTypeDetail;
-import cn.csdb.portal.model.ShowTypeInf;
+import cn.csdb.portal.model.*;
 import cn.csdb.portal.utils.dataSrc.DataSourceFactory;
 import cn.csdb.portal.utils.dataSrc.IDataSource;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+import java.sql.*;
 import java.util.*;
 
 @Repository
@@ -78,49 +73,6 @@ public class EditDataDao {
         return map;
     }
 
-    /**
-     * @Description: 根据PORTALID查询数据
-     * @Param: [dataSrc, tableName, PORTALID]
-     * @return: java.util.List<java.lang.String>
-     * @Author: zcy
-     * @Date: 2019/5/20
-     */
-    public List<String> getDataByPORTALID(DataSrc dataSrc, String tableName, String PORTALID) {
-        IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
-        Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());
-        List<String> list = new ArrayList<>();
-        try {
-            String sql = "SELECT * from " + tableName + " where PORTALID=?";
-
-            PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setString(1, PORTALID);
-            ResultSet set = pst.executeQuery();
-            ResultSetMetaData rsm = set.getMetaData();
-            while (set.next()) {
-                for (int i = 1; i <= rsm.getColumnCount(); i++) {
-                    if (set.getString(rsm.getColumnName(i)) == null || set.getString(rsm.getColumnName(i)).equals("")) {
-                        list.add("");
-                    } else {
-                        list.add(set.getString(rsm.getColumnName(i)));
-                    }
-//                    System.out.println("查询" + set.getString(rsm.getColumnName(i)));
-                }
-            }
-
-            pst.close();
-            set.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-
-            try {
-                connection.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return list;
-    }
 
 
     /**
@@ -130,31 +82,120 @@ public class EditDataDao {
      * @Author: zcy
      * @Date: 2019/5/20
      */
-    public int deleteDate(String tableName, String delPORTALID, DataSrc dataSrc) {
+    public JSONObject deleteDate(String tableName, List<Object> listData, List<String> listColName,DataSrc dataSource) {
+        List<String> list = selectPrimaryKeyColumn(dataSource, tableName);
+        if (list.size() > 0) {
+            return deleteDateByPrimaryKey(tableName, listData, listColName, dataSource, list);
+        } else {
+            return deleteDateByAllColumn(tableName, listData, listColName, dataSource);
+        }
+    }
+
+    //    查询各个数据库主键和列
+    public List<String> selectPrimaryKeyColumn(DataSrc dataSource, String tableName) {
+        List<String> s = new ArrayList<>();
+
+        Map<String, List<String>> listMap = getTableStructure(dataSource, tableName);
+
+        List<String> list1 = listMap.get("COLUMN_NAME");
+        List<String> list2 = listMap.get("pkColumn");
+        for (int i = 0; i < list1.size(); i++) {
+            if (list2.get(i).equals("true")) {
+                s.add(list1.get(i));
+            }
+        }
+        return s;
+    }
+
+    public JSONObject deleteDateByPrimaryKey(String tableName, List<Object> listData, List<String> listColName, DataSrc dataSrc, List<String> listPk) {
         int i = 0;
+        JSONObject jsonObject=new JSONObject();
         IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
         Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());
         try {
-            String sql = "delete from " + tableName + " where PORTALID=?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, delPORTALID);
-            i = ps.executeUpdate();
-            System.out.println(sql);
+            String sql = "";
+                sql = "delete from " + tableName + " where ";
 
+            String s = " ";
+            for (int j = 0; j < listPk.size(); j++) {
+                    s += listPk.get(j) + " =? and ";
+            }
+            s = s.substring(0, s.length() - 4);
+            sql = sql + s;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            for (int k = 0, j = 1; k < listColName.size(); k++) {
+                for (int i1 = 0; i1 < listPk.size(); i1++) {
+                    if (listColName.get(k).equals(listPk.get(i1))) {
+                        ps.setObject(j, listData.get(k));
+                        j++;
+                    }
+                }
+            }
+            System.out.println("主键删除：" + sql);
+            i = ps.executeUpdate();
             ps.close();
         } catch (Exception e) {
-
+            e.printStackTrace();
+            jsonObject.put("deleteReuslt",e);
         } finally {
             try {
                 connection.close();
+                if(i>0){
+                    jsonObject.put("deleteReuslt","1");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        return i;
+        return jsonObject;
     }
 
+
+    public JSONObject deleteDateByAllColumn(String tableName, List<Object> listData, List<String> listColName, DataSrc dataSrc) {
+        int i = 0;
+        JSONObject jsonObject=new JSONObject();
+        IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
+        Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());;
+        try {
+            String sql = "";
+            sql = "delete from " + tableName + " where ";
+
+
+            String s = " ";
+            for (int j = 0; j < listColName.size(); j++) {
+                if (!listData.get(j).equals("") && listData.get(j) != null) {
+                        s += listColName.get(j) + " =? and ";
+                }
+            }
+            s = s.substring(0, s.length() - 4);
+            sql = sql + s;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            for (int k = 0, j = 1; k < listData.size(); k++) {
+                if (!listData.get(k).equals("") && listData.get(k) != null) {
+                    ps.setObject(j, listData.get(k));
+                    j++;
+                }
+            }
+            System.out.println("全匹配删除：" + sql);
+            i = ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonObject.put("deleteReuslt",e);
+        } finally {
+            try {
+                connection.close();
+                if(i>0){
+                    jsonObject.put("deleteReuslt","1");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return jsonObject;
+    }
 
     /**
      * @Description: 获得表列名
@@ -196,42 +237,67 @@ public class EditDataDao {
      * @Author: zcy
      * @Date: 2019/5/22
      */
-    public int updateDate(String tableName, DataSrc dataSrc, JSONArray jsonArray2, String subjectCode,
-                          String[] enumnCoumns, String delPORTALID) {
-        int check = 0;
+    public JSONObject updateDate(String tableName, DataSrc dataSrc, JSONArray jsonArray2, String subjectCode,
+                          String[] enumnCoumns, JSONArray jsonArrayOld) {
         IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
         Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());
+        int check = 0;
+        JSONObject jsonObject=new JSONObject();
         ShowTypeInf showTypeInf = showTypeInfDao.checkData(tableName, subjectCode);
-//       旧数据
-        List<String> list = getDataByPORTALID(dataSrc, tableName, delPORTALID);
         try {
             String updatestr = " set ";
             for (int i = 0; i < jsonArray2.size(); i++) {
                 String column = jsonArray2.getJSONObject(i).getString("name");
                 Object value = jsonArray2.getJSONObject(i).getString("value");
-                if (list.get(i).equals(value)) {
+                if (jsonArrayOld.get(i).equals(value)) {
 
-                } else if ((list.get(i).equals("") || list.get(i) == null) && (value.equals("") || value == null)) {
+                } else if ((jsonArrayOld.get(i).equals("") || jsonArrayOld.get(i) == null) && (value.equals("") || value == null)) {
 
                 } else {
-                    updatestr += "" + column + " = ? , ";
+                        updatestr += "" + column + " = ? ,";
                 }
             }
+//            数据没有发生任何改变
             if (updatestr.equals(" set ")) {
-                check = 1;
-                return check;
+                jsonObject.put("data","1");
             }
             updatestr = updatestr.substring(0, updatestr.length() - 2);
-            String conditionstr = " PORTALID  = '" + delPORTALID + "' ";
-            String sql = "update " + tableName + "" + updatestr + " where " + conditionstr;
+            String conditionstr = "";
+
+            List<String> list = selectPrimaryKeyColumn(dataSrc, tableName);
+            if (list.size() > 0) {  //已设置主键
+                for (int i = 0; i < jsonArray2.size(); i++) {
+                    String column = jsonArray2.getJSONObject(i).getString("name");
+                    for (int j = 0; j < list.size(); j++) {
+                        if (list.get(j).equals(column)) {
+                                conditionstr += " " + column + " = '" + jsonArrayOld.get(i) + "'  and ";
+                        }
+                    }
+                }
+            } else {   //未设置主键
+                for (int i = 0; i < jsonArray2.size(); i++) {
+                    if (!jsonArrayOld.get(i).equals("") && jsonArrayOld.get(i) != null) {
+                        String column = jsonArray2.getJSONObject(i).getString("name");
+                            List<String> list1=getTableStructure(dataSrc,tableName).get("DATA_TYPE");
+                            if("float".equals(list1.get(i))){
+                                conditionstr += " " + column + " = " + jsonArrayOld.get(i) + "  and ";
+                            }else {
+                                conditionstr += " " + column + " = '" + jsonArrayOld.get(i) + "'  and ";
+                            }
+                    }
+                }
+            }
+            conditionstr = conditionstr.substring(0, conditionstr.length() - 4);
+            String sql = "";
+            sql = "update " + tableName + "" + updatestr + " where " + conditionstr;
 
             PreparedStatement pst = connection.prepareStatement(sql);
             for (int i = 0, j = 1; i < jsonArray2.size(); i++) {
                 String column = jsonArray2.getJSONObject(i).getString("name");
                 Object value = jsonArray2.getJSONObject(i).getString("value");
-                if (list.get(i).equals(value)) {
+                if (jsonArrayOld.get(i).equals(value)) {
 
-                } else if ((list.get(i).equals("") || list.get(i) == null) && (value.equals("") || value == null)) {
+                } else if ((jsonArrayOld.get(i).equals("") || jsonArrayOld.get(i) == null) && (value.equals("") || value == null)) {
 
                 } else {
                     value = getEnumKeyByVal(showTypeInf, enumnCoumns, column, value, dataSrc);
@@ -244,14 +310,20 @@ public class EditDataDao {
             pst.close();
         } catch (Exception e) {
             e.printStackTrace();
+            jsonObject.put("updateResult",e);
         } finally {
             try {
                 connection.close();
+                if(check>0){
+                    jsonObject.put("data","1");
+                }else{
+                    jsonObject.put("data","0");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return check;
+        return jsonObject;
     }
 
     /**
@@ -261,9 +333,10 @@ public class EditDataDao {
      * @Author: zcy
      * @Date: 2019/5/22
      */
-    public int addData(DataSrc dataSrc, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String subjectCode, String[] enumnCoumns) {
+    public JSONObject addData(DataSrc dataSrc, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String subjectCode, String[] enumnCoumns) {
         IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
         Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());
+        JSONObject jsonObject=new JSONObject();
         int check = 0;
         ShowTypeInf showTypeInf = showTypeInfDao.checkData(tableName, subjectCode);
         try {
@@ -278,11 +351,6 @@ public class EditDataDao {
                         columns += "" + col + " ,";
                         values += " ? ,";
                     }
-                    if (col.equals("PORTALID")) {
-                        columns += "" + col + " ,";
-                        values += " ? ,";
-                    }
-
                 }
             }
             columns = columns.substring(0, columns.length() - 1);
@@ -295,18 +363,11 @@ public class EditDataDao {
                 Object val = jsonArray.getJSONObject(i).getString("columnValue");
                 if (pkyList.get(i).equals("PRI") && addAuto.get(i).equals("auto_increment")) { //有主键且自增
                 } else {
-                    if (col.equals("PORTALID")) {
-                        String uuid = UUID.randomUUID().toString();
-                        pst.setObject(j, uuid);
-                        j++;
-                    } else {
                         if (!val.toString().equals("") && val != null) {
                             val = getEnumKeyByVal(showTypeInf, enumnCoumns, col, val, dataSrc);
                             pst.setObject(j, val);
                             j++;
-                        }
                     }
-
                 }
             }
             System.out.println("新增：" + sql);
@@ -316,14 +377,18 @@ public class EditDataDao {
             pst.close();
         } catch (Exception e) {
             e.printStackTrace();
+            jsonObject.put("addResult",e);
         } finally {
             try {
+                if(check>0){
+                    jsonObject.put("data","1");
+                }
                 connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return check;
+        return jsonObject;
     }
 
     /**
@@ -455,30 +520,33 @@ public class EditDataDao {
      * @Author: zcy
      * @Date: 2019/5/20
      */
-    public List<Map<String, Object>> getTableData(DataSrc dataSrc, String tableName, int pageNo, int pageSize) {
+    public List<List<DataComposeDemo>> getTableData(DataSrc dataSrc, String tableName, int pageNo, int pageSize) {
         IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
         Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());
-        List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+        List<List<DataComposeDemo>> lists = new ArrayList<>();
         int start = pageSize * (pageNo - 1);
+        int rownum = pageNo * pageSize;
         try {
-//           select COLUMN_NAME,DATA_TYPE,COLUMN_COMMENT from information_schema.COLUMNS where table_name = '表名' and table_schema = '数据库名称';
-            String sql = "select * from " + tableName + " limit " + start + " ," + pageSize + "";
+            String sql = "";
+            sql = "select * from " + tableName + " limit " + start + " ," + pageSize + "";
 
-            //         时间格式的数据怎么获得
+            System.out.println("查询的sql:" + sql);
             PreparedStatement pst = connection.prepareStatement(sql);
             ResultSet set = pst.executeQuery();
             ResultSetMetaData rsm = set.getMetaData();
 
             while (set.next()) {
-                Map<String, Object> map = new LinkedHashMap<>();
-                for (int i = 1; i <= rsm.getColumnCount(); i++) {
+                List<DataComposeDemo> list = new ArrayList<>();
+                for (int i=1; i <= rsm.getColumnCount(); i++) {
+                    DataComposeDemo dataComposeDemo = new DataComposeDemo();
                     if (set.getString(rsm.getColumnName(i)) == null) {
-                        map.put(rsm.getColumnName(i), "");
+                        dataComposeDemo.setData(" ");
                     } else {
-                        map.put(rsm.getColumnName(i), set.getString(rsm.getColumnName(i)));
+                        dataComposeDemo.setData(set.getString(rsm.getColumnName(i)));
                     }
+                    list.add(dataComposeDemo);
                 }
-                listMap.add(map);
+                lists.add(list);
             }
             pst.close();
             set.close();
@@ -491,7 +559,7 @@ public class EditDataDao {
                 e.printStackTrace();
             }
         }
-        return listMap;
+        return lists;
     }
 
     /**
@@ -500,44 +568,45 @@ public class EditDataDao {
      * @return: java.util.List<java.util.Map < java.lang.String , java.lang.Object>>
      * @Author: zcy
      * @Date: 2019/5/23
-*/ 
-    public List<Map<String, Object>> selectTableDataBySearchKey(DataSrc dataSrc, String tableName, int pageNo, int pageSize, String searchKey, List<String> columnName) {
+*/
+    public List<List<DataComposeDemo>> selectTableDataBySearchKey(DataSrc dataSrc, String tableName, int pageNo, int pageSize, String searchKey, List<String> columnName) {
         IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
         Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());
-        List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+        List<List<DataComposeDemo>> lists = new ArrayList<>();
         int start = pageSize * (pageNo - 1);
+        int rownum = pageNo * pageSize;
         searchKey = "%" + searchKey + "%";
         try {
             String s = "";
             for (int j = 0; j < columnName.size(); j++) {
-                if (!columnName.get(j).equals("PORTALID")) {
                     s += columnName.get(j) + " like ? or ";
-                }
             }
             s = s.substring(0, s.length() - 3);
-            String sql = "select * from " + tableName + " where " + s + " limit " + start + " ," + pageSize + "";
+            String sql = "";
+            sql = "select * from " + tableName + " where " + s + " limit " + start + " ," + pageSize + "";
+
+
 
             PreparedStatement pst = connection.prepareStatement(sql);
-            for (int j = 0, i = 1; j < columnName.size(); j++) {
-                if (!columnName.get(j).equals("PORTALID")) {
-                    pst.setObject(i, searchKey);
-                    i++;
-                }
+            for (int j = 0; j < columnName.size(); j++) {
+                pst.setObject(j + 1, searchKey);
             }
             System.out.println("sql：" + sql);
             ResultSet set = pst.executeQuery();
             ResultSetMetaData rsm = set.getMetaData();
 
             while (set.next()) {
-                Map<String, Object> map = new LinkedHashMap<>();
-                for (int i = 1; i <= rsm.getColumnCount(); i++) {
+                List<DataComposeDemo> list = new ArrayList<>();
+                for (int i=1; i <= rsm.getColumnCount(); i++) {
+                    DataComposeDemo dataComposeDemo = new DataComposeDemo();
                     if (set.getString(rsm.getColumnName(i)) == null) {
-                        map.put(rsm.getColumnName(i), "");
+                        dataComposeDemo.setData("");
                     } else {
-                        map.put(rsm.getColumnName(i), set.getString(rsm.getColumnName(i)));
+                        dataComposeDemo.setData(set.getString(rsm.getColumnName(i)));
                     }
+                    list.add(dataComposeDemo);
                 }
-                listMap.add(map);
+                lists.add(list);
             }
             pst.close();
             set.close();
@@ -550,7 +619,7 @@ public class EditDataDao {
                 e.printStackTrace();
             }
         }
-        return listMap;
+        return lists;
     }
 
     /**

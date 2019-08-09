@@ -22,6 +22,7 @@
     <link href="${ctx}/resources/css/home.css" type="text/css"/>
     <link href="${ctx}/resources/bundles/timepicker/jquery.timepicker.css" type="text/css"/>
     <link href="${ctx}/resources/bundles/bootstrap-datepicker/css/datepicker.css"/>
+    <link href="${ctx}/resources/css/timeStyle.css" rel="stylesheet" type="text/css"/>
 
     <style type="text/css">
         /*超出隐藏*/
@@ -235,54 +236,178 @@
 <script type="text/html" id="checkdataTmpl">
     {{each data as value i}}
     <tr>
-        {{if value.colName=="PORTALID"}}
-        {{else if value.dataType=="datetime"}}
-        <td>{{value.colName}}</td>
-        <td>{{value.dataType}}</td>
-        <td>{{value.columnComment}}</td>
-        <td>{{dateFormat(value.data)}}</td>
-        {{else}}
+        <%--{{if (value.dataType=="datetime" || value.dataType=="DATE" ||value.dataType=="TIMESTAMP" || value.dataType=="datetime2") &&--%>
+        <%--value.data!=null && value.data!=""}}--%>
+        <%--<td>{{value.colName}}</td>--%>
+        <%--<td>{{value.dataType}}</td>--%>
+        <%--<td>{{value.columnComment}}</td>--%>
+        <%--<td>{{value.data}}</td>--%>
+        <%--{{else}}--%>
         <td>{{value.colName}}</td>
         <td>{{value.dataType}}</td>
         <td>{{value.columnComment}}</td>
         <td>{{value.data}}</td>
-        {{/if}}
+        <%--{{/if}}--%>
     </tr>
     {{/each}}
 </script>
 
 <%--新增数据--%>
 <script type="text/html" id="adddataTmpl">
-    {{each data as value i}}
+    {{each dataComposeDemoList as value i}}
     <tr>
-        {{if value.colName=="PORTALID"}}
-        {{else if value.pkColumn=="PRI" && value.autoAdd=="auto_increment"}}
+        {{if value.pkColumn=="true" && value.autoAdd=="true"}}
         {{else}}
         <td>{{value.colName}}</td>
         <td>{{value.dataType}}</td>
         <td>{{value.columnComment}}</td>
-        <td><input type="text" /></td>
+        <td id="{{value.colName}}_td">
+            {{if value.dataType=="date"}}
+            <input class='selectDate' style='width: 100%;height:100%;' id="{{value.colName}}" type='text'
+                   placeholder='请选择'/>
+            {{else if value.dataType=="time"}}
+            <input class='selectTime' style='width: 100%;height:100%;' id="{{value.colName}}" type='text'
+                   placeholder='请选择'/>
+            {{else if value.dataType=="datetime" || value.dataType=="DATE" || value.dataType=="TIMESTAMP" || value.dataType=="datetime2"}}
+            <input class='selectDateTime' style='width: 100%;height:100%;' id="{{value.colName}}" type='text'
+                   placeholder='请选择'/>
+            {{else}}
+            <input type="text" style='width: 100%;height:100%;' id="{{value.colName}}" dataType="{{value.dataType}}"
+                   onblur="func_blur(this)" class='form-control' name="{{value.colName}}"/>
+            <p id="{{value.colName}}_id" style='display: none;color:red;font-size: 12px;'></p>
+            {{/if}}
+        </td>
         {{/if}}
     </tr>
     {{/each}}
 </script>
 
 <%--显示表数据--%>
-<script type="text/html" id="showTableDataTestTheadTmpl">
-    {{each data as value i}}
-    <tr>
-        {{include 'scoreTemplate' $value}}   <!--引入子模板-->
-        <td>操作</td>
-    </tr>
+<script type="text/html" id="showTableDataTheadTmpl">
+    <table class='table table-hover biaoge' spellcheck='0' border='0'>
+        {{each datas as itemList i}}
+        {{if i == 0}}
+        <thead>
+        <tr class="table_tr">
+            {{each itemList as item j}}
+            {{if j<5}}
+            <td>{{item.columnName}}<br/>{{item.columnComment}}</td>
+            {{else}}
+            <td style="display: none">{{item.columnName}}<br/>{{item.columnComment}}</td>
+            {{/if}}
+            {{/each}}
+            <td>操作</td>
+        </tr>
+        </thead>
+        {{/if}}
+        {{/each}}
+
+        <tbody>
+        {{each datas as itemList n}}
+        {{if n>0}}
+        <tr>
+            {{each itemList as item k}}
+            {{if k<5}}
+            {{if (item.dataType=="datetime" || item.dataType=="DATE" || item.dataType=="datetime2") &&
+            item.data!=null && item.data!=" "}}
+            <td title="{{subStringDate(item.data)}}"
+                style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+                {{subStringDate(item.data)}}
+            </td>
+            {{else}}
+            <td title="{{item.data}}" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+                {{item.data}}
+            </td>
+            {{/if}}
+            {{else}}
+            {{ if (item.dataType=="datetime" || item.dataType=="DATE" || item.dataType=="datetime2") &&
+            item.data!=null && item.data!=" " }}
+            <td title="{{subStringDate(item.data)}}" style="display: none;">{{subStringDate(item.data)}}</td>
+            {{else}}
+            <td title="{{item.data}}" style="display: none;">{{item.data}}</td>
+            {{/if}}
+            {{/if}}
+            {{/each}}
+            <td align='center'>
+                <table class='0' cellspacing='0' border='0' align='scenter'>
+                    <tr>
+                        <td class='bianji'>
+                            <a src='#' onclick='updateData(this)'>
+                                <i class='fa fa-pencil-square-o' aria-hidden='true'></i>修改</a></td>
+                        <td width='1'></td>
+                        <td class='chakan'><a href='#' onclick='checkDada(this)'>
+                            <i class='fa fa-eye' aria-hidden='true'></i>查看</a></td>
+                        <td width='1'></td>
+                        <td class='shanchu'><a href='#' onclick='deleteDate(this)'>
+                            <i class='fa fa-trash-o fa-fw' aria-hidden='true'></i>删除</a></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        {{/if}}
+        {{/each}}
+        </tbody>
+    </table>
+
+
+    {{each tablist as item j}}
+    <div class='review-item clearfix'>
+        <div id='page_div{{item.tableName}}' style='padding-top: 25px; float: left;'>当前第&nbsp;
+            <span style='color:blue;' id='currentPageNo{{item.tableName}}'></span>&nbsp;页,&nbsp;共&nbsp;
+            <span style='color:blue;' id='totalPages{{item.tableName}}'></span>页，
+            <span style='color:blue;' id='totalCount{{item.tableName}}'></span>
+            条数据
+        </div>
+        <div style='float: right;'>
+            <div id='pagination{{item.tableName}}'>
+            </div>
+        </div>
+    </div>
     {{/each}}
 </script>
-<script id="scoreTemplate" type="text/html">
-    {{each dataDatil}}
-    <td>{{$value.tabledata1}}</td>
-    <td>{{$value.tabledata2}}</td>
-    <td>{{$value.tabledata3}}</td>
-    <td>{{$value.tabledata4}}</td>
-    <td>{{$value.tabledata5}}</td>
+
+<%--更新数据--%>
+<script id="toUpdateDataTmpl" type="text/html">
+    {{each dataComposeDemoList as value i}}
+    <tr>
+        <td>{{value.colName}}</td>
+        <td>{{value.dataType}}</td>
+        <td>{{value.columnComment}}</td>
+        <td id="{{value.colName}}_update">
+            {{if value.dataType=="date"}}
+            {{if value.data!=="" && value.data!==null}}
+            <input class='selectDate' style='width: 100%;height:100%;' id="{{value.colName}}_coldata" type='text'
+                   value="{{value.data}}"/>
+            {{else}}
+            <input class='selectDate' style='width: 100%;height:100%;' id="{{value.colName}}_coldata" type='text'
+                   placeholder="请选择"/>
+            {{/if}}
+            {{else if value.dataType=="time"}}
+            {{if value.data!=="" && value.data!==null}}
+            <input class='selectTime' style='width: 100%;height:100%;' data-format="hh:mm:ss" id="{{value.colName}}_coldata" type='text'
+                   value="{{value.data}}"/>
+            {{else}}
+            <input class='selectTime' style='width: 100%;height:100%;' id="{{value.colName}}_coldata" type='text'
+                   placeholder="请选择" />
+            {{/if}}
+            {{else if value.dataType=="datetime" || value.dataType=="DATE" || value.dataType=="TIMESTAMP" || value.dataType=="datetime2"}}
+            {{if value.data!=null && value.data!=""}}
+            <input class='selectDateTime' style='width: 100%;height:100%;' id="{{value.colName}}_coldata"
+                   type='text'
+                   value="{{value.data}}"/>
+            {{else}}
+            <input class='selectDateTime' style='width: 100%;height:100%;' id="{{value.colName}}_coldata"
+                   type='text'
+                   placeholder="请选择"/>
+            {{/if}}
+            {{else}}
+            <input type="text" style='width: 100%;height:100%;' id="{{value.colName}}_coldata"
+                   dataType="{{value.dataType}}" value="{{value.data}}" class='form-control'
+                   onblur="func_blur(this)" name="{{value.colName}}"/>
+            <p id="{{value.colName}}_id" style='display: none;color:red;font-size: 12px;'></p>
+            {{/if}}
+        </td>
+    </tr>
     {{/each}}
 </script>
 
@@ -312,13 +437,14 @@
                 data: {"subjectCode": subjectCode},
                 success: function (data) {
                     $("#alltableName").html("");
-                    var html = template("tableNameTempl", data);
-                    $("#alltableName").append(html);
-                    $("#alltableName").show();
                     if (data.list != null) {
-                        $("#btn_addTableData").show();
                         var searchKey = "";
+                        var html = template("tableNameTempl", data);
                         editTable_func(subjectCode, data.list[0].tableName, 1, searchKey);
+                        $("#alltableName").append(html);
+                        $("#alltableName").show();
+                        $("#btn_addTableData").show();
+
                     }
                 }
             });
@@ -339,12 +465,11 @@
         }
 
         function searchTableData(i) {
-            var searchKey = $(i).parent().siblings("input").val();
+            var searchKey = $(i).parent().siblings("input").val().trim();
             var tableName = $("#ul_div111 li.active a").text();
 
             $("#btn_addTableData").show();
             var pageNo = 1;
-            // editTable_func(subjectCode, tableName, pageNo,searchKey);
             clickPageButton(subjectCode, tableName, pageNo, searchKey);
         }
 
@@ -355,171 +480,56 @@
             $.ajax({
                 type: "post",
                 url: "${ctx}/showTableData",
-                data: {"subjectCode": subjectCode, "tableName": tableName, "pageNo": pageNo, "searchKey": searchKey},
+                data: {"subjectCode": subjectCode, "tableName": tableName, "pageNo": pageNo, "searchKey": searchKey.trim()},
                 dataType: "json",
                 success: function (data) {
-                    var arr = data.columns;
-                    var dataType = data.dataType;
+                    var columnName = data.columns;
                     var columnComment = data.columnComment;
                     var dataArry = data.dataDatil;
-                    console.log(dataArry);
-                    var count=dataArry.length;
-                    var delPORTALID;
-                    var tabs = "";
-                    var s = " ";
                     var tableComment = data.tableComment;
-                    s = "<table id='" + tableName + "' class='table table-hover biaoge' spellcheck='0' border='0'>" +
-                        "<thead ><tr class='table_tr'>";
-                    //表头
-                    var il = 0;
-                    if (dataArry.length > 0) {
-                        for (var i = 0; i < arr.length; i++) {
-                            if (il < 5) {
-                                if (arr[i] === "PORTALID") {
-                                    s += "<td style='display:none;' title=" + arr[i] + ">" + arr[i] + "</td>";
-                                } else {
-                                    s += "<td style='width:15%;'>" + arr[i] + "<br/><p title=" + columnComment[i] + ">" + columnComment[i] + "</p></td>";
-                                    il++;
-                                }
-                            } else {
-                                s += "<td style='display:none;'title=" + arr[i] + ">" + arr[i] + "</td>";
-                            }
-                        }
-                    }
-                    var ss = "";
-                    if (dataArry.length > 0) {
-                        ss += "<tbody>";
-                        for (var key in dataArry) {
-                            ss+="<tr>";
-                            var d = dataArry[key];
-                            var i = 0;
-                            var j = 0;
-                            for (var k in d) {
-                                if (j < 5) {
-                                    if (k === arr[i]) {
-                                        if (dataType[i] === "datetime" && d[k] !== null && d[k] !== " ") {
-                                            var date = d[k].split(".");
-                                            d[k] = date[0];
-                                        }
-                                        if (k === "PORTALID") {
-                                            delPORTALID = d[k];
-                                            ss += "<td  style='display:none;' title='" + d[k] + "'>" + d[k] + "</td>";
-                                        } else {
-                                            ss += "<td title='" + d[k] + "' style='word-break:keep-all;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;'><xmp style='font-family: Arial, 微软雅黑;'>" + d[k] + "</xmp></td>";
-                                            j++;
-                                        }
-                                    } else {
-                                        if (dataType[i] === "datetime" && d[arr[i]] !== null && d[arr[i]] !== " ") {
-                                            var date = d[arr[i]].split(".");
-                                            d[arr[i]] = date[0];
-                                        }
-                                        if (arr[i] === "PORTALID") {
-                                            delPORTALID = d[arr[i]];
-                                            ss += "<td style='display:none;' title='" + d[arr[i]] + "'>" + d[arr[i]] + "</td>";
-                                        } else {
-                                            ss += "<td title='" + d[arr[i]] + "' style='word-break:keep-all;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;'><xmp style='font-family: Arial, 微软雅黑;'>" + d[arr[i]] + "</xmp></td>";
-                                            j++;
-                                        }
-                                    }
-                                    i++;
-                                } else {
-                                    if (k === arr[i]) {
-                                        if (k === "PORTALID") {
-                                            delPORTALID = d[k];
-                                        }
-                                    } else {
-                                        if (arr[i] === "PORTALID") {
-                                            delPORTALID = d[arr[i]];
-                                        }
-                                    }
-                                    i++;
-                                }
-                            }
-                            ss += "<td align='center'><table class='0' cellspacing='0' border='0' align='center'><tr>";
-                            if (data.isSync === 0) {
-                                ss += "<td class='bianji'><a src='#' onclick=\" updateData('" + delPORTALID + "','" + tableName + "','" + subjectCode + "')\">" +
-                                    "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>修改</a></td><td width='1'></td>";
-                            }
-                            ss += "<td class='chakan'><a href='#' onclick=\"checkDada('" + delPORTALID + "','" + tableName + "','" + subjectCode + "')\">" +
-                                "<i class='fa fa-eye' aria-hidden='true'></i>查看</a></td><td width='1'></td>" +
-                                "<td class='shanchu'><a href='#' onclick=\"deleteDate('" + delPORTALID + "','" + tableName + "','" + subjectCode + "','"+ count +"')\">" +
-                                "<i class='fa fa-trash-o fa-fw' aria-hidden='true'></i>删除</a></td></tr></table></td></tr>";
-                        }
-                        ss += "</tbody>";
-                        s += "<td style='width:22%;'>操作</td></tr></thead>";
-                        tabs = s + ss + "</table>";
 
-                        tabs += "<div class='review-item clearfix'><div id='page_div" + tableName + "' style='padding-top: 25px; float: left;'>" +
-                            "当前第&nbsp;<span style='color:blue;' id='currentPageNo" + tableName + "'></span>&nbsp;页,&nbsp;共&nbsp;<span style='color:blue;' id='totalPages" + tableName + "'></span>页，<span style='color:blue;' id='totalCount" + tableName + "'></span>" +
-                            "条数据</div><div style='float: right;' ><div id='pagination" + tableName + "'></div></div></div>";
+                    if (dataArry !== null) {
+                        var columnList = [];
+                        var tablist = [];
+                        for (var i = 0; i < columnName.length; i++) {
+                            columnList.push({columnName: columnName[i], columnComment: columnComment[i]});
+                        }
+                        tablist.push({tableName: tableName, subjectCode: subjectCode});
+                        data.dataDatil.unshift(columnList);
+                        template.helper("subStringDate", subStringDate);
+                        var html = template("showTableDataTheadTmpl", {
+                            "datas": data.dataDatil,
+                            "isSync": data.isSync,
+                            "tablist": tablist
+                        });
 
-                        var item = {'id': tableName, 'name': tableName, 'closable': true, 'template': tabs};
+                        var item = {'id': tableName, 'name': tableName, 'closable': true, 'template': html};
                         closableTab.addTab(item); // 执行创建页签
                         fun_limit(subjectCode, tableName, data, searchKey);
                         closableTab.addTabComment({
                             'id': tableName,
                             'tableComment': tableComment,
                             'closable': true,
-                            'template': tabs
-                        })
+                            'template': html
+                        });
+                        if (data.isSync !== 0) {
+                            $(".bianji").hide();
+                        }
                     } else {
-                        tabs = "";
                         $(ids).html(" ");
-                        var item = {'id': tableName, 'name': tableName, 'closable': true, 'template': tabs};
-                        // 执行创建页签
-                        closableTab.addTab(item);
-                        var searchKey1=$(".input-group input").val();
-                        var click="";
-                        if(searchKey1===""||searchKey1==null){
-                            click= " <h5 style='font-size: 20px;text-align: center;margin-right: 30%;'>该表暂时没有数据</h5>";
-                        }else{
+                        var click = "";
+                        if (searchKey === "" || searchKey == null) {
+                            click = " <h5 style='font-size: 20px;text-align: center;margin-right: 30%;'>该表暂时没有数据</h5>";
+                        } else {
                             click = " <h5 style='font-size: 20px;text-align: center;margin-right: 30%;'>没有查询到相关数据</h5>";
                         }
                         $(ids).append(click);
                     }
+
                 }
             });
         }
 
-        //表数据，template模板
-        function showTableDataTestTmpl(subjectCode, tableName, pageNo) {
-            var ids = "#tab_container_" + tableName;
-            $.ajax({
-                type: "post",
-                url: "${ctx}/showTableDataTestTmpl",
-                data: {"subjectCode": subjectCode, "tableName": tableName, "pageNo": pageNo},
-                dataType: "json",
-                success: function (data) {
-                    data.push("subjectCode",subjectCode);
-                    data.push("tableName",tableName);
-                    data.push("pageNo",pageNo);
-                    var arr = data.columns;
-                    // var dataType = data.dataType;
-                    var columnComment = data.columnComment;
-                    var dataArry = data.dataDatil;
-
-                     var s = "<table id='" + tableName + "' class='table table-hover biaoge' spellcheck='0' border='0'>" +
-                        "<thead><tr class='table_tr'>";
-                    var il = 0;
-                    if (dataArry.length > 0) {
-                        for (var i = 0; i < arr.length; i++) {
-                            if (il < 5) {
-                                if (arr[i] === "PORTALID") {
-                                    s += "<td style='display:none;' title=" + arr[i] + ">" + arr[i] + "</td>";
-                                } else {
-                                    s += "<td style='width:15%;'>" + arr[i] + "<br/><p title=" + columnComment[i] + ">" + columnComment[i] + "</p></td>";
-                                    il++;
-                                }
-                            } else {
-                               break;
-                            }
-                        }
-                    }
-
-                     var html=template("showTableDataTestTheadTmpl",data);
-                }
-            })
-        }
 
 
         /**
@@ -570,105 +580,40 @@
                 data: {"subjectCode": subjectCode, "tableName": tableName, "pageNo": num, "searchKey": searchKey},
                 dataType: "json",
                 success: function (data) {
-                    var arr = data.columns;
-                    var dataType = data.dataType;
+                    var columnName = data.columns;
                     var columnComment = data.columnComment;
                     var dataArry = data.dataDatil;
-                    var count=dataArry.length;
-                    var delPORTALID;
-                    var tabs = "";
-                    var s = " ";
-                    s = "<table id='" + tableName + "' class='table table-hover biaoge' spellcheck='0' border='0' style='width:100%;'>" +
-                        "<thead ><tr tr class='table_tr'>";
-                    //表头
-                    var il = 0;
+                    var dataType = data.dataType;
+                    var tableComment = data.tableComment;
                     if (dataArry.length > 0) {
-                        for (var i = 0; i < arr.length; i++) {
-                            if (il < 5) {
-                                if (arr[i] === "PORTALID") {
-                                    s += "<td style='display:none;' title=" + arr[i] + ">" + arr[i] + "</td>";
-                                } else {
-                                    s += "<td style='width:15%;'>" + arr[i] + "<br/><p title=" + columnComment[i] + ">" + columnComment[i] + "</p></td>";
-                                    il++;
-                                }
-                            } else {
-                                s += "<td style='display:none;'title=" + arr[i] + ">" + arr[i] + "</td>";
-                            }
+                        var columnList = [];
+                        var tablist = [];
+                        for (var i = 0; i < columnName.length; i++) {
+                            columnList.push({columnName: columnName[i], columnComment: columnComment[i]});
                         }
-                    }
-                    var ss = "";
-                    if (dataArry.length > 0) {
-                        for (var key in dataArry) {
-                            ss += "<tbody><tr>";
-                            var d = dataArry[key];
-                            var i = 0;
-                            var j = 0;
-                            for (var k in d) {
-                                if (j < 5) {
-                                    if (k === arr[i]) {
-                                        if (dataType[i] === "datetime" && d[k] !== null && d[k] !== " ") {
-                                            var date = d[k].split(".");
-                                            d[k] = date[0];
-                                        }
-                                        if (k === "PORTALID") {
-                                            delPORTALID = d[k];
-                                            ss += "<td  style='display:none;' title='" + d[k] + "'>" + d[k] + "</td>";
-                                        } else {
-                                            ss += "<td title='" + d[k] + "' style='word-break:keep-all;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;'><xmp style='font-family: Arial, 微软雅黑;'>" + d[k] + "</xmp></td>";
-                                            j++;
-                                        }
-                                    } else {
-                                        if (dataType[i] === "datetime" && d[arr[i]] !== null && d[arr[i]] !== " ") {
-                                            var date = d[arr[i]].split(".");
-                                            d[arr[i]] = date[0];
-                                        }
-                                        if (arr[i] === "PORTALID") {
-                                            delPORTALID = d[arr[i]];
-                                            ss += "<td style='display:none;' title='" + d[arr[i]] + "'>" + d[arr[i]] + "</td>";
-                                        } else {
-                                            ss += "<td title='" + d[arr[i]] + "' style='word-break:keep-all;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;'><xmp style='font-family: Arial, 微软雅黑;'>" + d[arr[i]] + "</xmp></td>";
-                                            j++;
-                                        }
-                                    }
-                                    i++;
-                                } else {
-                                    if (k === arr[i]) {
-                                        if (k === "PORTALID") {
-                                            delPORTALID = d[k];
-                                        }
-                                    } else {
-                                        if (arr[i] === "PORTALID") {
-                                            delPORTALID = d[arr[i]];
-                                        }
-                                    }
-                                    i++;
-                                }
-                            }
-                            ss += "<td align='center'><table class='0' cellspacing='0' border='0' align='center'><tr>";
-                            if (data.isSync === 0) {
-                                ss += "<td class='bianji'><a src='#' onclick=\" updateData('" + delPORTALID + "','" + tableName + "','" + subjectCode + "')\">" +
-                                    "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>修改</a></td><td width='1'></td>";
-                            }
-                            ss += "<td class='chakan'><a href='#' onclick=\"checkDada('" + delPORTALID + "','" + tableName + "','" + subjectCode + "')\">" +
-                                "<i class='fa fa-eye' aria-hidden='true'></i>查看</a></td><td width='1'></td>" +
-                                "<td class='shanchu'><a href='#' onclick=\"deleteDate('" + delPORTALID + "','" + tableName + "','" + subjectCode + "','"+ count +"')\">" +
-                                "<i class='fa fa-trash-o fa-fw' aria-hidden='true'></i>删除</a></td></tr></table></td></tr>";
-                        }
-                        ss += "</tbody>";
-                        s += "<td style='width:22%;'>操作</td></tr></thead>";
-                        tabs = s + ss + "</table>";
+                        tablist.push({tableName: tableName, subjectCode: subjectCode});
+                        data.dataDatil.unshift(columnList);
+                        template.helper("dateFormat", formatDate);
+                        var html = template("showTableDataTheadTmpl", {
+                            "datas": data.dataDatil,
+                            "isSync": data.isSync,
+                            "tablist": tablist
+                        });
 
-                        tabs += "<div class='review-item clearfix'><div id='page_div" + tableName + "' style='padding-top: 25px; float: left;'>" +
-                            "当前第&nbsp;<span style='color:blue;' id='currentPageNo" + tableName + "'></span>&nbsp;页,&nbsp;共&nbsp;<span style='color:blue;' id='totalPages" + tableName + "'></span>页，<span style='color:blue;' id='totalCount" + tableName + "'></span>" +
-                            "条数据</div><div style='float: right;' ><div id='pagination" + tableName + "'></div></div></div>";
-                        $(ids).append(tabs);
+                        //点击页码，不用新建页签
+                        // var item = {'id': tableName, 'name': tableName, 'closable': true, 'template': html};
+                        // closableTab.addTab(item); // 执行创建页签
+                        $(ids).append(html);
                         fun_limit(subjectCode, tableName, data, searchKey);
+                        if (data.isSync !== 0) {
+                            $(".bianji").hide();
+                        }
                     } else {
                         $(ids).html(" ");
-                        var click="";
-                        if(searchKey===""||searchKey==null){
-                            click= " <h5 style='font-size: 20px;text-align: center;margin-right: 30%;'>该表暂时没有数据</h5>";
-                        }else{
+                        var click = "";
+                        if (searchKey === "" || searchKey == null) {
+                            click = " <h5 style='font-size: 20px;text-align: center;margin-right: 30%;'>该表暂时没有数据</h5>";
+                        } else {
                             click = " <h5 style='font-size: 20px;text-align: center;margin-right: 30%;'>没有查询到相关数据</h5>";
                         }
                         $(ids).append(click);
@@ -690,88 +635,60 @@
                 success: function (data) {
                     $("#addTable tbody").html(" ");
                     $("#add_div").html(" ");
+                    var dataComposeDemoList = data.dataComposeDemoList;
+                    var enumColumn = [];
                     var strs2 = data.COLUMN_NAME;
                     var dataTypeArr = data.DATA_TYPE;
-                    var columnComments = data.COLUMN_COMMENT;
                     var autoAddArr = data.autoAdd;
                     var pkColumnArr = data.pkColumn;
-                    var s = "";
-                    var enumColumn = [];
-                    for (var i = 0; i < strs2.length; i++) {
-                        if (pkColumnArr[i] === "PRI" && autoAddArr[i] === "auto_increment") {
-                            // s += "<input style='display:none;'  type='text' name=" + strs2[i] + " value='0'/>";
-                        } else {
-                            if (strs2[i] === "PORTALID") {
-                                s += "<input style='display:none;' class='" + dataTypeArr[i] + "' type='text' name=" + strs2[i] + " value='0'/>";
-                            } else {
-                                s += "<tr><td>" + strs2[i] + "</td><td>" + dataTypeArr[i] + "</td><td>" + columnComments[i] + "</td>";
 
-                                if (dataTypeArr[i] === "datetime") {
-                                    s += "<td><input class='selectDataTime' style='width: 100%;height:100%;' id='" + strs2[i] + "' type='text'  placeholder='请选择'  /></td></tr>";
-                                } else if (dataTypeArr[i] === "date") {
-                                    s += "<td><input class='selectData'  style='width: 100%;height:100%;' id='" + strs2[i] + "' type='text'  placeholder='请选择'/></td></tr>";
-                                } else if (dataTypeArr[i] === "time") {
-                                    s += "<td><input class='DataTime' style='width: 100%;height:100%;' id='" + strs2[i] + "' type='text'  placeholder='请选择'  /></td></tr>";
-                                } else {
-                                    var flag = 0;
-                                    if (data.alert === 1) {
-                                        var enumDataList = data.enumDataList;
-                                        for (var k = 0; k < enumDataList.length; k++) {
-                                            if (strs2[i] === enumDataList[k].key) {
-                                                flag = 1;
-                                                enumColumn.push(strs2[i]);
-                                                var sVal = enumDataList[k].value.split("|_|");
-                                                var selects = "<select class='form-control' style='width: 100%;height:100%;'  name='" + strs2[i] + "' id='" + strs2[i] + "'>";
-                                                for (var kk = 0; kk < sVal.length; kk++) {
-                                                    if (sVal[kk] !== "" && sVal[kk] !== null) {
-                                                        selects += "<option>" + sVal[kk] + "</option>";
-                                                    }
-                                                }
-                                                selects += "</select>";
-                                                s += "<td>" + selects + "</td></tr>";
-
-                                            }
+                    var html = template("adddataTmpl", data);
+                    $("#addTable tbody").append(html);
+                    debugger
+                    //枚举类型
+                    if (data.alert === 1) {
+                        var enumDataList = data.enumDataList;
+                        for (var i = 0; i < strs2.length; i++) {
+                            for (var k = 0; k < enumDataList.length; k++) {
+                                if (strs2[i] === enumDataList[k].key) {
+                                    enumColumn.push(strs2[i]);
+                                    var sVal = enumDataList[k].value.split("|_|");
+                                    var selects = "<select class='form-control' style='width: 100%;height:100%;'  name='" + strs2[i] + "' id='" + strs2[i] + "'>";
+                                    for (var kk = 0; kk < sVal.length; kk++) {
+                                        if (sVal[kk] !== "" && sVal[kk] !== null) {
+                                            selects += "<option>" + sVal[kk] + "</option>";
                                         }
                                     }
-                                    if (flag === 0) {
-                                        s += "<td><input  id='" + strs2[i] + "' class='form-control' style='width:100%;height=100%'  name=" + strs2[i] + "  dataType='" + dataTypeArr[i] + "' onblur=\"func_blur(this)\"/><p id='" + strs2[i] + "_id' style='display: none;color:red;font-size: 10px;'></p></td></tr>";
-                                    }
+                                    selects += "</select>";
+                                    $("#" + strs2[i] + "_td").children().remove();
+                                    $("#" + strs2[i] + "_td").append(selects);
                                 }
+
                             }
                         }
                     }
-                    var s_add = " <button id='addbtn' class='btn btn-success' data-dismiss='modal' onclick=\"addTablefuntion('" + dataTypeArr + "','" + strs2 + "','" + pkColumnArr + "','" + autoAddArr + "','" + enumColumn + "')\">保存</button>";
-                        s_add+="<button type='button' data-dismiss='modal' class='btn default'>取消</button> ";
-                    $("#addTable tbody").append(s);
-                    $("#add_div").append(s_add);
+
+                    var s_add = "<button id='addbtn' class='btn btn-success' data-dismiss='modal' onclick=\"addTablefuntion('" + dataTypeArr + "','" + strs2 + "','" + pkColumnArr + "','" + autoAddArr + "','" + enumColumn + "')\">保存</button>";
+                    s_add += "<button type='button' data-dismiss='modal' class='btn btn-danger'>取消</button> ";
+                    $("#add_div").append(s_add);  //增加按钮
                     $("#staticAddData").modal("show");
-                    $('.selectData').datetimepicker({
+                    $('.selectDate').datetimepicker({
                         minView: "month",//选择日期后，不会再跳转去选择时分秒
-                        language:'zh-CN',
+                        language: 'zh-CN',
                         autoclose: true,//选中之后自动隐藏日期选择框
                         clearBtn: true,//清除按钮
                         todayBtn: false,//今日按钮
                         format: "yyyy-mm-dd"
                     });
-                    $('.selectDataTime').datetimepicker({
-                        language:'zh-CN',
+                    $('.selectDateTime').datetimepicker({
+                        language: 'zh-CN',
                         autoclose: true,//选中之后自动隐藏日期选择框
                         clearBtn: true,//清除按钮
                         todayBtn: false,//今日按钮
-                        minuteStep:1,
+                        minuteStep: 1,
                         format: "yyyy-mm-dd hh:ii:ss"
                     });
-                    $('.DataTime').datetimepicker({
-                        //第一种
-                        language:'zh-CN',
-                        autoclose: true,//选中之后自动隐藏日期选择框
-                        clearBtn: true,//清除按钮
-                        todayBtn: false,//今日按钮
-                        format: "hh:ii:ss",
-                        minView: 0,
-                        minuteStep:1,
-                        startView: 0
-                    });
+                    $(".selectTime").bind('click',function(event){timePacker($(this),event)});
                 }
             })
         }
@@ -797,13 +714,10 @@
             var datacon = [];
             for (var i = 0, ii = 0; i < S_column.length; i++) {
                 //隐藏字段赋值
-                if (S_column[i] === "PORTALID") {
-                    datacon[i] = "";
-                } else if (S_pkColumnArr[i] === "PRI" && S_autoAddArr[i] === "auto_increment") {
+                if (S_pkColumnArr[i] === "true" && S_autoAddArr[i] === "true") {
                     datacon[i] = "";
                 } else {
                     var flag = 0;
-                    // alert(enumColumns.length+".."+$("#" + S_column[i] + " option:selected").val());
                     for (var k = 0; k < enumColumns.length; k++) {
                         if (S_column[i] === enumColumns[k]) {
                             flag = 1;
@@ -814,7 +728,6 @@
                         datacon[i] = dataArr[ii];
                         ii++;
                     }
-
                 }
             }
 
@@ -1012,26 +925,6 @@
                                     return;
                                 }
                             }
-                            //时间类型判断
-                            // if (S_dataType[i] === "date" && datacon[i] !== null && datacon[i] !== "" && datacon[i] !== "null") {
-                            //     // var reg = /^(\d{4})-(\d{2})-(\d{2})$/;
-                            //     var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
-                            //     var regExp = new RegExp(reg);
-                            //     if (!regExp.test(datacon[i])) {
-                            //         toastr.warning(S_column[i] + " 字段是时间格式,正确格式应为: xxxx-xx-xx ");
-                            //         return;
-                            //     }
-                            // }
-                            //
-                            // if (datacon[i] !== "" && S_dataType[i] === "datetime") {
-                            //     var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-                            //     var regExp = new RegExp(reg);
-                            //     if (!regExp.test(datacon[i]) && datacon[i] !== null && datacon[i] !== "") {
-                            //         toastr.warning(S_column[i] + " 字段正确格式应为: xxxx-xx-xx xx:xx:xx ");
-                            //         return;
-                            //     }
-                            // }
-
                             if (datacon[i] !== "" && datacon[i] !== null && S_dataType[i] === "decimal") {
                                 var pattern = /^(-?\d+)(\.\d+)?$/;    //浮点数
                                 var reg = new RegExp(pattern);
@@ -1064,22 +957,24 @@
                 dataType: "json",
                 success: function (data) {
                     if (data.data === "0") {
-                        toastr.error("添加数据失败，"+ data.prikey+"的值已存在！");
+                        toastr.error("添加数据失败，" + data.prikey + "的值已存在！");
                     } else if (data.data === "1") {
                         toastr.success("添加成功!");
-                        var searchKey=$(".input-group input").val();
+                        var searchKey = $(".input-group input").val().trim();
                         // var searchKey = "";
                         clickPageButton(subjectCode, tableName, currentPage, searchKey);
                         $("#staticAddData").modal("hide");
                     } else if (data.data === "-1") {
-                        toastr.error("添加数据失败，"+ data.prikey +"不能为空！");
-                    }else if(data.data==="-3"){
+                        toastr.error("添加数据失败，" + data.prikey + "不能为空！");
+                    } else if (data.data === "-3") {
                         toastr.error("添加数据失败！");
-                    } else {
-                        var arr = data.data.split("+");
+                    } else if (data.data === "-2"){
+                        var arr = data.dataResult.split("+");
                         if (arr[0] === "-2") {
                             toastr.error("添加数据失败，" + arr[1] + " 列不能为空！");
                         }
+                    }else{
+                        toastr.error(data.addResult.message);
                     }
                 },
                 error: function () {
@@ -1088,117 +983,89 @@
             })
         }
 
-        function updateData(delPORTALID,tableName,subjectCode) {
+        //点击编辑按钮
+        function updateData(i) {
             $("#form_id").html(" ");
             $("#update_tbody").html(" ");
             $("#update_div").html("");
-            //获得当前页码
-            var currentPage = $("#currentPageNo"+tableName +"").html();
+            var tableName = $("#ul_div111 li.active a").text();
+
+            var s = $(i).parent().parent().parent().parent().parent().siblings().size();
+            var oldData = new Array();
+            var d = [];
+            for (var j = 0; j < s; j++) {
+                var ss = $(i).parent().parent().parent().parent().parent().siblings().eq(j).text().replace(/[\r\n]/g, "");
+                oldData.push(ss.trim());//获得所有td
+                d.push(ss.trim() + "|_|");
+            }
             $.ajax({
                 type: "post",
                 url: "${ctx}/toupdateTableData",
-                data: {"subjectCode": subjectCode, "tableName": tableName, "PORTALID": delPORTALID},
+                data: {"subjectCode": subjectCode, "tableName": tableName,"oldData": JSON.stringify(oldData)},
                 dataType: "json",
                 success: function (data) {
+                    debugger
                     var dataTypeArr = data.DATA_TYPE;
-                    var columnComments = data.COLUMN_COMMENT;
-                    var COLUMN_TYPE = data.COLUMN_TYPE;
-                    var strs2=data.COLUMN_NAME;
-                    var strs = data.data;
-                    var delPORTALID="";
-                    var s_tbody="";
-                    var enumColumn = [];
-                    for (var i = 0; i < strs2.length; i++) {
-                        var getinput_id=strs2[i]+"_coldata";
-                        if (strs2[i] === "PORTALID") {
-                            delPORTALID = strs[i];
-                        }else{
-                            s_tbody+= "<tr><td style='width:20%;'>" + strs2[i] + "</td>" +
-                                "<td style='width:20%;'> " + COLUMN_TYPE[i] + "</td>" +
-                                "<td style='width:20%;'>" + columnComments[i] + "</td>";
-                            if(dataTypeArr[i]==="datetime") {
-                                if(strs[i]!==" " && strs[i]!==null) {
-                                    var date = strs[i].split(".");
-                                    strs[i] = date[0];
-                                    s_tbody += "<td style='width:40%;'><input class='selectDataTime' id='" + getinput_id + "' type='text' style='width:100%;height=100%' placeholder='请选择' title='" + strs[i] + "' value='" + strs[i] + "' /></td></tr>";
-                                }else{
-                                    s_tbody += "<td  style='width:40%;'><input class='selectDataTime' id='" + getinput_id + "' type='text' style='width:100%;height=100%' placeholder='请选择' title='" + strs[i] + "' value='" + strs[i] + "' /></td></tr>";
-                                }
-                            }else if(dataTypeArr[i]==="date"){
-                                s_tbody+="<td  style='width:40%;'><input class='selectData' id='"+ getinput_id +"' type='text' style='width:100%;height=100%' placeholder='请选择' title='" + strs[i] + "' value='" + strs[i] + "'  /></td></tr>";
-                            }else if(dataTypeArr[i]==="time"){
-                                s_tbody += "<td  style='width:40%;'><input class='selectTime' id='" + getinput_id + "' type='text' style='width:100%;height=100%' placeholder='请选择' title='" + strs[i] + "' value='" + strs[i] + "' /></td></tr>";
-                            }else {
-                                var enumDataList = data.enumDataList;
-                                var flag = 0;
-                                for (var k = 0; k < enumDataList.length; k++) {
-                                    if (strs2[i] === enumDataList[k].key) {
-                                        flag = 1;
-                                        enumColumn.push(strs2[i]);
-                                        var sVal = enumDataList[k].value.split("|_|");
-                                        var selects = "<select class='form-control' style='width: 100%;height:100%;'  name='" + strs2[i] + "' id='" + getinput_id + "'>";
-                                        for (var kk = 0; kk < sVal.length; kk++) {
-                                            if (strs[i] === sVal[kk]) {
-                                                selects += "<option selected>" + sVal[kk] + "</option>";
-                                            } else {
-                                                if (sVal[kk] !== "" && sVal[kk] !== null) {
-                                                    selects += "<option>" + sVal[kk] + "</option>";
-                                                }
+                    var strs2 = data.COLUMN_NAME;
+                    var strs = data.enumData;
+                    var enumColumn = [];//
+                    var html = template("toUpdateDataTmpl", data);
+                    $("#update_tbody").append(html);
+                    var enumDataList = data.enumDataList;
+                    if (data.alert === 1) {
+                        for (var j = 0; j < strs2.length; j++) {
+                            for (var k = 0; k < enumDataList.length; k++) {
+                                if (strs2[j] === enumDataList[k].key) {
+                                    enumColumn.push(strs2[j]);
+                                    var sVal = enumDataList[k].value.split("|_|");
+                                    var getinput_id = strs2[j] + "_coldata";
+                                    var selects = "<select class='form-control' style='width: 100%;height:100%;'  name='" + strs2[j] + "' id='" + getinput_id + "'>";
+                                    for (var kk = 0; kk < sVal.length; kk++) {
+                                        if (strs[j] === sVal[kk]) {
+                                            selects += "<option selected>" + sVal[kk] + "</option>";
+                                        } else {
+                                            if (sVal[kk] !== "" && sVal[kk] !== null) {
+                                                selects += "<option>" + sVal[kk] + "</option>";
                                             }
-
                                         }
-                                        selects += "</select>";
-                                        s_tbody += "<td>" + selects + "</td></tr>";
-
                                     }
-                                }
-                                if (flag === 0) {
-                                    s_tbody += "<td  style='width:40%;'><input title='" + strs[i] + "' class='form-control'  type='text' id='" + getinput_id + "' style='width:100%;height=100%'   name=" + strs2[i] + " value='" + strs[i] + "' dataType='" + dataTypeArr[i] + "' onblur=\"func_blur(this)\"/><p id='" + strs2[i] + "_id' style='display: none;color:red;font-size: 10px;'></p></td></tr>";
-
+                                    selects += "</select>";
+                                    $("#" + strs2[j] + "_update").children().remove();
+                                    $("#" + strs2[j] + "_update").append(selects);
                                 }
                             }
                         }
                     }
-                    var s_save = "<button id='btn_save'  class='btn btn-success' data-dismiss='modal' onclick=\" saveData('" + tableName + "','" + subjectCode + "','" + dataTypeArr + "','" + currentPage + "','" + strs2 + "','" + delPORTALID + "','" + enumColumn + "')\">保存</button> ";
-                    s_save+="<button type='button' data-dismiss='modal' class='btn default'>取消</button> ";
-                    $("#update_tbody").append(s_tbody);
+
+                    var s_save = "<button id='btn_save'  class='btn btn-success' data-dismiss='modal' onclick=\" saveData('" + dataTypeArr + "','" + strs2 + "','" + enumColumn + "','" + d + "')\">保存</button> ";
+                    s_save += "<button type='button' data-dismiss='modal' class='btn btn-danger'>取消</button> ";
+
                     $("#update_div").append(s_save);
                     $("#staticUpdateData").modal("show");
 
-                    $('.selectData').datetimepicker({
+                    $('.selectDate').datetimepicker({
                         minView: "month",//选择日期后，不会再跳转去选择时分秒
-                        language:'zh-CN',
+                        language: 'zh-CN',
                         autoclose: true,//选中之后自动隐藏日期选择框
                         clearBtn: true,//清除按钮
                         todayBtn: false,//今日按钮
                         format: "yyyy-mm-dd"
                     });
-                    $('.selectDataTime').datetimepicker({
+                    $('.selectDateTime').datetimepicker({
                         //第一种
-                        language:'zh-CN',
+                        language: 'zh-CN',
                         autoclose: true,//选中之后自动隐藏日期选择框
                         clearBtn: true,//清除按钮
                         todayBtn: false,//今日按钮
                         format: "yyyy-mm-dd hh:ii:ss",
                         minView: 0,
-                        minuteStep:1
+                        minuteStep: 1
                     });
-                    $('.selectTime').datetimepicker({
-                        //第一种
-                        language:'zh-CN',
-                        autoclose: true,//选中之后自动隐藏日期选择框
-                        clearBtn: true,//清除按钮
-                        todayBtn: false,//今日按钮
-                        format: "hh:ii:ss",
-                        // timeFormat: 'hh:mm:ss:l',
-                        minView: 0,
-                        minuteStep:1,
-                        pickDate:false,
-                        startView: 0
-                    });
+                    $(".selectTime").bind('click',function(event){timePacker($(this),event)});
                 }
             });
         }
+
         //这里是失去焦点时的事件
         function func_blur(i){
             var dataType =$(i).attr("dataType");
@@ -1455,43 +1322,9 @@
                         return;
                     }
                 }
-
-                //date数据类型判断
-                // if (dataType === "date" &&dataValue !== null && dataValue !=="") {
-                //     var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
-                //     var regExp = new RegExp(reg);
-                //     if (!regExp.test(checkdataArr[i])) {
-                //         toastr.warning(columnName[i]+" 字段是时间格式,正确格式应为: xxxx-xx-xx ");
-                //         return;
-                //     }
-                // }
-                //datetime数据类型判断
-                // if (dataTypeArr[i] === "datetime" && checkdataArr[i] !== null && checkdataArr[i] !== "" && checkdataArr[i] !== "null") {
-                //     var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-                //     var regExp = new RegExp(reg);
-                //     if (!regExp.test(checkdataArr[i])) {
-                //         toastr.warning(columnName[i]+" 字段正确格式应为: xxxx-xx-xx xx:xx:xx ");
-                //         return;
-                //     }
-                // }
                 //decimal数据类型判断
 
                 if (dataType === "decimal" && dataValue !== null && dataValue !=="") {
-                    // var col_type_str = S_columnType[i].split(",");
-                    // var m = col_type_str[0].split("(")[1];
-                    // var s = col_type_str[1].split(")")[0];
-                    // var n = m - s;
-                    // var pattern = /^(-?\d+)(\.\d+)?$/;    //浮点数
-                    //     var reg = new RegExp(pattern);
-                    //     if (reg.test(checkdataArr[i])) {
-                    //     var ss = checkdataArr[i].split(".");
-                    //     if (ss[0].length > n) {
-                    //         toastr.warning(columnName[i]+" 字段数据超出范围！ ");
-                    //         return;
-                    //     }
-                    // } else {
-                    //     toastr.warning(columnName[i]+" 字段是decimal类型！ ");
-                    // }
                     var pattern = /^(-?\d+)(\.\d+)?$/;    //浮点数
                     var reg = new RegExp(pattern);
                     if (!reg.test(dataValue)) {
@@ -1505,29 +1338,26 @@
         }
 
         //修改数据点击保存
-        function saveData(tableName, subjectCode, dataType, currentPage, alert_column, delPORTALID, enumColumn) {
-            debugger
+        function saveData(dataType, alert_column, enumColumn, oldData) {
+            var tableName = $("#ul_div111 li.active a").text();
+            //获得当前页码
+            var currentPage = $("#currentPageNo" + tableName + "").html();
             var dataTypeArr = dataType.split(",");
             var columnName=alert_column.split(",");
             var checkdataArr = [];
             var checkdataArrs=[];
+            var oldArr = oldData.split("|_|,");
+            oldArr[oldArr.length - 1] = oldArr[oldArr.length - 1].split("|_|")[0];
             var enumColumns = enumColumn.split(",");
-            for(var i =0; i <columnName.length; i++){
-                if(columnName[i]==="PORTALID"){
-                    var coldata={};
-                    coldata["name"]=columnName[i];
-                    coldata["value"]=delPORTALID;
-                    checkdataArrs.push(coldata);
-                    checkdataArr.push(delPORTALID);
-                }else{
-                   var s= document.getElementById(columnName[i]+"_coldata").value;
-                    var coldata={};
-                    coldata["name"]=columnName[i];
-                    coldata["value"]=s;
-                    checkdataArrs.push(coldata);
-                    checkdataArr.push(s);
-                }
+            for (var i = 0; i < columnName.length; i++) {
+                var s = document.getElementById(columnName[i] + "_coldata").value;
+                var coldata = {};
+                coldata["name"] = columnName[i];
+                coldata["value"] = s;
+                checkdataArrs.push(coldata);
+                checkdataArr.push(s);
             }
+
             for (var i = 0; i < checkdataArr.length; i++) {
                 for (var k = 0; k < enumColumns.length; k++) {
                     if (enumColumns[k] !== columnName[i]) {
@@ -1758,27 +1588,26 @@
                 data: {"newdata": JSON.stringify(checkdataArrs),
                     "subjectCode": subjectCode,
                     "tableName": tableName,
-                    "delPORTALID": delPORTALID,
-                    "enumColumn": enumColumns.join(",")
+                    "enumColumn": enumColumns.join(","),
+                    "oldData": JSON.stringify(oldArr)
                 },
                 dataType: "json",
                 success: function (data) {
-                    if (data.data === "0") {
-                        //错误消息提示，默认背景为浅红色
-                        toastr.error("更新数据失败!");
-                    } else if (data.data === "1") {
+                    if (data.data === "1") {
                         //成功消息提示，默认背景为浅绿色
                         toastr.success("更新成功!");
                         $("#staticUpdateData").modal("hide");
                         // var searchKey = "";
-                        var searchKey=$(".input-group input").val();
+                        var searchKey = $(".input-group input").val().trim();
                         clickPageButton(subjectCode, tableName, currentPage, searchKey);
-                    } else if(data.data === "-1"){
+                    } else if (data.data === "-1") {
                         toastr.error("主键重复！");
+                    } else if (data.data === "-2") {
+                        toastr.error("更新数据失败，" + data.col + " 列不能为空！");
+                    }else if(data.data==="0"){
+                        toastr.error("更新数据失败！");
                     }else{
-                        if (data.data === "-2") {
-                            toastr.error("更新数据失败，" + data.col + " 列不能为空！");
-                        }
+                        toastr.error(data.updateResult.message);
                     }
                 },
                 error: function () {
@@ -1788,15 +1617,23 @@
         }
 
         //删除数据
-        function deleteDate(delPORTALID, tableName, subjectCode,j) {
+        function deleteDate(i) {
+            var tableName = $("#ul_div111 li.active a").text();
+            bootbox.setDefaults("locale","zh_CN");
             bootbox.confirm("<span style='font-size: 16px'>确认要删除此条记录吗?</span>", function (r) {
                 if (r) {
                     var currentPage = $("#currentPageNo"+tableName +"").html();
-                    if(j==="1" && currentPage!=="1"){
-                        currentPage=currentPage-1;
+
+                    //是否有同胞元素
+                    if ($(i).parent().parent().parent().parent().parent().parent().siblings().size() == 0 && currentPage !== "1") {
+                        currentPage = currentPage - 1;
                     }
-                    //获得当前页码
-                    //获得当前页码
+                    var s = $(i).parent().parent().parent().parent().parent().siblings().size();
+                    var oldData = new Array();
+                    for (var j = 0; j < s; j++) {
+                        var ss = $(i).parent().parent().parent().parent().parent().siblings().eq(j).text().replace(/[\r\n]/g, "");
+                        oldData.push(ss.trim());//获得所有td
+                    }
 
                     $.ajax({
                         url: "${ctx}/deleteData",
@@ -1805,18 +1642,16 @@
                         data: {
                             "subjectCode": subjectCode,
                             "tableName": tableName,
-                            "delPORTALID": delPORTALID
+                            "oldData": JSON.stringify(oldData)
                         },
                         success: function (data) {
-                            if (data.data === "1") {
+                            if (data.deleteReuslt === "1") {
                                 toastr.success("删除成功!");
-                                // var searchKey = "";
-                                var searchKey=$(".input-group input").val();
+                                var searchKey = $(".input-group input").val();
                                 clickPageButton(subjectCode, tableName, currentPage, searchKey);
 
-                            }
-                            if (data.data === "0") {
-                                toastr.error("删除失败！");
+                            }else{
+                                toastr.error(data.deleteReuslt.message);
                             }
                         }
                     })
@@ -1825,16 +1660,21 @@
         }
 
         //查看详情
-        function checkDada(delPORTALID,tableName,subjectCode) {
+        function checkDada(i) {
+            var tableName = $("#ul_div111 li.active a").text();
             $("#checkTable tbody").html(" ");
+            var s = $(i).parent().parent().parent().parent().parent().siblings().size();
+            var oldData = new Array();
+            for (var j = 0; j < s; j++) {
+                oldData.push($(i).parent().parent().parent().parent().parent().siblings().eq(j).text().replace(/[\r\n]/g, "").trim());//获得所有td
+            }
             $.ajax({
                 type: "post",
                 url: "${ctx}/toCheckTableData",
-                data: {"subjectCode": subjectCode, "tableName": tableName, "PORTALID": delPORTALID},
+                data: {"subjectCode": subjectCode, "tableName": tableName, "oldData": JSON.stringify(oldData)},
                 dataType: "json",
                 success: function (data) {
-                    template.helper("dateFormat", formatDate);
-                    var html=template("checkdataTmpl",data);
+                    var html = template("checkdataTmpl", data);
                     $("#checkTable tbody").append(html);
                     $("#staticShowDataDetail").modal("show");
                 }
@@ -1848,6 +1688,175 @@
             }
         })
 
+        //时间方法time
+        function timePacker(dom,e) {
+            var hours = null;//存储 "时"
+            var minutes = null;//存储 "分"
+            var second=null;   //存储秒
+            var clientY = dom.offset().top + dom.height();//获取位置
+            var clientX = dom.offset().left;
+            var date = new Date();
+            var nowHours = date.getHours();
+            var nowMinutes = date.getMinutes();
+            var time_hm=/^(0\d{1}|\d{1}|1\d{1}|2[0-3]):([0-5]\d{1})$/; //时间正则，防止手动输入的时间不符合规范
+            var inputText = dom.is("input") ? dom.val():dom.text();
+            //插件容器布局
+            var html = '';
+            html += '<div class="timePacker" style="z-index: 10052">';
+            html += '<div class="timePacker-hours" style="display: block;">';
+            html += '<div class="timePacker-title"><span>小时</span></div>';
+            html += '<div class="timePacker-content">';
+            html += '<ul>';
+            var i = 0;
+            while (i < 24)
+            {
+                //var text = i < 10 ? "0" + i : i;
+                if(inputText !== "" && Number(inputText.split(":")[0]) === i){
+                    html += '<li class="hoursList timePackerSelect">'+i+'</li>';
+                    hours = Number(inputText.split(":")[0]);
+                }else{
+                    if(i === nowHours){
+                        html += '<li class="hoursList" style="color: #007BDB;">'+i+'</li>';
+                    }else{
+                        html += '<li class="hoursList">'+i+'</li>';
+                    }
+                }
+                i++;
+            }
+            html += '</ul>';
+            html +=  '</div>';
+            html += '</div>';
+            html += '<div class="timePacker-minutes" style="display: none;">';
+            html += '<div class="timePacker-title"><span>分钟</span><span class="timePacker-back-hours" title="返回小时选择"><img src="../resources/img/backTime.png"/> </span></div>';
+            html += '<div class="timePacker-content">';
+            html += '<ul>';
+            var m = 0;
+            while (m < 60)
+            {
+                var textM = m < 10 ? "0" + m : m;
+                if(inputText !== "" && Number(inputText.split(":")[1]) === textM){
+                    html += '<li class="mList timePackerSelect">'+textM+'</li>';
+                    minutes = Number(inputText.split(":")[1]);
+                }else{
+                    if(m === nowMinutes){
+                        html += '<li class="mList" style="color: #007BDB;">'+textM+'</li>';
+                    }else{
+                        html += '<li class="mList">'+textM+'</li>';
+                    }
+                }
+                m++;
+            }
+            html += '</ul>';
+            html +=  '</div>';
+            html += '</div>';
+
+            html += '<div class="timePacker-second" style="display: none;" id="ss_id">';
+            html += '<div class="timePacker-title"><span>秒</span><span class="timePacker-back-minutes" title="返回分钟选择"><img src="../resources/img/backTime.png"/> </span></div>';
+            html += '<div class="timePacker-content">';
+            html += '<ul>';
+            var s = 0;
+            while (s< 60)
+            {
+                var textM = s < 10 ? "0" + s : s;
+                if(inputText !== "" && Number(inputText.split(":")[1]) === textM){
+                    html += '<li class="sList timePackerSelect">'+textM+'</li>';
+                    second = Number(inputText.split(":")[1]);
+                }else{
+                    if(s === nowMinutes){
+                        html += '<li class="sList" style="color: #007BDB;">'+textM+'</li>';
+                    }else{
+                        html += '<li class="sList">'+textM+'</li>';
+                    }
+                }
+                s++;
+            }
+            html += '</ul>';
+            html +=  '</div>';
+            html += '</div>';
+            html += '</div>';
+            if($(".timePacker").length > 0){
+                $(".timePacker").remove();
+            }
+            $("body").append(html);
+            $(".timePacker").css({
+                position:"absolute",
+                top:clientY,
+                left:clientX
+            });
+            var _con = $(".timePacker"); // 设置目标区域,如果当前鼠标点击非此插件区域则移除插件
+            $(document).mouseup(function(e){
+                if(!_con.is(e.target) && _con.has(e.target).length === 0){ // Mark 1
+                    _con.remove();
+                }
+            });
+            //小时选择
+            $(".hoursList").bind('click',function () {
+                $(this).addClass("timePackerSelect").siblings().removeClass("timePackerSelect");
+                hours = $(this).text();
+                var timer = setTimeout(function () {
+                    $(".timePacker-hours").css("display","none");
+                    $(".timePacker-minutes").fadeIn();
+                    if(minutes !== null){
+                        var getTime = hours + ":" + minutes;
+                        if(time_hm.test(getTime)){
+                            dom.removeClass("errorStyle");
+                        }
+                        dom.is("input") ? dom.val(getTime):dom.text(getTime);
+                    }
+                    clearTimeout(timer);
+                },100);
+            });
+            //返回小时选择
+            $(".timePacker-back-hours").bind('click',function () {
+                var timer = setTimeout(function () {
+                    $(".timePacker-minutes").css("display","none");
+                    $(".timePacker-second").css("display","none");
+                    $(".timePacker-hours").fadeIn();
+                    clearTimeout(timer);
+                },500);
+            });
+            //返回小时选择
+            $(".timePacker-back-minutes").bind('click',function () {
+                var timer = setTimeout(function () {
+                    $(".timePacker-second").css("display","none");
+                    $(".timePacker-minutes").fadeIn();
+                    clearTimeout(timer);
+                },500);
+            });
+
+//  //分钟选择
+            $(".mList").bind('click',function () {
+                $(this).addClass("timePackerSelect").siblings().removeClass("timePackerSelect");
+                minutes = $(this).text();
+                var timer = setTimeout(function () {
+                    $(".timePacker-minutes").css("display","none");
+                    $(".timePacker-second").fadeIn();
+                    if(second !== null){
+                        var getTime = hours + ":" + minutes + ":" + second;
+                        if(time_hm.test(getTime)){
+                            dom.removeClass("errorStyle");
+                        }
+                        dom.is("input") ? dom.val(getTime):dom.text(getTime);
+                    }
+                    clearTimeout(timer);
+                },100);
+            })
+
+            //秒的选择
+            $(".sList").bind('click',function () {
+                $(this).addClass("timePackerSelect").siblings().removeClass("timePackerSelect");
+                second = $(this).text();
+                var timer = setTimeout(function () {
+                    var getTime = hours + ":" + minutes +":"+second;
+                    if(time_hm.test(getTime)){
+                        dom.removeClass("errorStyle");
+                    }
+                    dom.is("input") ? dom.val(getTime):dom.text(getTime);
+                    clearTimeout(timer);
+                    _con.remove();
+                },500);
+            })
+        }
 
 
     </script>

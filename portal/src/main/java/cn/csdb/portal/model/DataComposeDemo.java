@@ -6,8 +6,10 @@ public class DataComposeDemo {
   private  String autoAdd;
   private  String pkColumn;
   private  String dataType;
-  private String columnType;
-  private Object data;
+  private  String columnType;
+  private  Object data;
+  private  int isSync;
+  private String potalId;
 
     public Object getData() {
         return data;
@@ -63,5 +65,21 @@ public class DataComposeDemo {
 
     public void setColumnType(String columnType) {
         this.columnType = columnType;
+    }
+
+    public int getIsSync() {
+        return isSync;
+    }
+
+    public void setIsSync(int isSync) {
+        this.isSync = isSync;
+    }
+
+    public String getPotalId() {
+        return potalId;
+    }
+
+    public void setPotalId(String potalId) {
+        this.potalId = potalId;
     }
 }
