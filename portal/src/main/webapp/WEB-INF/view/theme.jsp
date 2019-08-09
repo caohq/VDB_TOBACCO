@@ -675,11 +675,11 @@
                         <label class="col-md-3 control-label">
                             主题库<span style="color: red;">*</span>
                         </label>
-                        <div class="col-md-9">
+                        <div class="col-md-9" id="updateThemeDiv">
                             <%--选择主题库--%>
-                            <select id="updateSubjectThemeName" name="updateSubjectThemeName" class="form-control" name="themeGroup">
+                            <%--<select id="updateSubjectThemeName" name="updateSubjectThemeName" class="form-control" name="themeGroup">--%>
 
-                            </select>
+                            <%--</select>--%>
                         </div>
                     </div>
 
@@ -714,6 +714,7 @@
     <script src="${ctx}/resources/bundles/jquery-validation/js/additional-methods.min.js"></script>
     <script src="${ctx}/resources/bundles/jquery-validation/js/localization/messages_zh.min.js"></script>
     <script type="text/javascript" src="${ctx}/resources/bundles/select2/select2.min.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/bundles/form-validation/form-validation.js"></script>
 
 
     <script type="text/javascript">
@@ -724,15 +725,16 @@
 
         $(function () {
             getSubject(1);
+
             $("#resetPassword").on('click', function () {
                 var currentTarget = event.currentTarget;
                 var isChecked = $(currentTarget).is(":checked");
                 if (isChecked) {
-                    $("#passwordForUpdate").removeAttrs("disabled");
+                    $("#adminPasswdM").removeAttrs("disabled");
                 } else {
-                    $("#passwordForUpdate").attr("disabled", "disabled");
+                    $("#adminPasswdM").attr("disabled", "disabled");
                 }
-            })
+            });
             template.helper("dateFormat", formatDate);
             getData(1);
 
@@ -851,23 +853,152 @@
             $("#addThemeForm").validate(validAddData);
             $("#editGroupForm").validate(validEditData);
 
+            //新建、修改专业库对话框的验证
+            var addSubjectValid = {
+                errorElement: "span",
+                errorClass: "error-message",
+                focusInvalid: false,
+                rules: {
+                    subjectName: "required",
+                    subjectCode: {
+                        required: true,
+                        remote:
+                            {
+                                url: "${ctx}/subjectMgmt/querySubjectCode",
+                                type: "get",
+                                data:
+                                    {
+                                        'subjectCode': function () {
+                                            return $("#subjectCode").val();
+                                        }
+                                    },
+                                dataType: "json"
+                            }
+                    },
+                    image: "required",
+                    admin: {
+                        required: true,
+                        remote:
+                            {
+                                url: "${ctx}/subjectMgmt/queryAdmin",
+                                type: "get",
+                                data:
+                                    {
+                                        'admin': function () {
+                                            return $("#admin").val();
+                                        }
+                                    },
+                                dataType: "json"
+                            }
+                    },
+                    adminPasswd: {
+                        required: true,
+                        minlength: 6
+                    },
+                    contact: "required",
+                    phone:
+                        {
+                            required: true,
+                            maxlength: 11,
+                            maxlength: 11,
+                            isphoneNum: true
+                        },
+                    email: {
+                        required: false,
+                        email: true
+                    },
+                    serialNo: "required"
+                },
+                messages: {
+                    subjectName: "请输入${applicationScope.menus['organization_title']}名称",
+                    subjectCode: {
+                        required: "请输入${applicationScope.menus['organization_title']}代码",
+                        remote: "此${applicationScope.menus['organization_title']}代码已经存在！"
+                    },
+                    image: "请选择一个图片",
+                    admin: {
+                        required: "请输入${applicationScope.menus['organization_title']}管理员账号",
+                        remote: "此${applicationScope.menus['organization_title']}管理员账号已经存在！"
+                    },
+                    adminPasswd: {
+                        required: "请输入${applicationScope.menus['organization_title']}管理密码",
+                        minlength: "密码至少为6位"
+                    },
+                    contact: "请输入${applicationScope.menus['organization_title']}联系人",
+                    phone: {
+                        required: "请输入手机号",
+                        maxlength: "请填写11位的手机号",
+                        minlength: "请填写11位的手机号",
+                        isphoneNum: "请填写正确的手机号码"
+                    },
+                    email: "请输入一个正确的email",
+                    serialNo: "请输入${applicationScope.menus['organization_title']}的序号"
+                }
+            };
+
+            jQuery.validator.addMethod("isphoneNum", function (value, element) {
+                var length = value.length;
+                var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+                return this.optional(element) || (length == 11 && mobile.test(value));
+            }, "请填写正确的手机号码");
+
+            var updateSubjectValid = {
+                errorElement: 'span',
+                errorClass: 'error-message',
+                focusInvalid: false,
+                rules: {
+                    subjectName: "required",
+                    subjectCode: "required",
+                    admin: "required",
+                    adminPasswd: {
+                        required: true,
+                        minlength: 6
+                    },
+                    contact: "required",
+                    phone:
+                        {
+                            required: true,
+                            maxlength: 11,
+                            maxlength: 11,
+                            isphoneNum: true
+                        },
+                    email: {
+                        required: false,
+                        email: true
+                    },
+                    serialNo: "required"
+                },
+                messages: {
+                    subjectName: "请输入${applicationScope.menus['organization_title']}名称",
+                    subjectCode: "请输入${applicationScope.menus['organization_title']}代码",
+                    admin: "请输入${applicationScope.menus['organization_title']}管理员账号",
+                    adminPasswd: {
+                        required: "请输入${applicationScope.menus['organization_title']}管理密码",
+                        minlength: "密码至少为6位"
+                    },
+                    contact: "请输入${applicationScope.menus['organization_title']}联系人",
+                    phone: {
+                        required: "请输入手机号",
+                        maxlength: "请填写11位的手机号",
+                        minlength: "请填写11位的手机号",
+                        isphoneNum: "请填写正确的手机号码"
+                    },
+                    email: "请输入一个正确的email",
+                    serialNo: "请输入${applicationScope.menus['organization_title']}的序号"
+                }
+            };
+
+            $("#updateSubjectForm").validate(updateSubjectValid);
+            $("#addSubjectForm").validate(addSubjectValid);
+
+            $("#imageM,#image").on("change", function (item) {
+                showUploadFileAsDataURL(item);
+            })
+
             $("#showSubjectContent").click(function () {
                 location.reload();
             });
         });
-
-        //自定义手机号验证
-        jQuery.validator.addMethod("isPhoneNum", function (value, element) {
-            var length = value.length;
-            var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
-            return this.optional(element) || (length == 11 && mobile.test(value));
-        }, "请正确填写您的手机号码");
-        //自定义身份证号验证
-        jQuery.validator.addMethod("isIdCard", function (value, element) {
-            var length = value.length;
-            var idCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-            return this.optional(element) || (idCard.test(value));
-        }, "请输入正确的身份证号");
 
         //获得主题库列表
         function getData(pageNo) {
@@ -985,6 +1116,16 @@
             $('.form-group').removeClass('has-error');
         }
 
+        // 选中图片回显图片
+        function showUploadFileAsDataURL(input) {
+            var reader = new FileReader();
+            reader.readAsDataURL(input.currentTarget.files[0]);
+            reader.onload = function (event) {
+                $(input.currentTarget).parent().parent().find("div:eq(0)").show();
+                $(input.currentTarget).parent().parent().find("img").attr("src", event.target.result);
+            }
+        }
+
         //新增主题库保存
         function submitAddData() {
             if (!$("#addThemeForm").valid()) {
@@ -1046,28 +1187,6 @@
                     }
                 }
             });
-        }
-
-        // 清理弹窗中所有的输入框
-        function clearAllInput() {
-            $("input").val("");
-            $(".showImgIfExist").hide();
-            $("textarea").val("");
-        }
-
-    </script>
-
-
-    <%--//////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // 专业库管理标签页：javascript代码
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////--%>
-    <script type="text/javascript">
-        function resetAddUserDialog() {
-            $("#addUserForm").validate().resetForm();
-            $("#addUserForm").validate().clean();
-            $(".form-group").removeClass("has-error");
         }
 
         //查询专业库
@@ -1163,18 +1282,18 @@
                                         type: "get",
                                         dataType: "text",
                                         success: function (data) {
-                                            console.log(data);
-                                            console.log("typeof data = " + (typeof data));
                                             if (data.trim() == "1") {
-                                                toastr["success"]("删除成功！", "数据删除");
+                                                toastr["success"]("删除成功！");
                                                 getSubject(currentPage);
                                             } else {
-                                                toastr["error"]("删除失败！", "数据删除");
+                                                toastr["error"]("删除失败！");
                                             }
+                                            console.log(data);
+                                            console.log("typeof data = " + (typeof data));
                                         },
                                         error: function (data) {
                                             console.log(data);
-                                            toastr["error"]("删除失败！", "数据删除");
+                                            toastr["error"]("删除失败！");
                                         }
                                     });
                                 }
@@ -1187,7 +1306,10 @@
 
         //更新专业库
         function updateSubject(updateBtn) {
+
             $("#updateSubjectThemeName").html(" ");
+            $("#updateThemeDiv").html("");
+
             $("#resetPassword").prop("checked", false);
             $("#adminPasswdM").prop("checked", false);
             clearAllInput();
@@ -1215,14 +1337,12 @@
                     $("#emailM").val(data.subject.email);
                     $("#serialNoM").val(data.subject.serialNo);
                       var s="";
-                      debugger
                     for(var i=0;i<data.list.length;i++){
                         if(data.subject.themeCode===data.list[i].themeCode){
-                            s+="<option value='"+data.list[i].themeCode +"' selected>"+data.list[i].themeName +"</option>"
-                        }else{
-                            s+="<option value='"+data.list[i].themeCode +"'>"+data.list[i].themeName +"</option>"
-                        }
+                             s+="<input id='updateSubjectThemeName' class='form-control' name='"+ data.list[i].themeCode +"' value='"+data.list[i].themeName +"' readonly />";
 
+                        }
+                        $("#updateThemeDiv").append(s);
                     }
                     $("#updateSubjectThemeName").append(s);
 
@@ -1318,7 +1438,8 @@
             formData.append("phone", $("#phoneM").val());
             formData.append("email", $("#emailM").val());
             formData.append("serialNo", $("#serialNoM").val());
-            formData.append("themeCode",$("#updateSubjectThemeName").val());
+            var txt= $("input[id='updateSubjectThemeName']").attr("name");
+            formData.append("themeCode",txt);
             console.log("agreeUpdateSubject - formData = " + formData);
 
             $.ajax({
@@ -1345,7 +1466,12 @@
                 }
             });
         }
-
+        // 清理弹窗中所有的输入框
+        function clearAllInput() {
+            $("input").val("");
+            $(".showImgIfExist").hide();
+            $("textarea").val("");
+        }
 
     </script>
 </div>

@@ -50,6 +50,12 @@ public class Subject {
     @Field("themeCode")
     private String themeCode;   //主题库Code，和节点关系一对多
 
+    @Field("filePath")
+    private String filePath;
+
+    @Field("dbPath")
+    private String dbPath;
+
     private long visitCount; // 访问量统计
     private long downCont; // 下载量统计
 
@@ -237,6 +243,22 @@ public class Subject {
         this.themeCode = themeCode;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getDbPath() {
+        return dbPath;
+    }
+
+    public void setDbPath(String dbPath) {
+        this.dbPath = dbPath;
+    }
+
     @Override
     public String toString() {
         return "Subject{" +
@@ -261,6 +283,8 @@ public class Subject {
                 ", dbHost='" + dbHost + '\'' +
                 ", dbPort='" + dbPort + '\'' +
                 ", themeCode='" + themeCode + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", dbPath='" + dbPath + '\'' +
                 ", visitCount=" + visitCount +
                 ", downCont=" + downCont +
                 '}';

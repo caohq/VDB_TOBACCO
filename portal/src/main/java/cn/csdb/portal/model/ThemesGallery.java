@@ -23,7 +23,7 @@ public class ThemesGallery {
 //    @Field("subjects")
 //    private List<String> subjects; // 包含的节点
 
-    @Field("/filePath")
+    @Field("filePath")
     private String filePath;
 
 

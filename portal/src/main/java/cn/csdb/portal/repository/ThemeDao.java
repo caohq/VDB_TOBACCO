@@ -64,13 +64,13 @@ public class ThemeDao {
        List<ThemesGallery> list=mongoTemplate.find(new Query(Criteria.where("themeCode").is(themesGallery.getThemeCode())),ThemesGallery.class);
        JSONObject jsonObject=new JSONObject();
         if(list.size()==0){
-//            windows测试路径
-            //            String path="G:\\"+themesGallery.getThemeCode();
+//            windows测试路径,部署时注释
+//            String path="G:\\"+themesGallery.getThemeCode();
             String path="/home/"+themesGallery.getThemeCode();
             themesGallery.setFilePath(path);
             mongoTemplate.insert(themesGallery);
-//            创建主题库文件夹，/home/themecode
 
+//            创建主题库文件夹，/home/themecode
             File f1=new File(path);
             if(!f1.exists())
             {
@@ -136,6 +136,11 @@ return jsonObject;
         ThemesGallery themesGallery=mongoTemplate.findOne(new Query(Criteria.where("id").is(id)),ThemesGallery.class);
         List<Subject> list=mongoTemplate.find(new Query(Criteria.where("themeCode").is(themesGallery.getThemeCode())),Subject.class);
         if(list.size()==0){
+//            删除文件夹
+            File file=new File(themesGallery.getFilePath());
+            if (file.exists()) {
+                file.delete();
+            }
             mongoTemplate.remove(new Query(Criteria.where("id").is(id)),ThemesGallery.class);
             jsonObject.put("result","ok");
         }else{
