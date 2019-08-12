@@ -1306,8 +1306,6 @@
 
         //更新专业库
         function updateSubject(updateBtn) {
-
-            $("#updateSubjectThemeName").html(" ");
             $("#updateThemeDiv").html("");
 
             $("#resetPassword").prop("checked", false);
@@ -1340,12 +1338,9 @@
                     for(var i=0;i<data.list.length;i++){
                         if(data.subject.themeCode===data.list[i].themeCode){
                              s+="<input id='updateSubjectThemeName' class='form-control' name='"+ data.list[i].themeCode +"' value='"+data.list[i].themeName +"' readonly />";
-
                         }
-                        $("#updateThemeDiv").append(s);
                     }
-                    $("#updateSubjectThemeName").append(s);
-
+                    $("#updateThemeDiv").append(s);
                     $("#updateSubjectDialog").modal("show");
                 },
                 error: function (data) {
