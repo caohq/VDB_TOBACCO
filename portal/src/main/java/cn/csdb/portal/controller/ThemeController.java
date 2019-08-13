@@ -37,7 +37,13 @@ public class ThemeController {
                                    @RequestParam(value = "pageSize",defaultValue = "10") int pageSize ){
         JSONObject jsonObject=new JSONObject();
         List<ThemesGallery> list=themeService.selectAllThemesGallery(themeName,pageNo,pageSize);
+        int count=themeService.countThemeList(themeName);
+        int totalPages=count%pageSize==0 ? count/pageSize:count/pageSize+1;
         jsonObject.put("list",list);
+        jsonObject.put("totalCount", count);
+        jsonObject.put("currentPage", pageNo);
+        jsonObject.put("pageSize", pageSize);
+        jsonObject.put("totalPages", totalPages);
         return jsonObject;
     }
 

@@ -412,6 +412,7 @@ public class SubjectMgmtDao {
             update.set("serialNo", subject.getSerialNo());
             update.set("imagePath", subject.getImagePath());
             update.set("themeCode", subject.getThemeCode());
+            update.set("subjectURL",subject.getSubjectURL());
             mongoTemplate.upsert(query, update, "t_subject");
 
         } catch (Exception e) {

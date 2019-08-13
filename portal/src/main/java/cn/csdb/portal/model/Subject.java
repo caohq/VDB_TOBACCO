@@ -56,6 +56,9 @@ public class Subject {
     @Field("dbPath")
     private String dbPath;
 
+    @Field("subjectURL")
+    private String subjectURL;
+
     private long visitCount; // 访问量统计
     private long downCont; // 下载量统计
 
@@ -257,6 +260,14 @@ public class Subject {
 
     public void setDbPath(String dbPath) {
         this.dbPath = dbPath;
+    }
+
+    public String getSubjectURL() {
+        return subjectURL;
+    }
+
+    public void setSubjectURL(String subjectURL) {
+        this.subjectURL = subjectURL;
     }
 
     @Override

@@ -40,25 +40,25 @@
     <div class="tabbable-custom ">
         <!-- tab header --->
         <ul class="nav nav-tabs ">
-            <li class="active">
-                <a href="#subjectContent" data-toggle="tab" id="showSubjectContent" style="white-space:nowrap;">
-                    节点管理
-                </a>
+            <li  class="active">
+                <a href="#themeContent" data-toggle="tab" id="showThemeContent"  style="white-space:nowrap;">
+                    主题库管理</a>
             </li>
             <li>
-                <a href="#themeContent" data-toggle="tab">
-                    主题库管理</a>
+                <a href="#subjectContent" data-toggle="tab" >
+                    节点管理
+                </a>
             </li>
         </ul>
         <!--tab content-->
         <div class="tab-content">
 
             <!--节点管理标签页-->
-            <div class="tab-pane active" id="subjectContent" style="min-height: 400px">
+            <div class="tab-pane" id="subjectContent" style="min-height: 400px">
                 <div class="row">
                     <div class="col-xs-12 col-md-12 col-lg-12">
 
-                        <!--用户管理标签页: 用户筛选条件-->
+                        <!--节点管理标签页: 节点筛选条件-->
                         <div class="alert alert-info" role="alert">
                             <div class="row">
                                 <div class="col-md-12 form-inline">
@@ -101,7 +101,7 @@
                             </div>
                         </div>
 
-                        <!--用户管理标签页: 用户列表-->
+                        <!--用户管理标签页: 节点列表-->
                         <div class="table-message">列表加载中......</div>
                         <div class="table-scrollable">
                             <table class="table table-striped table-bordered table-advance table-hover">
@@ -111,9 +111,9 @@
                                     <th style="width: 3%;">编号</th>
                                     <th style="width: 10%;">${applicationScope.menus['organization_title']}名称</th>
                                     <th style="width: 5%;">${applicationScope.menus['organization_title']}代码</th>
+                                    <th style="width: 5%;">主题库代码</th>
                                     <th style="width: 5%;">管理员账号</th>
                                     <th style="width: 5%;">负责人</th>
-                                    <th style="width: 5%;">电话</th>
                                     <th style="width: 10%;">操作</th>
                                 </tr>
                                 </thead>
@@ -131,7 +131,7 @@
                                 当前第&nbsp;<span style="color:blue;"
                                                id="pageNum"></span>&nbsp;页,&nbsp;共&nbsp;<span
                                     style="color:blue;"
-                                    id="totalPages"></span>页，
+                                    id="totalPagesSubject"></span>页，
                                 共<span style="color:blue;" id="total"></span>&nbsp;条数据
                             </div>
                             <div class="page-list col-md-6">
@@ -143,7 +143,7 @@
             </div>
 
             <!--主题库 tab-->
-            <div class="tab-pane" id="themeContent">
+            <div class="tab-pane  active" id="themeContent">
                 <div class="row">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div class="alert alert-info" role="alert">
@@ -363,9 +363,9 @@
         <td style="text-align: center;">{{ $index + 1}}</td>
         <td style="text-align: center">{{$value.subjectName}}</td>
         <td style="text-align: center">{{$value.subjectCode}}</td>
+        <td style="text-align: center">{{$value.themeCode}}</td>
         <td style="text-align: center">{{$value.admin}}</td>
         <td style="text-align: center">{{$value.contact}}</td>
-        <td style="text-align: center">{{$value.phone}}</td>
         <td id="{{$value.id}}">
             <table class="0" cellspacing="0" border="0" align="center">
                 <tr>
@@ -386,6 +386,7 @@
 <option  value="{{value.themeCode}}"> {{value.themeName}}</option>
     {{/each}}
     </script>
+
 <%--新增数据节点--%>
 <div id="addSubjectDialog" class="modal fade" tabindex="-1" aria-hidden="true" data-width="400">
     <div class="modal-dialog">
@@ -467,6 +468,16 @@
                         <div class="col-md-9">
                             <input type="text" class="form-control" placeholder="请输入管理员密码" id="adminPasswd"
                                    name="adminPasswd" required="required"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">
+                            节点URL<span style="color: red;">*</span>
+                        </label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" placeholder="请输入远程端URL" id="subjectURL"
+                                   name="subjectURL" required="required"/>
                         </div>
                     </div>
 
@@ -633,6 +644,16 @@
 
                     <div class="form-group">
                         <label class="col-md-3 control-label">
+                            节点URL<span style="color: red;">*</span>
+                        </label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" placeholder="请输入远程端URL" id="subjectURLM"
+                                   name="subjectURL" required="required"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">
                             联系人<span style="color: red;">*</span>
                         </label>
                         <div class="col-md-9">
@@ -724,7 +745,8 @@
         var validEditData;
 
         $(function () {
-            getSubject(1);
+            getData(1);
+            // getSubject(1);
 
             $("#resetPassword").on('click', function () {
                 var currentTarget = event.currentTarget;
@@ -736,8 +758,8 @@
                 }
             });
             template.helper("dateFormat", formatDate);
-            getData(1);
-
+            // getData(1);
+            getSubject(1);
             $(".search-text").keydown(function (event) {
                 if (event.keyCode == 13) {
                     getData(1);
@@ -895,6 +917,10 @@
                         required: true,
                         minlength: 6
                     },
+                    subjectURL:{
+                        required: true,
+                        isSubjectURL:true
+                    },
                     contact: "required",
                     phone:
                         {
@@ -924,6 +950,11 @@
                         required: "请输入${applicationScope.menus['organization_title']}管理密码",
                         minlength: "密码至少为6位"
                     },
+
+                    subjectURL:{
+                        required: "请输入节点URL",
+                        isSubjectURL:"请填写正确的URL地址"
+                    },
                     contact: "请输入${applicationScope.menus['organization_title']}联系人",
                     phone: {
                         required: "请输入手机号",
@@ -942,6 +973,10 @@
                 return this.optional(element) || (length == 11 && mobile.test(value));
             }, "请填写正确的手机号码");
 
+            jQuery.validator.addMethod("isSubjectURL",function (value,element) {
+                var mobile=/^(((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))$/;
+                return this.optional(element) || (mobile.test(value));
+            });
             var updateSubjectValid = {
                 errorElement: 'span',
                 errorClass: 'error-message',
@@ -953,6 +988,10 @@
                     adminPasswd: {
                         required: true,
                         minlength: 6
+                    },
+                    subjectURL:{
+                        required: true,
+                        isSubjectURL:true
                     },
                     contact: "required",
                     phone:
@@ -976,6 +1015,10 @@
                         required: "请输入${applicationScope.menus['organization_title']}管理密码",
                         minlength: "密码至少为6位"
                     },
+                    subjectURL:{
+                        required: "请输入节点URL",
+                        isSubjectURL:"请填写正确的URL地址"
+                    },
                     contact: "请输入${applicationScope.menus['organization_title']}联系人",
                     phone: {
                         required: "请输入手机号",
@@ -995,7 +1038,7 @@
                 showUploadFileAsDataURL(item);
             })
 
-            $("#showSubjectContent").click(function () {
+            $("#showThemeContent").click(function () {
                 location.reload();
             });
         });
@@ -1224,7 +1267,7 @@
 
                         $("#pageNum").html(data.pageNum);
                         currentPage = pageNum;
-                        $("#totalPages").html(data.totalPages);
+                        $("#totalPagesSubject").html(data.totalPages);
                         $("#total").html(data.total);
 
 
@@ -1334,6 +1377,7 @@
                     $("#phoneM").val(data.subject.phone);
                     $("#emailM").val(data.subject.email);
                     $("#serialNoM").val(data.subject.serialNo);
+                    $("#subjectURLM").val(data.subject.subjectURL);
                       var s="";
                     for(var i=0;i<data.list.length;i++){
                         if(data.subject.themeCode===data.list[i].themeCode){
@@ -1390,6 +1434,7 @@
             formData.append("email", $("#email").val());
             formData.append("serialNo", $("#serialNo").val());
             formData.append("themeCode",$("#subjectThemeName").val());
+            formData.append("subjectURL",$("#subjectURL").val())
             $.ajax({
                 url: "${ctx}/subjectMgmt/addSubject",
                 type: "post",
@@ -1435,6 +1480,7 @@
             formData.append("serialNo", $("#serialNoM").val());
             var txt= $("input[id='updateSubjectThemeName']").attr("name");
             formData.append("themeCode",txt);
+            formData.append("subjectURL",$("#subjectURLM").val());
             console.log("agreeUpdateSubject - formData = " + formData);
 
             $.ajax({

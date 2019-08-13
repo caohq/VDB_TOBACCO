@@ -18,6 +18,9 @@ public class ThemeService {
     public List<ThemesGallery> selectAllThemesGallery(String themeName,int pageNo,int pageSize){
         return themeDao.selectAllThemesGallery(themeName,pageNo,pageSize);
     }
+    public int countThemeList(String themeName){
+        return themeDao.countThemeList(themeName);
+    }
 
     public JSONObject addTheme(ThemesGallery themesGallery){
        return themeDao.addTheme(themesGallery);

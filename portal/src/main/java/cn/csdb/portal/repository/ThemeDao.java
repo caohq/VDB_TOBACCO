@@ -52,6 +52,17 @@ public class ThemeDao {
 
     }
 
+    public int countThemeList(String themeName){
+        QueryBuilder queryBuilder=new QueryBuilder();
+        if(StringUtils.isNotEmpty(themeName)){
+            queryBuilder=queryBuilder.and("themeName").regex(Pattern.compile("^.*"+themeName+".*$"));
+        }
+        DBObject dbObject = queryBuilder.get();
+        BasicQuery basicQuery = new BasicQuery(dbObject);
+        List<ThemesGallery> list=mongoTemplate.find(basicQuery,ThemesGallery.class);
+        return list.size();
+    }
+
 /**
 * @Description: 新增主题库
 * @Param: [themesGallery]

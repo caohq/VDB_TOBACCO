@@ -26,7 +26,6 @@ public class ThemesGallery {
     @Field("filePath")
     private String filePath;
 
-
     public String getId() {
         return id;
     }
