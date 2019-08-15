@@ -76,8 +76,8 @@ public class ThemeDao {
        JSONObject jsonObject=new JSONObject();
         if(list.size()==0){
 //            windows测试路径,部署时注释
-//            String path="G:\\"+themesGallery.getThemeCode();
-            String path="/home/"+themesGallery.getThemeCode();
+            String path="G:\\"+themesGallery.getThemeCode();
+//            String path="/home/"+themesGallery.getThemeCode();
             themesGallery.setFilePath(path);
             mongoTemplate.insert(themesGallery);
 

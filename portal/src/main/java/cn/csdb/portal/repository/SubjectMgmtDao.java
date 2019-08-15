@@ -80,6 +80,8 @@ public class SubjectMgmtDao {
         subject.setDbHost(dbHost);
         subject.setDbPort(dbPort);
 
+//        创建数据库
+
         //create db and ftp
         createDb(subject.getSubjectCode());
         //createFtpUser(subject.getFtpUser(), subject.getFtpPassword());
@@ -109,17 +111,17 @@ public class SubjectMgmtDao {
 //            subjectCode不重复，创建节点文件夹
             ThemesGallery themesGallery = mongoTemplate.findOne(new Query(Criteria.where("themeCode").is(subject.getThemeCode())), ThemesGallery.class);
 //                      windows测试路径,部署时注释
-//            String path = themesGallery.getFilePath() + "\\" + subject.getSubjectCode();
+            String path = themesGallery.getFilePath() + "\\" + subject.getSubjectCode();
 
-            String path = themesGallery.getFilePath() + "/" + subject.getSubjectCode();
+//            String path = themesGallery.getFilePath() + "/" + subject.getSubjectCode();
             File f1 = new File(path);
             if (!f1.exists()) {
                 f1.mkdirs();
             }
-//            String path1=path+"\\db";
-//            String path2=path+"\\file";
-            String path1=path+"/db";
-            String path2=path+"/file";
+            String path1=path+"\\db";
+            String path2=path+"\\file";
+//            String path1=path+"/db";
+//            String path2=path+"/file";
             File fileDB=new File(path1);
             File file=new File(path2);
 

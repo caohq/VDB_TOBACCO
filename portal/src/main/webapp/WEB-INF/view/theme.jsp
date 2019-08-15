@@ -125,7 +125,7 @@
                             </table>
                         </div>
 
-                        <!--用户管理标签页: 分页-->
+                        <!--节点管理标签页: 分页-->
                         <div class="row margin-top-20">
                             <div class="page-message col-md-6 margin-top-10">
                                 当前第&nbsp;<span style="color:blue;"
@@ -135,7 +135,7 @@
                                 共<span style="color:blue;" id="total"></span>&nbsp;条数据
                             </div>
                             <div class="page-list col-md-6">
-                                <div id="paginationForUser" style="float: right"></div>
+                                <div id="paginationForSubject" style="float: right"></div>
                             </div>
                         </div>
                     </div>
@@ -197,7 +197,7 @@
                                     style="color:blue;" id="totalCount"></span>&nbsp;条数据
                             </div>
                             <div class="col-md-6" id="message-group2">
-                                <div id="pagination" style="float: right"></div>
+                                <div id="paginationForTheme" style="float: right"></div>
                             </div>
                         </div>
                     </div>
@@ -1078,12 +1078,12 @@
                         $("#currentPageNo").html("0");
                     }
 
-                    if ($("#pagination .bootpag").length != 0) {
-                        $("#pagination").off();
-                        $('#pagination').empty();
+                    if ($("#paginationForTheme .bootpag").length != 0) {
+                        $("#paginationForTheme").off();
+                        $('#paginationForTheme').empty();
                     }
 
-                    $('#pagination').bootpag({
+                    $('#paginationForTheme').bootpag({
                         total: data.totalPages,
                         page: data.currentPage,
                         maxVisible: 5,
@@ -1272,11 +1272,11 @@
 
 
                         //分页
-                        if ($("#pagination .bootpag").length != 0) {
-                            $("#pagination").off();
-                            $('#pagination').empty();
+                        if ($("#paginationForSubject .bootpag").length != 0) {
+                            $("#paginationForSubject").off();
+                            $('#paginationForSubject').empty();
                         }
-                        $('#pagination').bootpag({
+                        $('#paginationForSubject').bootpag({
                             total: data.totalPages,
                             page: data.pageNum,
                             maxVisible: 5,

@@ -232,6 +232,8 @@
                                     数据发布管理</a></li>
                                 <li class=""><a href="${ctx}/metaTemplate/toMateTemMsgList"><i class="fa fa-bars"></i>元数据模板管理</a>
                                 </li>
+                                        <li class=""><a href="${ctx}/ceshi"><i class="fa fa-bars"></i>测试</a>
+                                        </li>
                             </ul>
                         </shiro:hasRole>
 
