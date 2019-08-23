@@ -22,11 +22,10 @@ public class CreateTableByExcelController {
         JSONObject jsonObject = new JSONObject();
 //
         String subjectCode=request.getSession().getAttribute("SubjectCode").toString();
-        createdTablesByCSVService.getDbFile(subjectCode);
+        createdTablesByCSVService.ergodicNodeList(subjectCode);
         return "403";
     }
 
-//     根据 /home/ ThemeCode /节点名称/ db目录下的csv文件，
-//    怎么判断哪些csv文件已经建表成功，哪些还未建表
+//
 
 }
