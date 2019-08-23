@@ -2,6 +2,8 @@ package cn.csdb.portal.service;
 
 import cn.csdb.portal.model.*;
 import cn.csdb.portal.repository.*;
+import cn.csdb.portal.utils.ExcelXlsReader;
+import cn.csdb.portal.utils.ExcelXlsxReaderWithDefaultHandler;
 import cn.csdb.portal.utils.dataSrc.DataSourceFactory;
 import cn.csdb.portal.utils.dataSrc.IDataSource;
 import com.alibaba.fastjson.JSONObject;
@@ -108,40 +110,43 @@ public class CreatedTablesByExcelService {
             List<String> files = new ArrayList<String>();
             File file = new File(dbFilePath);
             File[] tempList = file.listFiles();
-
-            for (int i = 0; i < tempList.length; i++) {
-                if (tempList[i].isFile()) {
-                    files.add(tempList[i].toString());
-                    //文件名，不包含路径
-                    String fileName = tempList[i].getName();
+            if(tempList!=null) {
+                for (int i = 0; i < tempList.length; i++) {
+                    if (tempList[i].isFile()) {
+                        files.add(tempList[i].toString());
+                        //文件名，不包含路径
+                        String fileName = tempList[i].getName();
 //                 判断该csv文件是否已经建表,从MongoDB数据库中判断
-                    if (createdTablesByCSVDao.IsCreatedTable(node.getNodeCode(), subjectCode, fileName)) {
-                        jsonObject.put("tableIsExist", "表已存在");
-//                        return jsonObject;   表已存在需要写进日志
-                    } else {
-                        //未建表，
-                        String tableName = fileName.substring(0, fileName.lastIndexOf("."));
-//                        判断表名是否存在，数据库中
-                        if (tableIsExist(subject, tableName)) {
+                        if (createdTablesByCSVDao.IsCreatedTable(node.getNodeCode(), subjectCode, fileName)) {
                             jsonObject.put("tableIsExist", "表已存在");
+//                        return jsonObject;   表已存在需要写进日志
+                        } else {
+                            //未建表，
+                            String tableName = fileName.substring(0, fileName.lastIndexOf("."));
+//                        判断表名是否存在，数据库中
+                            if (tableIsExist(subject, tableName)) {
+                                jsonObject.put("tableIsExist", "表已存在");
 //                            return jsonObject;
-                        }
+                            }
 //                      表不存在，建表
-                        jsonObject = excelVersion(fileName, subject, tableName,node);
+                            jsonObject = excelVersion(fileName, subject, tableName, node);
 //                        建表和导入数据成功，添加关联信息
-                        if (jsonObject.get("code").equals("success")) {
-                            CreatedTables createdTables = new CreatedTables();
-                            createdTables.setSubjectCode(subjectCode);
-                            createdTables.setNodeCode(node.getNodeCode());
-                            createdTables.setTableName(tableName);
-                            createdTables.setFileName(fileName);
-                            createdTablesByCSVDao.addCreatedTables(createdTables);
+                            if (jsonObject.get("code").equals("success")) {
+                                CreatedTables createdTables = new CreatedTables();
+                                createdTables.setSubjectCode(subjectCode);
+                                createdTables.setNodeCode(node.getNodeCode());
+                                createdTables.setTableName(tableName);
+                                createdTables.setFileName(fileName);
+                                createdTablesByCSVDao.addCreatedTables(createdTables);
+                            }
                         }
                     }
+                    if (tempList[i].isDirectory()) {
+                        //这里就不递归了，
+                    }
                 }
-                if (tempList[i].isDirectory()) {
-                    //这里就不递归了，
-                }
+            }else{
+                jsonObject.put("result","该文件夹下没有文件");
             }
         }
         return jsonObject;
@@ -161,30 +166,35 @@ public class CreatedTablesByExcelService {
         List<List<String>> listDate = new ArrayList<>();
         String dbFilePath=node.getDbPath()+"/"+fileName;
         if (fileName.matches("^.+\\.(?i)(xls)$")) {
-            map = parseExcelBy2003(fileName, subject,dbFilePath);
-            lists = map.get("title");
-            listDate = map.get("tableDate");
+//            普通数据解析
+//            map = parseExcelBy2003(fileName, subject,dbFilePath);
+//            大文件数据解析
+            ExcelXlsReader excelXlsReader=new ExcelXlsReader();
+            try {
+              map=excelXlsReader.process(dbFilePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else if (fileName.matches("^.+\\.(?i)(xlsx)$")) { //@描述：是否是2007的excel，返回true是2007
-//            解析excel2007版本及以上
-             map = parseExcelBy2007(dbFilePath);
+//            解析普通excel2007版本及以上
+//             map = parseExcelBy2007(dbFilePath);
 //            POI读取大数据
-//            ExcelXlsxReaderWithDefaultHandler excelXlsxReaderWithDefaultHandler=new ExcelXlsxReaderWithDefaultHandler();
+            ExcelXlsxReaderWithDefaultHandler excelXlsxReaderWithDefaultHandler=new ExcelXlsxReaderWithDefaultHandler();
 //
 //            ExcelXlsxReader excelXlsxReader=new ExcelXlsxReader();
-//            try {
-//                excelXlsxReaderWithDefaultHandler.process(dbFilePath);
+            try {
+                map=excelXlsxReaderWithDefaultHandler.process(dbFilePath);
 //                map=excelXlsxReader.processSheet(dbFilePath);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-
-            lists = map.get("title");
-            listDate = map.get("tableDate");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
-            jsonObject.put("code", "文件格式错误!");
+            jsonObject.put("code", "文件格式错误,文件的扩展名只能是xls或xlsx!");
             return jsonObject;
         }
-
+        lists = map.get("title");
+        listDate = map.get("tableDate");
         List<TableField> list = formatData(lists);
         jsonObject = createTableAndInsertValue(tableName, list, subject.getSubjectCode(), listDate);
         return jsonObject;
