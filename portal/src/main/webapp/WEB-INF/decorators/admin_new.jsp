@@ -198,10 +198,6 @@
                                                                                        aria-hidden="true"></i>
                                     数据统计管理</a>
                                 </li>
-                                <li><a class="" href="${ctx}/theme/"><i class="fa  fa-bar-chart"
-                                                                                       aria-hidden="true"></i>
-                                    主题库</a>
-                                </li>
                             </ul>
 
                         </shiro:hasRole>
@@ -232,6 +228,8 @@
                                     数据发布管理</a></li>
                                 <li class=""><a href="${ctx}/metaTemplate/toMateTemMsgList"><i class="fa fa-bars"></i>元数据模板管理</a>
                                 </li>
+                                        <li class=""><a href="${ctx}/node/"><i class="fa fa-bars"></i>节点管理</a>
+                                        </li>
                                         <li class=""><a href="${ctx}/ceshi"><i class="fa fa-bars"></i>测试</a>
                                         </li>
                             </ul>

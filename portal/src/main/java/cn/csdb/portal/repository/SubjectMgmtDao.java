@@ -1,8 +1,8 @@
 package cn.csdb.portal.repository;
 
 import cn.csdb.portal.controller.SubjectMgmtController;
+import cn.csdb.portal.model.Node;
 import cn.csdb.portal.model.Subject;
-import cn.csdb.portal.model.ThemesGallery;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
 import com.mongodb.WriteResult;
@@ -56,6 +56,8 @@ public class SubjectMgmtDao {
 
     @Resource
     private MongoTemplate mongoTemplate;
+    @Resource
+    private CreatedTablesByExcelDao createdTablesByExcelDao;
 
     @Autowired
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
@@ -109,29 +111,25 @@ public class SubjectMgmtDao {
         int addedRowCnt = 0;
         if (list.size() == 0) {
 //            subjectCode不重复，创建节点文件夹
-            ThemesGallery themesGallery = mongoTemplate.findOne(new Query(Criteria.where("themeCode").is(subject.getThemeCode())), ThemesGallery.class);
+//            ThemesGallery themesGallery = mongoTemplate.findOne(new Query(Criteria.where("themeCode").is(subject.getThemeCode())), ThemesGallery.class);
 //                      windows测试路径,部署时注释
-            String path = themesGallery.getFilePath() + "\\" + subject.getSubjectCode();
+            String path ="G:\\"+subject.getSubjectCode();
 
-//            String path = themesGallery.getFilePath() + "/" + subject.getSubjectCode();
+//            String path ="/home/" + subject.getSubjectCode();
             File f1 = new File(path);
             if (!f1.exists()) {
                 f1.mkdirs();
             }
-            String path1=path+"\\db";
-            String path2=path+"\\file";
-//            String path1=path+"/db";
+//            String path2=path+"\\file";
 //            String path2=path+"/file";
-            File fileDB=new File(path1);
-            File file=new File(path2);
+//            File file=new File(path2);
 
-            if (!file.exists() && !fileDB.exists()) {
-                file.mkdirs();
-                fileDB.mkdirs();
-            }
+//            if (!file.exists() && !fileDB.exists()) {
+//                file.mkdirs();
+//                fileDB.mkdirs();
+//            }
 
-            subject.setFilePath(path2);
-            subject.setDbPath(path1);
+            subject.setFilePath(path);
             addedRowCnt = 1;
             mongoTemplate.insert(subject);
         }
@@ -254,38 +252,25 @@ public class SubjectMgmtDao {
 
         logger.info("Delete Subject: delete subject db record");
         int deletedRowCnt = 0;
-//        删除节点的同时，删除文件夹
-         ThemesGallery themesGallery=mongoTemplate.findOne(new Query(Criteria.where("themeCode").is(subject.getThemeCode())),ThemesGallery.class);
-//         部署时注释
-//         File file3=new File(themesGallery.getFilePath()+"\\"+subject.getSubjectCode());
-        File file3=new File(themesGallery.getFilePath()+"/"+subject.getSubjectCode());
-        if(file3.exists()){
-            delFile(file3);
+
+//        删除主题库时，其主题库下没有节点
+        Subject subject1 = mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), Subject.class);
+        List<Node> list = mongoTemplate.find(new Query(Criteria.where("subjectCode").is(subject1.getSubjectCode())), Node.class);
+        if (list.size() == 0) {
+//            删除主题库时，删除文件夹
+            File file = new File(subject1.getFilePath());
+            if (file.exists()) {
+                file.delete();
+            }
+            WriteResult wr = mongoTemplate.remove(subject, "t_subject");
+            deletedRowCnt = wr.getN();
+        }else{
+            deletedRowCnt=2;
         }
-        WriteResult wr = mongoTemplate.remove(subject, "t_subject");
-        deletedRowCnt = wr.getN();
+
         logger.info("Delete Subject: delete subject db record completed.");
 
         return deletedRowCnt;
-    }
-/** 
-* @Description: 删除文件夹
-* @Param: [file] 
-* @return: boolean 
-* @Author: zcy
-* @Date: 2019/8/9 
-*/ 
-    public boolean delFile(File file) {
-        if (!file.exists()) {
-            return false;
-        }
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            for (File f : files) {
-                delFile(f);
-            }
-        }
-        return file.delete();
     }
 
     /**
@@ -413,8 +398,6 @@ public class SubjectMgmtDao {
             update.set("email", subject.getEmail());
             update.set("serialNo", subject.getSerialNo());
             update.set("imagePath", subject.getImagePath());
-            update.set("themeCode", subject.getThemeCode());
-            update.set("subjectURL",subject.getSubjectURL());
             mongoTemplate.upsert(query, update, "t_subject");
 
         } catch (Exception e) {

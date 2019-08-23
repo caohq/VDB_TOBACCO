@@ -47,17 +47,8 @@ public class Subject {
     @Field("dbPort")
     private String dbPort; // 关系型数据库端口号
 
-    @Field("themeCode")
-    private String themeCode;   //主题库Code，和节点关系一对多
-
     @Field("filePath")
-    private String filePath;
-
-    @Field("dbPath")
-    private String dbPath;
-
-    @Field("subjectURL")
-    private String subjectURL;
+    private String filePath;  // 文件路径
 
     private long visitCount; // 访问量统计
     private long downCont; // 下载量统计
@@ -238,66 +229,11 @@ public class Subject {
         this.dbPort = dbPort;
     }
 
-    public String getThemeCode() {
-        return themeCode;
-    }
-
-    public void setThemeCode(String themeCode) {
-        this.themeCode = themeCode;
-    }
-
     public String getFilePath() {
         return filePath;
     }
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
-    }
-
-    public String getDbPath() {
-        return dbPath;
-    }
-
-    public void setDbPath(String dbPath) {
-        this.dbPath = dbPath;
-    }
-
-    public String getSubjectURL() {
-        return subjectURL;
-    }
-
-    public void setSubjectURL(String subjectURL) {
-        this.subjectURL = subjectURL;
-    }
-
-    @Override
-    public String toString() {
-        return "Subject{" +
-                "id='" + id + '\'' +
-                ", subjectName='" + subjectName + '\'' +
-                ", subjectCode='" + subjectCode + '\'' +
-                ", imagePath='" + imagePath + '\'' +
-                ", brief='" + brief + '\'' +
-                ", admin='" + admin + '\'' +
-                ", adminPasswd='" + adminPasswd + '\'' +
-                ", contact='" + contact + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", ftpServerAddr='" + ftpServerAddr + '\'' +
-                ", ftpUser='" + ftpUser + '\'' +
-                ", ftpPassword='" + ftpPassword + '\'' +
-                ", serialNo='" + serialNo + '\'' +
-                ", ftpFilePath='" + ftpFilePath + '\'' +
-                ", dbName='" + dbName + '\'' +
-                ", dbUserName='" + dbUserName + '\'' +
-                ", dbPassword='" + dbPassword + '\'' +
-                ", dbHost='" + dbHost + '\'' +
-                ", dbPort='" + dbPort + '\'' +
-                ", themeCode='" + themeCode + '\'' +
-                ", filePath='" + filePath + '\'' +
-                ", dbPath='" + dbPath + '\'' +
-                ", visitCount=" + visitCount +
-                ", downCont=" + downCont +
-                '}';
     }
 }

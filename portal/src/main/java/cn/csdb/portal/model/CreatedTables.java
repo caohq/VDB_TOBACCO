@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CreatedTables {
     @Id
     private String id;
-    @Field("themeCode")
-    private String themeCode; // 主题库代码
+    @Field("nodeCode")
+    private String nodeCode; // 节点代码
     @Field("subjectCode")
     private String subjectCode; // 主题库代码
     @Field("tableName")
@@ -24,14 +24,6 @@ public class CreatedTables {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getThemeCode() {
-        return themeCode;
-    }
-
-    public void setThemeCode(String themeCode) {
-        this.themeCode = themeCode;
     }
 
     public String getSubjectCode() {
@@ -56,5 +48,13 @@ public class CreatedTables {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getNodeCode() {
+        return nodeCode;
+    }
+
+    public void setNodeCode(String nodeCode) {
+        this.nodeCode = nodeCode;
     }
 }

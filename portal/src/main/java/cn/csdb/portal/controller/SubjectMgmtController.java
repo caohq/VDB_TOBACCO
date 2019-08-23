@@ -1,9 +1,9 @@
 package cn.csdb.portal.controller;
 
+import cn.csdb.portal.model.Node;
 import cn.csdb.portal.model.Subject;
-import cn.csdb.portal.model.ThemesGallery;
 import cn.csdb.portal.service.SubjectMgmtService;
-import cn.csdb.portal.service.ThemeService;
+import cn.csdb.portal.service.NodeService;
 import cn.csdb.portal.utils.MD5Util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -38,7 +38,7 @@ public class SubjectMgmtController {
 	private String ftpServerAddr;
 
 	@Resource
-    private ThemeService themeService;
+    private NodeService nodeService;
 
     @Autowired
     public void setProjectLibService(SubjectMgmtService subjectService) {
@@ -293,7 +293,7 @@ public class SubjectMgmtController {
         logger.info("enterring SubjectMgmtController-querySubjectById");
         logger.info("id = " + id);
         Subject subject = subjectMgmtService.findSubjectById(id);
-        List<ThemesGallery> list=themeService.getAll();
+//        List<Node> list=themeService.getAll();
         logger.info("queried subject - " + subject);
         return (JSONObject) JSON.toJSON(subject);
     }
@@ -302,10 +302,10 @@ public class SubjectMgmtController {
     @ResponseBody
     public JSONObject findSubjectAndThemeById(String id) {
         Subject subject = subjectMgmtService.findSubjectById(id);
-        List<ThemesGallery> list=themeService.getAll();
+//        List<Node> list=themeService.getAll();
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("subject",subject);
-        jsonObject.put("list",list);
+//        jsonObject.put("list",list);
         return jsonObject;
     }
 
@@ -369,22 +369,5 @@ public class SubjectMgmtController {
         logger.info("nextSerialNo = " + nextSerialNo);
 
         return nextSerialNo;
-    }
-
-    @RequestMapping(value = "/getNextSerialNoAndTheme")
-    @ResponseBody
-    public JSONObject getNextSerialNoAndTheme(HttpServletRequest request) {
-        JSONObject jsonObject=new JSONObject();
-        String nextSerialNo = "";
-        String lastSerialNo = "";
-        lastSerialNo = subjectMgmtService.getLastSerialNo();
-        nextSerialNo = Integer.parseInt(lastSerialNo) + 1 + "";
-
-        logger.info("lastSerialNo = " + lastSerialNo);
-        logger.info("nextSerialNo = " + nextSerialNo);
-        List<ThemesGallery> list=themeService.getAll();
-        jsonObject.put("list",list);
-        jsonObject.put("nextSerialNo",nextSerialNo);
-        return jsonObject;
     }
 }

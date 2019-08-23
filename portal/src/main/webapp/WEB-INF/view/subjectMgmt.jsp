@@ -837,7 +837,9 @@
                                             if (data.trim() == "1") {
                                                 toastr["success"]("删除成功！", "数据删除");
                                                 getSubject(currentPage);
-                                            } else {
+                                            } else if (data.trim() == "2"){
+                                                toastr["error"]("该主题库下存在，请删除节点再删除主题库！");
+                                            }else{
                                                 toastr["error"]("删除失败！", "数据删除");
                                             }
                                         },
