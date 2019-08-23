@@ -1,13 +1,9 @@
 package cn.csdb.portal.service;
 
-import cn.csdb.portal.model.CreatedTables;
-import cn.csdb.portal.model.DataSrc;
-import cn.csdb.portal.model.Subject;
-import cn.csdb.portal.model.TableField;
-import cn.csdb.portal.repository.CheckUserDao;
-import cn.csdb.portal.repository.CreatedTablesByExcelDao;
-import cn.csdb.portal.repository.DataSrcDao;
-import cn.csdb.portal.repository.SubjectDao;
+import cn.csdb.portal.model.*;
+import cn.csdb.portal.repository.*;
+import cn.csdb.portal.utils.ExcelXlsxReader;
+import cn.csdb.portal.utils.ExcelXlsxReaderWithDefaultHandler;
 import cn.csdb.portal.utils.dataSrc.DataSourceFactory;
 import cn.csdb.portal.utils.dataSrc.IDataSource;
 import com.alibaba.fastjson.JSONObject;
@@ -15,6 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -27,7 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.*;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 @Service
 public class CreatedTablesByExcelService {
@@ -45,6 +46,9 @@ public class CreatedTablesByExcelService {
 
     @Resource
     private CheckUserDao checkUserDao;
+
+    @Resource
+    private NodeDao nodeDao;
 
     /**
      * 根据当前用户获取相关连接信息
@@ -78,12 +82,31 @@ public class CreatedTablesByExcelService {
         return connection;
     }
 
-    public JSONObject getDbFile(String subjectCode) {
+    public JSONObject ergodicNodeList(String subjectCode){
+        JSONObject jsonObject = new JSONObject();
+        List<Node> nodes=nodeDao.findBySubjectCode(subjectCode);
+        for(Node node:nodes){
+            getDbFile(subjectCode,node);
+        }
+        return jsonObject;
+    }
+    
+    //    根据 /home/ ThemeCode /节点名称/ db目录下的csv文件，
+    //    怎么判断哪些csv文件已经建表成功，哪些还未建表
+    /** 
+    * @Description:
+    * @Param: [subjectCode, node] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/21 
+    */ 
+    public JSONObject getDbFile(String subjectCode,Node node) {
         JSONObject jsonObject = new JSONObject();
         Subject subject = subjectDao.findBySubjectCode(subjectCode);
+//        Node node=nodeDao.findByNodeCode(nodeCode);
         String dbFilePath;
         if (subject != null) {
-            dbFilePath = subject.getDbPath();
+            dbFilePath = node.getDbPath();
             List<String> files = new ArrayList<String>();
             File file = new File(dbFilePath);
             File[] tempList = file.listFiles();
@@ -94,27 +117,27 @@ public class CreatedTablesByExcelService {
                     //文件名，不包含路径
                     String fileName = tempList[i].getName();
 //                 判断该csv文件是否已经建表,从MongoDB数据库中判断
-                    if (createdTablesByCSVDao.IsCreatedTable(subject.getThemeCode(), subjectCode, fileName)) {
+                    if (createdTablesByCSVDao.IsCreatedTable(node.getNodeCode(), subjectCode, fileName)) {
                         jsonObject.put("tableIsExist", "表已存在");
-                        return jsonObject;
+//                        return jsonObject;   表已存在需要写进日志
                     } else {
                         //未建表，
                         String tableName = fileName.substring(0, fileName.lastIndexOf("."));
 //                        判断表名是否存在，数据库中
                         if (tableIsExist(subject, tableName)) {
                             jsonObject.put("tableIsExist", "表已存在");
-                            return jsonObject;
+//                            return jsonObject;
                         }
 //                      表不存在，建表
-                        jsonObject=excelVersion(fileName, subject, tableName);
+                        jsonObject = excelVersion(fileName, subject, tableName,node);
 //                        建表和导入数据成功，添加关联信息
-                        if(jsonObject.get("code").equals("success")){
-                            CreatedTables createdTables=new CreatedTables();
+                        if (jsonObject.get("code").equals("success")) {
+                            CreatedTables createdTables = new CreatedTables();
                             createdTables.setSubjectCode(subjectCode);
-                            createdTables.setThemeCode(subject.getThemeCode());
+                            createdTables.setNodeCode(node.getNodeCode());
                             createdTables.setTableName(tableName);
                             createdTables.setFileName(fileName);
-                         createdTablesByCSVDao.addCreatedTables(createdTables);
+                            createdTablesByCSVDao.addCreatedTables(createdTables);
                         }
                     }
                 }
@@ -126,25 +149,37 @@ public class CreatedTablesByExcelService {
         return jsonObject;
     }
 
-/** 
-* @Description: 根据excel不同版本，调用不同的解析方法
-* @Param: [fileName, subject, tableName] 
-* @return: com.alibaba.fastjson.JSONObject 
-* @Author: zcy
-* @Date: 2019/8/15 
-*/ 
-    public JSONObject excelVersion(String fileName, Subject subject, String tableName) {
+    /**
+     * @Description: 根据excel不同版本，调用不同的解析方法
+     * @Param: [fileName, subject, tableName]
+     * @return: com.alibaba.fastjson.JSONObject
+     * @Author: zcy
+     * @Date: 2019/8/15
+     */
+    public JSONObject excelVersion(String fileName, Subject subject, String tableName ,Node node) {
         JSONObject jsonObject = new JSONObject();
         Map<String, List<List<String>>> map = new HashMap<>();
         List<List<String>> lists = new ArrayList<>();
         List<List<String>> listDate = new ArrayList<>();
+        String dbFilePath=node.getDbPath()+"/"+fileName;
         if (fileName.matches("^.+\\.(?i)(xls)$")) {
-            map = parseExcelBy2003(fileName, subject);
+            map = parseExcelBy2003(fileName, subject,dbFilePath);
             lists = map.get("title");
             listDate = map.get("tableDate");
         } else if (fileName.matches("^.+\\.(?i)(xlsx)$")) { //@描述：是否是2007的excel，返回true是2007
 //            解析excel2007版本及以上
-            map = parseExcelBy2007(fileName, subject);
+             map = parseExcelBy2007(dbFilePath);
+//            POI读取大数据
+//            ExcelXlsxReaderWithDefaultHandler excelXlsxReaderWithDefaultHandler=new ExcelXlsxReaderWithDefaultHandler();
+//
+//            ExcelXlsxReader excelXlsxReader=new ExcelXlsxReader();
+//            try {
+//                excelXlsxReaderWithDefaultHandler.process(dbFilePath);
+//                map=excelXlsxReader.processSheet(dbFilePath);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
             lists = map.get("title");
             listDate = map.get("tableDate");
         } else {
@@ -159,8 +194,6 @@ public class CreatedTablesByExcelService {
 
     public List<TableField> formatData(List<List<String>> listTitle) {
         List<TableField> list = new ArrayList<>();
-//            for (int i = 0; i < listTitle.size(); i++) {
-
         for (int j = 0; j < listTitle.get(1).size(); j++) {
             TableField tableField = new TableField();
             tableField.setComment(listTitle.get(0).get(j));//注释
@@ -168,14 +201,8 @@ public class CreatedTablesByExcelService {
             tableField.setType(listTitle.get(2).get(j));   //数据类型
             tableField.setLength(listTitle.get(3).get(j));  //长度
             tableField.setPk(listTitle.get(4).get(j));
-//                    if(listTitle.get(4).get(j).equals("1.0")||listTitle.get(4).get(j).equals("1")){
-//                        tableField.setPk(listTitle.get(1).get(j));
-//                    }else{
-//                        tableField.setPk("");
-//                    }
             list.add(tableField);
         }
-//            }
         return list;
     }
 
@@ -183,16 +210,18 @@ public class CreatedTablesByExcelService {
      * 基于XSSFWorkbook对象处理Excel生成 Map<表名，List<行值>>
      * .xls格式的excel文件需要HSSF支持，需要相应的poi.jar，.xlsx格式的excel文件需要XSSF支持，需要poi-ooxml.jar，
      *
-     * @param fileName Excel全路径
+     * @param
      * @return
      */
-    public Map<String, List<List<String>>> parseExcelBy2007(String fileName, Subject subject) {
-        File excelFile = new File(subject.getDbPath() + "\\" + fileName);
+    public Map<String, List<List<String>>> parseExcelBy2007(String dbFilePath) {
+//        File excelFile = new File(subject.getDbPath() + "\\" + fileName);
+        File excelFile = new File(dbFilePath);
         XSSFWorkbook workbook = null;
         Map<String, List<List<String>>> map = new HashMap<>();
         List<List<String>> lists = new ArrayList<>();
         List<List<String>> listDate = new ArrayList<>();
         int realcellNum = 0;
+        List<String> typeList = new ArrayList<>();
         try {
             workbook = new XSSFWorkbook(new FileInputStream(excelFile));
             int numberOfSheets = workbook.getNumberOfSheets();
@@ -205,15 +234,28 @@ public class CreatedTablesByExcelService {
                         for (int r = 0; r <= lastRowNum; r++) {
                             XSSFRow row = sheetAt.getRow(r);
                             int lastCellNum = row.getLastCellNum();
-                            List<String> cellList = new ArrayList<String>(lastCellNum);
+                            List<String> cellList = new ArrayList<>();
 //                        根据第二行的字段名，获取最完整的列数
                             realcellNum = sheetAt.getRow(1).getLastCellNum();
                             for (int c = 0; c < realcellNum; c++) {
                                 XSSFCell cell = row.getCell(c);
-                                String s = cell == null ? "" : cell.toString();
+                                String s = "";
+//                             excel的时间和日期格式需要单独处理
+                                if (r >= 5) {
+                                    if (typeList.size() > 0) {
+                                        String dateType = typeList.get(c);
+                                        s = formatDateExcel(cell, dateType);
+                                        System.out.println(s);
+                                    }
+                                } else {
+                                    s = cell == null ? "" : cell.toString();
+                                }
                                 cellList.add(s);
                             }
                             if (r < 5) {
+                                if (r == 2) {
+                                    typeList = cellList;
+                                }
                                 lists.add(cellList);
                             } else {
                                 listDate.add(cellList);
@@ -221,19 +263,24 @@ public class CreatedTablesByExcelService {
                         }
                     }
                 }
+//                第二个sheet页仍从第六行开始读取数据
                 if (i > 0) {
 //                    获得第i个sheet页
                     XSSFSheet sheetAt = workbook.getSheetAt(i);
                     int lastRowNum = sheetAt.getLastRowNum();
                     if (lastRowNum > 0) {
-                        for (int r = 5; r <= lastRowNum; r++) {
+                        for (int r = 0; r <= lastRowNum; r++) {
                             XSSFRow row = sheetAt.getRow(r);
                             int lastCellNum = row.getLastCellNum();
-                            List<String> cellList = new ArrayList<String>(lastCellNum);
+                            List<String> cellList = new ArrayList<>();
                             for (int c = 0; c < realcellNum; c++) {
                                 XSSFCell cell = row.getCell(c);
-                                String s = cell == null ? "" : cell.toString();
-                                cellList.add(s);
+//                                String s = cell == null ? "" : cell.toString();
+                                if (typeList.size() > 0) {
+                                    String dateType = typeList.get(c);
+                                    String s = formatDateExcel(cell, dateType);
+                                    cellList.add(s);
+                                }
                             }
                             listDate.add(cellList);
                         }
@@ -250,12 +297,58 @@ public class CreatedTablesByExcelService {
         return map;
     }
 
-    public Map<String, List<List<String>>> parseExcelBy2003(String fileName, Subject subject) {
-        File excelFile = new File(subject.getDbPath() + "\\" + fileName);
+    public String formatDateExcel(Cell cell, String dateType) {
+        String s;
+        if ("date".equalsIgnoreCase(dateType)) {
+            DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+            s = formater.format(cell.getDateCellValue());
+        } else if ("time".equalsIgnoreCase(dateType)) {
+            DateFormat formater = new SimpleDateFormat("HH:mm:ss");
+            s = formater.format(cell.getDateCellValue());
+        } else if ("datetime".equalsIgnoreCase(dateType)) {
+            DateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            s = formater.format(cell.getDateCellValue());
+        } else {
+            s = cell == null ? "" : cell.toString();
+        }
+        return s;
+    }
+
+    public String formatDateExcelBy2003(Cell cell, String dateType) {
+        String s = "";
+        if ("date".equalsIgnoreCase(dateType)) {
+            DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = new SimpleDateFormat("MM/dd/yyyy").parse(cell.toString());
+                s = formater.format(date);
+                System.out.println();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else if ("datetime".equalsIgnoreCase(dateType)) {
+            DateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(cell.toString());
+                s = formater.format(date);
+                System.out.println();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            s = cell == null ? "" : cell.toString();
+        }
+
+        return s;
+    }
+
+    public Map<String, List<List<String>>> parseExcelBy2003(String fileName, Subject subject,String dbFilePath) {
+//        File excelFile = new File(subject.getDbPath() + "\\" + fileName);
+        File excelFile = new File(dbFilePath);
         HSSFWorkbook workbook = null;
         Map<String, List<List<String>>> map = new HashMap<>();
         List<List<String>> lists = new ArrayList<>();
         List<List<String>> listDate = new ArrayList<>();
+        List<String> typeList = new ArrayList<>();
         int realcellNum = 0;
         try {
             workbook = new HSSFWorkbook(new FileInputStream(excelFile));
@@ -269,15 +362,29 @@ public class CreatedTablesByExcelService {
                         for (int r = 0; r <= lastRowNum; r++) {
                             HSSFRow row = sheetAt.getRow(r);
                             int lastCellNum = row.getLastCellNum();
-                            List<String> cellList = new ArrayList<String>(lastCellNum);
+                            List<String> cellList = new ArrayList<>();
 //                        根据第二行的字段名，获取最完整的列数
                             realcellNum = sheetAt.getRow(1).getLastCellNum();
                             for (int c = 0; c < realcellNum; c++) {
                                 HSSFCell cell = row.getCell(c);
-                                String s = cell == null ? "" : cell.toString();
+                                String s = "";
+//                                String s = cell == null ? "" : cell.toString();
+                                if (r >= 5) {
+                                    if (typeList.size() > 0) {
+                                        String dateType = typeList.get(c);
+                                        s = formatDateExcelBy2003(cell, dateType);
+                                        System.out.println(s);
+                                    }
+                                } else {
+                                    s = cell == null ? "" : cell.toString();
+                                }
                                 cellList.add(s);
+//                                System.out.println(getCellValue(cell));
                             }
                             if (r < 5) {
+                                if (r == 2) {
+                                    typeList = cellList;
+                                }
                                 lists.add(cellList);
                             } else {
                                 listDate.add(cellList);
@@ -290,14 +397,18 @@ public class CreatedTablesByExcelService {
                     HSSFSheet sheetAt = workbook.getSheetAt(i);
                     int lastRowNum = sheetAt.getLastRowNum();
                     if (lastRowNum > 0) {
-                        for (int r = 5; r <= lastRowNum; r++) {
+                        for (int r = 0; r <= lastRowNum; r++) {
                             HSSFRow row = sheetAt.getRow(r);
                             int lastCellNum = row.getLastCellNum();
-                            List<String> cellList = new ArrayList<String>(lastCellNum);
+                            List<String> cellList = new ArrayList<>();
                             for (int c = 0; c < realcellNum; c++) {
                                 HSSFCell cell = row.getCell(c);
-                                String s = cell == null ? "" : cell.toString();
-                                cellList.add(s);
+//                                String s = cell == null ? "" : cell.toString();
+                                if (typeList.size() > 0) {
+                                    String dateType = typeList.get(c);
+                                    String s = formatDateExcelBy2003(cell, dateType);
+                                    cellList.add(s);
+                                }
                             }
                             listDate.add(cellList);
                         }
@@ -435,7 +546,7 @@ public class CreatedTablesByExcelService {
                 String next1 = iterator1.next();
                 sb.append("'");
                 if ("".equals(next1.trim()) &&
-                        ("int".equals(typeList.get(i)) || "float".equals(typeList.get(i)) || "double".equalsIgnoreCase(typeList.get(i)) || "decimal".equalsIgnoreCase(typeList.get(i)))) {
+                        ("int".equalsIgnoreCase(typeList.get(i)) || "float".equalsIgnoreCase(typeList.get(i)) || "double".equalsIgnoreCase(typeList.get(i)) || "decimal".equalsIgnoreCase(typeList.get(i)))) {
                     next1 = "0";
                     sb.append(next1);
                 } else {
@@ -513,6 +624,8 @@ public class CreatedTablesByExcelService {
             if ("float".equalsIgnoreCase(type) || "double".equalsIgnoreCase(type) || "decimal".equalsIgnoreCase(type)) {
                 len += 6;
                 sb.append("(" + len + ",6)");
+            } else if ("time".equalsIgnoreCase(type) || "date".equalsIgnoreCase(type) || "datetime".equalsIgnoreCase(type)) {
+
             } else {
                 sb.append("(" + len + ")");
             }
@@ -578,7 +691,6 @@ public class CreatedTablesByExcelService {
         }
         return "1".equals(num);
     }
-
 
 
     /***
