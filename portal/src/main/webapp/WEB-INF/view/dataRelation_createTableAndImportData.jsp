@@ -967,15 +967,15 @@
 
                     <td>
                         <select fieldType={{v[0]}}>
-                            <option selected value="0">请选择字段类型</option>
-                            <option value="varchar">varchar</option>
+                            <%--<option selected value="0">请选择字段类型</option>--%>
+                            <option value="varchar" selected>varchar</option>
                             <option value="int">int</option>
                             <option value="text">text</option>
                         </select>
                     </td>
 
                     <td>
-                        <input fieldLength={{v[0]}} placeholder="请输入字段长度"/>
+                        <input fieldLength={{v[0]}} placeholder="请输入字段长度" value="255"/>
                     </td>
                     <td class="text-center"><input fieldPk="{{v[0]}}" name="isPK" type="radio"/></td>
                 </tr>

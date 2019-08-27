@@ -71,6 +71,13 @@ public class FileImportController {
         return jsonObject;
     }
 
+    /** 
+    * @Description: 导入式建表 
+    * @Param: [request, file] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/27 
+    */ 
     @PostMapping("/createTableAndInsertValue")
     @ResponseBody
     public JSONObject createTableAndInsertValue(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file) {
@@ -93,7 +100,13 @@ public class FileImportController {
         jsonObject.put("fileStatus", b);
         return jsonObject;
     }
-
+    /** 
+    * @Description: 表存在时，增量添加数据 
+    * @Param: [request, file] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/27 
+    */ 
     @PostMapping("/onlyInsertValue")
     @ResponseBody
     public JSONObject onlyInsertValue(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file) {
@@ -185,7 +198,13 @@ public class FileImportController {
         JSONObject jsonObject = fileImportService.deleteTableName(tableName, subjectCode);
         return jsonObject;
     }
-
+/** 
+* @Description: 验证SQL语句 
+* @Param: [newSql, request] 
+* @return: java.lang.String 
+* @Author: zcy
+* @Date: 2019/8/27 
+*/ 
     @PostMapping("/validateSqlString")
     @ResponseBody
     public String validateSqlString(String newSql, HttpServletRequest request) {
@@ -193,6 +212,13 @@ public class FileImportController {
         return fileImportService.validateSqlString(newSql, subjectCode);
     }
 
+    /** 
+    * @Description: 验证表名是否重复 
+    * @Param: [newName, request] 
+    * @return: java.lang.String 
+    * @Author: zcy
+    * @Date: 2019/8/27 
+    */ 
     @PostMapping("/validateTableName")
     @ResponseBody
     public String validateTableName(String newName, HttpServletRequest request) {
@@ -200,6 +226,13 @@ public class FileImportController {
         return fileImportService.validateTableName(newName, subjectCode);
     }
 
+    /** 
+    * @Description: 创建表（关联创建表） 
+    * @Param: [newSql, newName, period, request] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/8/27 
+    */ 
     @PostMapping("/createTableBySql")
     @ResponseBody
     public JSONObject createTableBySql(String newSql, String newName, String period, HttpServletRequest request) {
@@ -220,7 +253,13 @@ public class FileImportController {
         }
         return jsonObject;
     }
-
+/** 
+* @Description: 预览数据
+* @Param: [sqlString, request] 
+* @return: com.alibaba.fastjson.JSONObject 
+* @Author: zcy
+* @Date: 2019/8/27 
+*/ 
     @PostMapping("/previewSqlData")
     @ResponseBody
     public JSONObject previewSqlData(String sqlString, HttpServletRequest request) {

@@ -100,7 +100,8 @@ public class HttpServiceController {
         }
 
         // 创建操作空间
-        String siteFtpPath = subject.getFtpFilePath() + "temp/";
+//        String siteFtpPath = subject.getFtpFilePath() + "temp/";
+        String siteFtpPath = subject.getFilePath() + "temp/";
         try {
             FileUtil.createFileByPathAndType(siteFtpPath, "dir");
         } catch (IOException e) {

@@ -235,7 +235,8 @@ public class ResourceController {
     public List<JSONObject> fileSourceFileList(HttpSession session) {
         String subjectCode = session.getAttribute("SubjectCode").toString();
         Subject subject = subjectService.findBySubjectCode(subjectCode);
-        List<JSONObject> jsonObjects = resourceService.fileSourceFileListFirst(subject.getFtpFilePath());
+//        List<JSONObject> jsonObjects = resourceService.fileSourceFileListFirst(subject.getFtpFilePath());
+        List<JSONObject> jsonObjects = resourceService.fileSourceFileListFirst(subject.getFilePath());
         return jsonObjects;
     }
 
@@ -887,7 +888,8 @@ public class ResourceController {
         Subject subject = subjectService.findBySubjectCode(subjectCode);
 
 
-        String filePath = subject.getFtpFilePath() + "file";
+//        String filePath = subject.getFtpFilePath() + "file";
+        String filePath = subject.getFilePath();
 
         List<FileTreeNode> nodeList = new ArrayList<FileTreeNode>();
         filePath = filePath.replace("/", File.separator);
