@@ -424,6 +424,7 @@
 
         var subjectCode = '${sessionScope.SubjectCode}';
         var userName = "${sessionScope.userName}";
+        var oldDataList;
         closableTab.afterCloseTab = function (item){
             if (!$(".nav.nav-tabs.activeTabs li")[0]) {
                 $("#btn_addTableData").hide();
@@ -985,6 +986,7 @@
 
         //点击编辑按钮
         function updateData(i) {
+            debugger
             $("#form_id").html(" ");
             $("#update_tbody").html(" ");
             $("#update_div").html("");
@@ -992,11 +994,13 @@
 
             var s = $(i).parent().parent().parent().parent().parent().siblings().size();
             var oldData = new Array();
-            var d = [];
+            // var d = [];
+            oldDataList=new Array();
             for (var j = 0; j < s; j++) {
                 var ss = $(i).parent().parent().parent().parent().parent().siblings().eq(j).text().replace(/[\r\n]/g, "");
                 oldData.push(ss.trim());//获得所有td
-                d.push(ss.trim() + "|_|");
+                // d.push(ss.trim() + "|_|");
+                oldDataList[j]=ss.trim();
             }
             $.ajax({
                 type: "post",
@@ -1037,7 +1041,7 @@
                         }
                     }
 
-                    var s_save = "<button id='btn_save'  class='btn btn-success' data-dismiss='modal' onclick=\" saveData('" + dataTypeArr + "','" + strs2 + "','" + enumColumn + "','" + d + "')\">保存</button> ";
+                    var s_save = "<button id='btn_save'  class='btn btn-success' data-dismiss='modal' onclick=\" saveData('" + dataTypeArr + "','" + strs2 + "','" + enumColumn + "')\">保存</button> ";
                     s_save += "<button type='button' data-dismiss='modal' class='btn btn-danger'>取消</button> ";
 
                     $("#update_div").append(s_save);
@@ -1338,7 +1342,8 @@
         }
 
         //修改数据点击保存
-        function saveData(dataType, alert_column, enumColumn, oldData) {
+        function saveData(dataType, alert_column, enumColumn) {
+            debugger;
             var tableName = $("#ul_div111 li.active a").text();
             //获得当前页码
             var currentPage = $("#currentPageNo" + tableName + "").html();
@@ -1346,8 +1351,9 @@
             var columnName=alert_column.split(",");
             var checkdataArr = [];
             var checkdataArrs=[];
-            var oldArr = oldData.split("|_|,");
-            oldArr[oldArr.length - 1] = oldArr[oldArr.length - 1].split("|_|")[0];
+            // var oldArr = oldData.split("|_|,");
+            // oldArr[oldArr.length - 1] = oldArr[oldArr.length - 1].split("|_|")[0];
+            JSON.stringify(oldDataList)
             var enumColumns = enumColumn.split(",");
             for (var i = 0; i < columnName.length; i++) {
                 var s = document.getElementById(columnName[i] + "_coldata").value;
@@ -1589,7 +1595,7 @@
                     "subjectCode": subjectCode,
                     "tableName": tableName,
                     "enumColumn": enumColumns.join(","),
-                    "oldData": JSON.stringify(oldArr)
+                    "oldData": JSON.stringify(oldDataList)
                 },
                 dataType: "json",
                 success: function (data) {

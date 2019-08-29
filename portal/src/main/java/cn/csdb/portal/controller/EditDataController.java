@@ -155,6 +155,7 @@ public class EditDataController {
         List<String> list1=map.get("pkColumn");
         List<String> list2=map.get("autoAdd");
         List<String> list3=map.get("IS_NULLABLE");
+        List<String> dataType=map.get("DATA_TYPE");
 
         for(int i=0;i<jsonArray.size();i++){
             String col = jsonArray.getJSONObject(i).getString("columnName");
@@ -179,7 +180,7 @@ public class EditDataController {
                 return jsonObject;
             }
         }
-        jsonObject = editDataService.addData(subjectCode, tableName, list1, list2, jsonArray, enumnCoumns);
+        jsonObject = editDataService.addData(subjectCode, tableName, list1, list2, jsonArray, enumnCoumns,dataType);
         return jsonObject;
     }
 

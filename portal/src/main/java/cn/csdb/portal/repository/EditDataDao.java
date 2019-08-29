@@ -170,10 +170,16 @@ public class EditDataDao {
             }
             s = s.substring(0, s.length() - 4);
             sql = sql + s;
+            List<String> dataType=getTableStructure(dataSrc,tableName).get("DATA_TYPE");
             PreparedStatement ps = connection.prepareStatement(sql);
             for (int k = 0, j = 1; k < listData.size(); k++) {
                 if (!listData.get(k).equals("") && listData.get(k) != null) {
-                    ps.setObject(j, listData.get(k));
+                        if("varchar".equalsIgnoreCase(dataType.get(k))||"char".equalsIgnoreCase(dataType.get(k))||"text".equalsIgnoreCase(dataType.get(k))||"longtext".equalsIgnoreCase(dataType.get(k))||"tinytext".equalsIgnoreCase(dataType.get(k))) {
+                            String ss=listData.get(k).toString().replaceAll("&apos;", "'");
+                            ps.setObject(j, ss);
+                        }else{
+                            ps.setObject(j, listData.get(k));
+                        }
                     j++;
                 }
             }
@@ -265,6 +271,7 @@ public class EditDataDao {
             String conditionstr = "";
 
             List<String> list = selectPrimaryKeyColumn(dataSrc, tableName);
+            List<String> list1=getTableStructure(dataSrc,tableName).get("DATA_TYPE");
             if (list.size() > 0) {  //已设置主键
                 for (int i = 0; i < jsonArray2.size(); i++) {
                     String column = jsonArray2.getJSONObject(i).getString("name");
@@ -278,10 +285,13 @@ public class EditDataDao {
                 for (int i = 0; i < jsonArray2.size(); i++) {
                     if (!jsonArrayOld.get(i).equals("") && jsonArrayOld.get(i) != null) {
                         String column = jsonArray2.getJSONObject(i).getString("name");
-                            List<String> list1=getTableStructure(dataSrc,tableName).get("DATA_TYPE");
                             if("float".equals(list1.get(i))){
                                 conditionstr += " " + column + " = " + jsonArrayOld.get(i) + "  and ";
-                            }else {
+                            }else if("varchar".equalsIgnoreCase(list1.get(i))||"char".equalsIgnoreCase(list1.get(i))||"text".equalsIgnoreCase(list1.get(i))||"longtext".equalsIgnoreCase(list1.get(i))||"tinytext".equalsIgnoreCase(list1.get(i))){
+                                String s=jsonArrayOld.get(i).toString();
+                                s=s.replaceAll("&apos;","''");
+                                conditionstr += " " + column + " = '" + s + "'  and ";
+                            }else{
                                 conditionstr += " " + column + " = '" + jsonArrayOld.get(i) + "'  and ";
                             }
                     }
@@ -300,6 +310,9 @@ public class EditDataDao {
                 } else if ((jsonArrayOld.get(i).equals("") || jsonArrayOld.get(i) == null) && (value.equals("") || value == null)) {
 
                 } else {
+                        if("varchar".equalsIgnoreCase(list1.get(i))||"char".equalsIgnoreCase(list1.get(i))||"text".equalsIgnoreCase(list1.get(i))||"longtext".equalsIgnoreCase(list1.get(i))||"tinytext".equalsIgnoreCase(list1.get(i))) {
+                            value=value.toString().replaceAll("&apos;", "'");
+                        }
                     value = getEnumKeyByVal(showTypeInf, enumnCoumns, column, value, dataSrc);
                     pst.setObject(j, value);
                     j++;
@@ -333,7 +346,7 @@ public class EditDataDao {
      * @Author: zcy
      * @Date: 2019/5/22
      */
-    public JSONObject addData(DataSrc dataSrc, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String subjectCode, String[] enumnCoumns) {
+    public JSONObject addData(DataSrc dataSrc, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String subjectCode, String[] enumnCoumns,List<String> dataType) {
         IDataSource dataSource = DataSourceFactory.getDataSource(dataSrc.getDatabaseType());
         Connection connection = dataSource.getConnection(dataSrc.getHost(), dataSrc.getPort(), dataSrc.getUserName(), dataSrc.getPassword(), dataSrc.getDatabaseName());
         JSONObject jsonObject=new JSONObject();
@@ -364,10 +377,13 @@ public class EditDataDao {
                 if (pkyList.get(i).equals("PRI") && addAuto.get(i).equals("auto_increment")) { //有主键且自增
                 } else {
                         if (!val.toString().equals("") && val != null) {
+                            if("varchar".equalsIgnoreCase(dataType.get(i))||"char".equalsIgnoreCase(dataType.get(i))||"text".equalsIgnoreCase(dataType.get(i))||"longtext".equalsIgnoreCase(dataType.get(i))||"tinytext".equalsIgnoreCase(dataType.get(i))) {
+                                val=val.toString().replaceAll("&apos;", "'");
+                            }
                             val = getEnumKeyByVal(showTypeInf, enumnCoumns, col, val, dataSrc);
                             pst.setObject(j, val);
                             j++;
-                    }
+                         }
                 }
             }
             System.out.println("新增：" + sql);

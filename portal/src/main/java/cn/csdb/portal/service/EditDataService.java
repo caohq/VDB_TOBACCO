@@ -101,9 +101,9 @@ public class EditDataService {
      * @Author: zcy
      * @Date: 2019/5/20
      */
-    public JSONObject addData(String subjectCode, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String[] enumnCoumns) {
+    public JSONObject addData(String subjectCode, String tableName, List<String> pkyList, List<String> addAuto, JSONArray jsonArray, String[] enumnCoumns,List<String> dataType) {
         DataSrc dataSrc = getDataSrc(subjectCode);
-        return editDataDao.addData(dataSrc, tableName, pkyList, addAuto, jsonArray, subjectCode, enumnCoumns);
+        return editDataDao.addData(dataSrc, tableName, pkyList, addAuto, jsonArray, subjectCode, enumnCoumns,dataType);
     }
 
     /**
