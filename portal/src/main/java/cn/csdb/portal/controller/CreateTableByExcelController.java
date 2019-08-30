@@ -1,6 +1,6 @@
 package cn.csdb.portal.controller;
 
-import cn.csdb.portal.service.CreatedTablesByExcelService;
+import cn.csdb.portal.service.CreatedTablesByJsonService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class CreateTableByExcelController {
 
+//    @Autowired
+//    private CreatedTablesByExcelService createdTablesByCSVService;
     @Autowired
-    private CreatedTablesByExcelService createdTablesByCSVService;
+    private CreatedTablesByJsonService createdTablesByCSVService;
 
     /**
      * 接到文件生成excel
