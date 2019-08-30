@@ -76,9 +76,19 @@ public class FileNetController {
         jsonObject = fileNetService.getDirByName(parentPath, ftpRootPath, searchName);
         return jsonObject;
     }
-
+/** 
+* @Description: 网盘
+* @Param: [request] 
+* @return: java.lang.String 
+* @Author: zcy
+* @Date: 2019/8/29 
+*/ 
     private String removeFtpRootLastSeparator(HttpServletRequest request) {
-        String ftpRootPath = (String) request.getSession().getAttribute("FtpFilePath");
+//        String ftpRootPath = (String) request.getSession().getAttribute("FtpFilePath");
+
+//        烟草版本，修改读取文件路径
+        String ftpRootPath = (String) request.getSession().getAttribute("filePath");
+
         // TODO 部署时候请注释下一行
 //        ftpRootPath = "H:\\Cache\\";
 
@@ -250,6 +260,13 @@ public class FileNetController {
         return filePath;
     }
 
+    /** 
+    * @Description: 下载日志
+    * @Param: [request, response, fileName] 
+    * @return: javax.servlet.http.HttpServletResponse 
+    * @Author: zcy
+    * @Date: 2019/8/29 
+    */ 
     @GetMapping(value = "/downloadLog")
     public HttpServletResponse downloadLog(HttpServletRequest request, HttpServletResponse response, String fileName) throws IOException {
         // TODO 部署时替换

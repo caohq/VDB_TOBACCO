@@ -79,6 +79,7 @@ public class CheckUserController {
                         request.getSession().setAttribute("userName", u.getUserName());
                         request.getSession().setAttribute("LoginId", u.getLoginId());
                         request.getSession().setAttribute("roles", roles);
+                        request.getSession().setAttribute("filePath", sub.getFilePath());
                     }
                 } else {
                     request.getSession().setAttribute("userName", u.getUserName());

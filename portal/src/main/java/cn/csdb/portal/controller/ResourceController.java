@@ -833,8 +833,10 @@ public class ResourceController {
         String[] filePathArry = new String[0];
 
         List<FileTreeNode> nodeList = new ArrayList<FileTreeNode>();
-        String filePath = (String) request.getSession().getAttribute("FtpFilePath") + "file";
+//        String filePath = (String) request.getSession().getAttribute("FtpFilePath") + "file";
 //        String filePath="D:\\workspace";
+//        烟草，数据发布文件路径修改
+        String filePath = (String) request.getSession().getAttribute("filePath");
         File dirFile = new File(filePath);
         JSONObject jsonObject = new JSONObject();
         if (resource != null) {

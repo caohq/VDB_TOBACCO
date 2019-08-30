@@ -205,6 +205,10 @@
                             <ul>
                                     <%--<li><a href="${ctx}/authorization"><i class="fa fa-cog" aria-hidden="true"></i>
                                             ${applicationScope.menus['organization_title']}用户授权</a></li>--%>
+                                <li class=""><a href="${ctx}/node/"><i class="fa fa-bars"></i>汇聚节点管理</a>
+                                </li>
+                                <li class=""><a href="${ctx}/metaTemplate/toMateTemMsgList"><i class="fa fa-bars"></i>元数据模板管理</a>
+                                 </li>
                                 <li><a href="javaScript:void(0);"><i class="fa fa-database" aria-hidden="true"></i>
                                     关系数据管理</a>
                                     <ul>
@@ -226,12 +230,8 @@
                                     文件数据管理</a></li>
                                 <li><a href="${ctx}/dataRelease"><i class="fa fa-upload" aria-hidden="true"></i>
                                     数据发布管理</a></li>
-                                <li class=""><a href="${ctx}/metaTemplate/toMateTemMsgList"><i class="fa fa-bars"></i>元数据模板管理</a>
-                                </li>
-                                        <li class=""><a href="${ctx}/node/"><i class="fa fa-bars"></i>节点管理</a>
-                                        </li>
-                                        <li class=""><a href="${ctx}/ceshi"><i class="fa fa-bars"></i>测试</a>
-                                        </li>
+                                 <li class=""><a href="${ctx}/ceshi"><i class="fa fa-bars"></i>测试</a>
+                                 </li>
                             </ul>
                         </shiro:hasRole>
 
