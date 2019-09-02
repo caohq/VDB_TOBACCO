@@ -21,10 +21,11 @@ public class CreateTableByExcelController {
      */
     @RequestMapping("/ceshi")
     public String ceshi(HttpServletRequest request) {
-        JSONObject jsonObject = new JSONObject();
-//
-        String subjectCode=request.getSession().getAttribute("SubjectCode").toString();
-        createdTablesByCSVService.ergodicNodeList(subjectCode);
+//        JSONObject jsonObject = new JSONObject();
+//        String subjectCode=request.getSession().getAttribute("SubjectCode").toString();
+
+//        触发遍历所有主题库下的所有节点的JSON文件，建表
+        createdTablesByCSVService.ergodicSubjectList();
         return "403";
     }
 

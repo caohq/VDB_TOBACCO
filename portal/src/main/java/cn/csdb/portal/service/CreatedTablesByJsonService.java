@@ -83,6 +83,30 @@ public class CreatedTablesByJsonService {
         return connection;
     }
 
+/** 
+* @Description: 遍历主题库 
+* @Param: [] 
+* @return: com.alibaba.fastjson.JSONObject 
+* @Author: zcy
+* @Date: 2019/9/2 
+*/ 
+    public JSONObject  ergodicSubjectList(){
+//        查询所有主题库
+        List<Subject> list=subjectDao.findAllsubject();
+        JSONObject jsonObject=new JSONObject();
+        for(Subject subject:list){
+            jsonObject= ergodicNodeList(subject.getSubjectCode());
+        }
+        return jsonObject;
+    }
+
+    /** 
+    * @Description: 遍历节点
+    * @Param: [subjectCode] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/9/2 
+    */ 
     public JSONObject ergodicNodeList(String subjectCode){
         JSONObject jsonObject = new JSONObject();
         List<Node> nodes=nodeDao.findBySubjectCode(subjectCode);
@@ -104,7 +128,6 @@ public class CreatedTablesByJsonService {
     public JSONObject getDbFile(String subjectCode,Node node) {
         JSONObject jsonObject = new JSONObject();
         Subject subject = subjectDao.findBySubjectCode(subjectCode);
-//        Node node=nodeDao.findByNodeCode(nodeCode);
         String dbFilePath;
         if (subject != null) {
             dbFilePath = node.getDbPath();
@@ -162,9 +185,9 @@ public class CreatedTablesByJsonService {
      */
     public JSONObject excelVersion(String fileName, Subject subject, String tableName ,Node node) {
         JSONObject jsonObject = new JSONObject();
-        Map<String, List<List<Object>>> map = new HashMap<>();
-        List<List<Object>> lists = new ArrayList<>();
-        List<List<Object>> listDate = new ArrayList<>();
+        Map<String, List<List<String>>> map = new HashMap<>();
+        List<List<String>> lists = new ArrayList<>();
+        List<List<String>> listDate = new ArrayList<>();
         String dbFilePath=node.getDbPath()+"/"+fileName;
         try {
             map = readJsonMathod(dbFilePath);
@@ -173,13 +196,20 @@ public class CreatedTablesByJsonService {
         }
         lists = map.get("title");
         listDate = map.get("tableDate");
-//        List<TableField> list = formatData(lists);
-//        jsonObject = createTableAndInsertValue(tableName, list, subject.getSubjectCode(), listDate);
+        List<TableField> list = formatData(lists);
+        jsonObject = createTableAndInsertValue(tableName, list, subject.getSubjectCode(), listDate);
         return jsonObject;
     }
 
-    public Map<String, List<List<Object>>> readJsonMathod(String path) throws IOException{
-        Map<String, List<List<Object>>> map=new HashMap<>();
+    /** 
+    * @Description: 解析json文件
+    * @Param: [path] 
+    * @return: java.util.Map<java.lang.String,java.util.List<java.util.List<java.lang.String>>> 
+    * @Author: zcy
+    * @Date: 2019/9/2 
+    */ 
+    public Map<String, List<List<String>>> readJsonMathod(String path) throws IOException{
+        Map<String, List<List<String>>> map=new HashMap<>();
         File filePath = new File(path);
         JSONArray tableColumn = null;
         JSONArray tableType=null;
@@ -204,13 +234,13 @@ public class CreatedTablesByJsonService {
 
         JSONObject jsonObject1=tableColumn.getJSONObject(0);
 
-        List<Object> column=new ArrayList<>();
-        List<Object> columnType=new ArrayList<>();
-        List<Object> columnLehgth=new ArrayList<>();
-        List<Object> columnPk=new ArrayList<>();
-        List<Object> columnComment=new ArrayList<>();
+        List<String> column=new ArrayList<>();
+        List<String> columnType=new ArrayList<>();
+        List<String> columnLehgth=new ArrayList<>();
+        List<String> columnPk=new ArrayList<>();
+        List<String> columnComment=new ArrayList<>();
 
-        List<List<Object>> tableTitle=new ArrayList<>();
+        List<List<String>> tableTitle=new ArrayList<>();
 
         for (int i = 0; i < tableColumn.size(); i++) {
             JSONObject temp  = tableColumn.getJSONObject(i);
@@ -234,16 +264,23 @@ public class CreatedTablesByJsonService {
         tableTitle.add(columnLehgth);
         tableTitle.add(columnPk);
 
-        List<List<Object>> dataList=new ArrayList<>();
+        List<List<String>> dataList=new ArrayList<>();
         for (int i = 0; i < tableData.size(); i++) {
             JSONObject temp  = tableData.getJSONObject(i);
-            List<Object> list=new ArrayList<>();
-            for(Object key : temp.keySet()){
-//                String s=temp.get(key);
-                if(temp.get(key)==null){
+            List<String> list=new ArrayList<>();
+//            for(Object key : temp.keySet()){
+////                String s=temp.get(key);
+//                if(temp.get(key)==null){
+//                    list.add("");
+//                }else {
+//                    list.add(temp.get(key).toString());
+//                }
+//            }
+            for(int j=0;j<temp.size();j++){
+                if(temp.get(column.get(j))==null){
                     list.add("");
                 }else {
-                    list.add(temp.get(key));
+                    list.add(temp.get(column.get(j)).toString());
                 }
             }
             dataList.add(list);
@@ -253,7 +290,14 @@ public class CreatedTablesByJsonService {
         map.put("tableDate",dataList);
         return map;
     }
-
+    
+/** 
+* @Description: 格式化建表数据 
+* @Param: [listTitle] 
+* @return: java.util.List<cn.csdb.portal.model.TableField> 
+* @Author: zcy
+* @Date: 2019/9/2 
+*/ 
     public List<TableField> formatData(List<List<String>> listTitle) {
         List<TableField> list = new ArrayList<>();
         for (int j = 0; j < listTitle.get(1).size(); j++) {
@@ -487,6 +531,13 @@ public class CreatedTablesByJsonService {
         return map;
     }
 
+    /** 
+    * @Description: 建表和插入数据
+    * @Param: [tableName, tableFields, subjectCode, listData] 
+    * @return: com.alibaba.fastjson.JSONObject 
+    * @Author: zcy
+    * @Date: 2019/9/2 
+    */ 
     @Transactional
     public JSONObject createTableAndInsertValue(String tableName, List<TableField> tableFields, String subjectCode, List<List<String>> listData) {
         JSONObject jsonObject = new JSONObject();
@@ -682,7 +733,9 @@ public class CreatedTablesByJsonService {
             String pk = next.getPk();
             sb.append("`" + field + "`  ");
             sb.append(type);
-            int len = Integer.parseInt(length.substring(0, length.length() - 2));
+//            excel普通版数据解析后带有.0，需要做特殊处理,json格式不用，excel大数据不用
+//            int len = Integer.parseInt(length.substring(0,length.length()-2));
+            int len = Integer.parseInt(length);
             if ("float".equalsIgnoreCase(type) || "double".equalsIgnoreCase(type) || "decimal".equalsIgnoreCase(type)) {
                 len += 6;
                 sb.append("(" + len + ",6)");
@@ -753,85 +806,4 @@ public class CreatedTablesByJsonService {
         }
         return "1".equals(num);
     }
-
-
-    /***
-     public void getDbCSV(String subjectCode){
-     Subject subject=subjectDao.findBySubjectCode(subjectCode);
-     String dbFilePath;
-     if(subject!=null){
-     dbFilePath=subject.getDbPath();
-     List<String> files = new ArrayList<String>();
-     File file = new File(dbFilePath);
-     File[] tempList = file.listFiles();
-
-     for (int i = 0; i < tempList.length; i++) {
-     if (tempList[i].isFile()) {
-     files.add(tempList[i].toString());
-     //文件名，不包含路径
-     String fileName = tempList[i].getName();
-     //                 判断该csv文件是否已经建表
-     if(createdTablesByCSVDao.IsCreatedTable(subject.getThemeCode(),subjectCode,fileName)){
-
-     }else{ //未建表，
-     Map<String,List<List<String>>> map=analysisCSV(fileName,subject);
-     //                       建表
-     List<List<String>>  lists1=map.get("title");
-     if(lists1.size()>0){
-
-     }
-     }
-     System.out.println(fileName);
-     }
-     if (tempList[i].isDirectory()) {
-     //这里就不递归了，
-     }
-     }
-     }
-     }
-
-     //   解析CSV文件
-     public Map<String,List<List<String>>> analysisCSV(String csvName, Subject subject){
-     // 1.声明CsvReader类用于csv文件读取
-     CsvReader nCsvReader = null;
-     Map<String,List<List<String>>> map=new HashMap<>();
-     List<List<String>> lists=new ArrayList<>();
-     List<List<String>> listDate=new ArrayList<>();
-     try {
-     // 2.实例化CsvReader类用于csv文件读取
-     nCsvReader = new CsvReader(subject.getDbPath()+"\\"+csvName);
-     // 3.循环reader的结果集
-     int n=0;
-     while (nCsvReader.readRecord()) {
-     List<String> list=new ArrayList<>();
-     int count=nCsvReader.getColumnCount();
-     for (int i = 0; i < nCsvReader.getColumnCount(); i++) {
-     String aa=nCsvReader.get(i);
-     byte[] bytes=aa.getBytes("ISO8859-1");
-     String s=new String(bytes,"gbk");
-     list.add(s);
-     System.out.println(s);
-     }
-     if(n<5){
-     lists.add(list);
-     }else{
-     listDate.add(list);
-     }
-     n++;
-     }
-     } catch (FileNotFoundException e) {
-     e.printStackTrace();
-     logger.error("解析csv异常！！！"+ e);
-     } catch (IOException e) {
-     e.printStackTrace();
-     } finally {
-     // 关闭读取连接
-     nCsvReader.close();
-     }
-     map.put("title",lists);
-     map.put("tableDate",listDate);
-     return map;
-     }
-
-     */
 }
