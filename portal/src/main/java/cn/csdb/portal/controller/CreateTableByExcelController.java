@@ -1,7 +1,6 @@
 package cn.csdb.portal.controller;
 
-import cn.csdb.portal.service.CreatedTablesByJsonService;
-import com.alibaba.fastjson.JSONObject;
+import cn.csdb.portal.service.CreatedTablesByJsonNewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +13,7 @@ public class CreateTableByExcelController {
 //    @Autowired
 //    private CreatedTablesByExcelService createdTablesByCSVService;
     @Autowired
-    private CreatedTablesByJsonService createdTablesByCSVService;
+    private CreatedTablesByJsonNewService createdTablesByJsonNewService;
 
     /**
      * 接到文件生成excel
@@ -25,7 +24,7 @@ public class CreateTableByExcelController {
 //        String subjectCode=request.getSession().getAttribute("SubjectCode").toString();
 
 //        触发遍历所有主题库下的所有节点的JSON文件，建表
-        createdTablesByCSVService.ergodicSubjectList();
+        createdTablesByJsonNewService.ergodicSubjectList();
         return "403";
     }
 
