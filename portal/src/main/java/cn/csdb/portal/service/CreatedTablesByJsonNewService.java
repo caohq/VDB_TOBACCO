@@ -234,8 +234,15 @@ public class CreatedTablesByJsonNewService {
     public  List<List<String>> readJsonByFastJsonCreateTable(String path) {
         File file = new File(path);//json文件路径
         Map<String, Object> map = new HashMap<>();
-        List<String> columnList = new ArrayList<>();
 
+        List<String> columnList = new ArrayList<>();
+        List<String> columnType = new ArrayList<>();
+        List<String> columnLehgth = new ArrayList<>();
+        List<String> columnPk = new ArrayList<>();
+        List<String> columnComment = new ArrayList<>();
+
+        List<TableField> list=new ArrayList<>();
+        List<List<String>> tableTitle = new ArrayList<>();
 //        先解析出列明
         try {
             InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "UTF-8");
@@ -248,9 +255,21 @@ public class CreatedTablesByJsonNewService {
                     while (reader.hasNext()) {
                         reader.startObject();
                         while (reader.hasNext()) {
+//                            TableField tableField=new TableField();
                             String key1 = reader.readString();
                             String value1 = reader.readObject().toString();
-                            columnList.add(value1);
+                            String l[]=value1.split("','");
+//                            tableField.setComment(l[1]);
+//                            tableField.setField(key1);
+//                            tableField.setType(l[2]);
+//                            tableField.setLength(l[3]);
+//                            tableField.setPk(l[4].substring(0,l[4].length()-1));
+                            columnList.add(key1);//字段名
+                            columnComment.add(l[1]);//注释
+                            columnType.add(l[2]); //数据类型
+                            columnLehgth.add(l[3]); //长度
+                            columnPk.add(l[4].substring(0,l[4].length()-1));//是否是主键
+//                            list.add(tableField);
                         }
                         reader.endObject();
                     }
@@ -276,28 +295,28 @@ public class CreatedTablesByJsonNewService {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        Object o2 = map.get("COLUMNNOTE");
-        Object o3 = map.get("COLUMNTYPE");
-        Object o4 = map.get("LENGTH");
-        Object o5 = map.get("PRIMARYKEY");
-
-        List<String> columnType = new ArrayList<>();
-        List<String> columnLehgth = new ArrayList<>();
-        List<String> columnPk = new ArrayList<>();
-        List<String> columnComment = new ArrayList<>();
-
-        JSONArray jsonArray2 = JSONArray.parseArray(o2.toString());
-        JSONArray jsonArray3 = JSONArray.parseArray(o3.toString());
-        JSONArray jsonArray4 = JSONArray.parseArray(o4.toString());
-        JSONArray jsonArray5 = JSONArray.parseArray(o5.toString());
-
-        for (int i = 0; i < columnList.size(); i++) {
-            columnComment.add(jsonArray2.getJSONObject(0).get(columnList.get(i)).toString());
-            columnType.add(jsonArray3.getJSONObject(0).get(columnList.get(i)).toString());
-            columnLehgth.add(jsonArray4.getJSONObject(0).get(columnList.get(i)).toString());
-            columnPk.add(jsonArray5.getJSONObject(0).get(columnList.get(i)).toString());
-        }
-        List<List<String>> tableTitle = new ArrayList<>();
+//        Object o2 = map.get("COLUMNNOTE");
+//        Object o3 = map.get("COLUMNTYPE");
+//        Object o4 = map.get("LENGTH");
+//        Object o5 = map.get("PRIMARYKEY");
+//
+//        List<String> columnType = new ArrayList<>();
+//        List<String> columnLehgth = new ArrayList<>();
+//        List<String> columnPk = new ArrayList<>();
+//        List<String> columnComment = new ArrayList<>();
+//
+//        JSONArray jsonArray2 = JSONArray.parseArray(o2.toString());
+//        JSONArray jsonArray3 = JSONArray.parseArray(o3.toString());
+//        JSONArray jsonArray4 = JSONArray.parseArray(o4.toString());
+//        JSONArray jsonArray5 = JSONArray.parseArray(o5.toString());
+//
+//        for (int i = 0; i < columnList.size(); i++) {
+//            columnComment.add(jsonArray2.getJSONObject(0).get(columnList.get(i)).toString());
+//            columnType.add(jsonArray3.getJSONObject(0).get(columnList.get(i)).toString());
+//            columnLehgth.add(jsonArray4.getJSONObject(0).get(columnList.get(i)).toString());
+//            columnPk.add(jsonArray5.getJSONObject(0).get(columnList.get(i)).toString());
+//        }
+//
         tableTitle.add(columnComment);
         tableTitle.add(columnList);
         tableTitle.add(columnType);

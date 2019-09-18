@@ -274,7 +274,7 @@
             {{else}}
             <input type="text" style='width: 100%;height:100%;' id="{{value.colName}}" dataType="{{value.dataType}}"
                    onblur="func_blur(this)" class='form-control' name="{{value.colName}}"/>
-            <p id="{{value.colName}}_id" style='display: none;color:red;font-size: 12px;'></p>
+            <p id="{{value.colName}}_warn_id" style='display: none;color:red;font-size: 12px;'></p>
             {{/if}}
         </td>
         {{/if}}
@@ -404,7 +404,7 @@
             <input type="text" style='width: 100%;height:100%;' id="{{value.colName}}_coldata"
                    dataType="{{value.dataType}}" value="{{value.data}}" class='form-control'
                    onblur="func_blur(this)" name="{{value.colName}}"/>
-            <p id="{{value.colName}}_id" style='display: none;color:red;font-size: 12px;'></p>
+            <p id="{{value.colName}}_warn_id" style='display: none;color:red;font-size: 12px;'></p>
             {{/if}}
         </td>
     </tr>
@@ -1075,7 +1075,7 @@
             var dataType =$(i).attr("dataType");
             var dataValue = $(i).attr("value");
             var columnName =$(i).attr("name");
-            var ids="#"+columnName+"_id";
+            var ids="#"+columnName+"_warn_id";
             $(ids).hide();
             var warns;
 
